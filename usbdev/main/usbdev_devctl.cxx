@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QElapsedTimer>
 #include <QAtomicInt>
+#include <memory>
 
 #include "nwkusbobj2.hxx"
 #include "usbdev/common/usbdev_memcntr.hxx"
@@ -54,7 +55,9 @@ static void  gPutInt16( unsigned char *buff, qint16 v, const Profile &pf )
 class USBDEV_HIDDEN DevCtl_Worker : public QObject {
     Q_OBJECT
 private:
-    Profile m_profile; SciPack::NwkUsbObj2 *m_usb_dev; QElapsedTimer m_elapse_tmr;
+    Profile m_profile;
+    SciPack::NwkUsbObj2 *m_usb_dev;
+    QElapsedTimer m_elapse_tmr;
     quint32 m_trg_cntr; quint32 m_vid_pid, m_cfg_id; bool m_is_video_on;
     QAtomicInt  m_trg_called;
     DevCtl::WorkStatus  m_wks;
@@ -83,7 +86,7 @@ public :
     Q_INVOKABLE bool  cmd_ReadFrameData ( );
     Q_INVOKABLE bool  cmd_TurnOnVideo ( );
     Q_INVOKABLE bool  cmd_TurnOffVideo( );
-    Q_INVOKABLE bool  cmd_MoveMotor   ( int mot, qint32 sps, qint32 dist, quint8 acc_flag, int mov_id );
+    Q_INVOKABLE bool  cmd_Move5Motors  ( quint8 sps[5], qint32 value[5],DevCtl::MoveMethod method );
     Q_INVOKABLE bool  cmd_SaveMotorCfg( int mot, const QByteArray &ba );
     Q_INVOKABLE bool  cmd_ControlSampleMotor( int stage, qint32 sps, quint8 acc_flag );
     Q_INVOKABLE bool  cmd_SetLamp ( int lamp, bool );
@@ -339,19 +342,16 @@ bool  DevCtl_Worker :: cmd_TurnOffVideo()
 // ============================================================================
 // cmd: motor move
 // ============================================================================
-bool  DevCtl_Worker :: cmd_MoveMotor( int mot, qint32 sps, qint32 dist, quint8 acc_flag, int mov_id )
+bool  DevCtl_Worker :: cmd_Move5Motors( quint8 sps[5], qint32 dist[5] ,DevCtl::MoveMethod method)
 {
     if ( ! this->isDeviceWork()) { return false; }
     unsigned char buff[512]; bool ret = true;
 
     if ( ret ) {
-        // 0x50 means relative moving, 0x51 means position, 0x52 means reset
-        buff[0] = 0x5a; buff[1] = ( mov_id == 0 ? 0x50 : ( mov_id == 1 ? 0x51 : 0x52 ));
-        buff[2] = quint8( mot ); buff[3] = 0;
-        gPutInt32( & buff[4], sps, m_profile  );
-        gPutInt32( & buff[8], dist, m_profile );
-        buff[12] = acc_flag;
-
+        buff[0] = 0x5a;
+        buff[1] = method  == DevCtl::MoveMethod::Relative ? 0x52 : 0x53 ;
+        memcpy(&buff[3],&sps[0],sizeof (*sps));
+        memcpy(&buff[8],&dist[0],sizeof (*dist));
         ret = this->cmdComm_bulkOutSync( buff, sizeof( buff ) );
         if ( ! ret ) { qWarning("send motor moving command failed."); }
     }
@@ -849,34 +849,14 @@ UsbDev::FrameData    DevCtl :: takeNextPendingFrameData()
 // ============================================================================
 // move the motor
 // ============================================================================
-void   DevCtl :: moveMotor( MotorId mot, qint32 sps, qint32 dist, quint8 acc_flag )
+void   DevCtl :: move5Motors( quint8 sps[5], qint32 dist[5],MoveMethod method)
 {
-//    int mot_id = gHwMotId( mot );
-//    if ( mot_id > 0 && mot_id < 9 ) {
-//        if ( sps <= 0 ) { sps = 400; }
-//        QMetaObject::invokeMethod(
-//            T_PrivPtr( m_obj )->wkrPtr(), "cmd_MoveMotor", Qt::QueuedConnection,
-//            Q_ARG( int, mot_id ), Q_ARG( qint32, sps ), Q_ARG( qint32, dist ),
-//            Q_ARG( quint8, acc_flag ), Q_ARG( int, 0 )
-//        );
-//    }
+    QMetaObject::invokeMethod(
+        T_PrivPtr( m_obj )->wkrPtr(), "cmd_move5Motors", Qt::QueuedConnection,
+        Q_ARG( quint8, sps[5] ), Q_ARG( qint32, dist[5] ), Q_ARG( MoveMethod, method )
+    );
 }
 
-// ============================================================================
-// position the motor
-// ============================================================================
-void   DevCtl :: posMotor( MotorId mot, qint32 sps, qint32 dist, quint8 acc_flag )
-{
-    int mot_id = int( mot );
-    if ( mot_id > 0 && mot_id < 9 ) {
-        if ( sps <= 0 ) { sps = 400; }
-        QMetaObject::invokeMethod(
-            T_PrivPtr( m_obj )->wkrPtr(), "cmd_MoveMotor", Qt::QueuedConnection,
-            Q_ARG( int, mot_id ), Q_ARG( qint32, sps ), Q_ARG( qint32, dist ),
-            Q_ARG( quint8, acc_flag ), Q_ARG( int, 1 )
-        );
-    }
-}
 
 // ============================================================================
 // reset the motor

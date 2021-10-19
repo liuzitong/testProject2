@@ -54,6 +54,11 @@ public:
         SampleMotorCtl_Stage_Work = 2
     };
 
+    enum MoveMethod{
+        Relative=0,
+        Abosolute=1
+    };
+
     //! dtor
     virtual ~DevCtl( ) Q_DECL_OVERRIDE;
 
@@ -93,7 +98,7 @@ public:
      *        while 'acc_flga' is 1, 'sps' should be [ 0, 800 ]
      *
      */
-    void  moveMotor( MotorId mot, qint32 sps, qint32 dist, quint8 acc_flag );
+    void  move5Motors( quint8 sps[5], qint32 value[5],MoveMethod method);
 
     /*!
      * \brief Positioning spec. Motor
@@ -105,7 +110,7 @@ public:
      * \note  'sps' parameter can be use 0 or < 0, it will automatically use \n
      *     default speed.
      */
-    void  posMotor( MotorId mot, qint32 sps, qint32 pos, quint8 acc_flag );
+    void  pos5Motors( MotorId mot, qint32 sps, qint32 pos, quint8 acc_flag );
 
     /*!
      * \brief reset Motor, the motor moved to reset position
