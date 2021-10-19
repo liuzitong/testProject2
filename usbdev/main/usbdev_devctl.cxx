@@ -28,37 +28,20 @@ static void  gPutInt32_Le( unsigned char *buff, qint32 v )
     buff[0] = quint8( v & 0x0ff );          buff[1] = quint8(( v >> 8 ) & 0x0ff );
     buff[2] = quint8(( v >> 16 ) & 0x0ff ); buff[3] = quint8(( v >> 24) & 0x0ff );
 }
-static void  gPutInt32_Be( unsigned char *buff, qint32 v )
-{
-    buff[3] = quint8( v & 0x0ff );          buff[2] = quint8(( v >> 8 ) & 0x0ff );
-    buff[1] = quint8(( v >> 16 ) & 0x0ff ); buff[0] = quint8(( v >> 24) & 0x0ff );
-}
 
 static void  gPutInt16_Le( unsigned char *buff, qint16 v )
 {
     buff[0] = quint8( v & 0x0ff );          buff[1] = quint8(( v >> 8 ) & 0x0ff );
 }
-static void  gPutInt16_Be( unsigned char *buff, qint16 v )
-{
-    buff[1] = quint8( v & 0x0ff );          buff[0] = quint8(( v >> 8 ) & 0x0ff );
-}
 
 static void  gPutInt32( unsigned char *buff, qint32 v, const Profile &pf )
 {
-    if ( pf.isBeOrder()) {
-        gPutInt32_Be( buff, v );
-    } else {
         gPutInt32_Le( buff, v );
-    }
 }
 
 static void  gPutInt16( unsigned char *buff, qint16 v, const Profile &pf )
 {
-    if ( pf.isBeOrder()) {
-        gPutInt16_Be( buff, v );
-    } else {
         gPutInt16_Le( buff, v );
-    }
 }
 
 
@@ -80,7 +63,6 @@ protected:
     auto  cmdComm_bulkOutSync( const unsigned char *buff, int buff_sz ) -> bool;
     auto  cmdComm_strInSync  (       unsigned char *buff, int buff_sz ) -> bool;
     auto  cmdComm_bulkInSync (       unsigned char *buff, int buff_sz ) -> bool;
-    auto  analysisPhyKey( const unsigned char buff[512] ) -> void; // since 0.3.0
     auto  isDeviceWork( ) -> bool
     {
         if ( m_usb_dev == nullptr ) { return false; }
@@ -104,8 +86,6 @@ public :
     Q_INVOKABLE bool  cmd_MoveMotor   ( int mot, qint32 sps, qint32 dist, quint8 acc_flag, int mov_id );
     Q_INVOKABLE bool  cmd_SaveMotorCfg( int mot, const QByteArray &ba );
     Q_INVOKABLE bool  cmd_ControlSampleMotor( int stage, qint32 sps, quint8 acc_flag );
-    Q_INVOKABLE bool  cmd_SetSLED ( qint32 );
-    Q_INVOKABLE bool  cmd_AdjSLED ( qint8  );
     Q_INVOKABLE bool  cmd_SetLamp ( int lamp, bool );
     Q_INVOKABLE bool  cmd_SetFixatLamp( qint16, qint16, bool);
 
@@ -115,12 +95,6 @@ public :
     Q_SIGNAL void  newStatusData( const UsbDev::StatusData & );
     Q_SIGNAL void  videoStatusChanged( bool );
 
-    Q_SIGNAL void  physKeyPressed ( quint32 ); // since 0.3.0
-    Q_SIGNAL void  physKeyReleased( quint32 ); // since 0.3.0
-    Q_SIGNAL void  physKeyClicked ( quint32 ); // since 0.3.0
-
-    Q_INVOKABLE bool  cmd_SetSLO ( qint32 ); // since 0.4
-    Q_INVOKABLE bool  cmd_AdjSLO ( qint8  ); // since 0.4
 
     Q_INVOKABLE bool  cmd_readUsbEEPROM ( char *buff, int size, int eeprom_addr  ); // since 0.5
     Q_INVOKABLE bool  cmd_writeUsbEEPROM( const char *buff, int size, int eeprom_addr );
@@ -219,33 +193,6 @@ bool    DevCtl_Worker :: cmdComm_strInSync( unsigned char *buff, int buff_sz )
     return ( m_usb_dev->bulkTransSync( SciPack::NwkUsbObj2::PipeTypeID_StrBulkIn, & pkg ) == SCIPACK_S_OK );
 }
 
-// ============================================================================
-// since 0.3.0, analysis the physical key
-// ============================================================================
-auto     DevCtl_Worker :: analysisPhyKey( const unsigned char buff[512]) -> void
-{
-    if ( ! m_profile.hasPhysKey()) { return; }
-
-    // ------------------------------------------------------------------------
-    // bitmap changing map
-    // ------------------------------------------------------------------------
-    //  S  |  P  | M ( S ^ P) |  Press ( P & M ) |  Released ( ( P ^ M ) & M ) |
-    //  0     0      0^0=0        0&0 = 0           (0^0)&0 = 0
-    //  0     1      0^1=1        1&1 = 1           (1^1)&1 = 0
-    //  1     0      1^0=1        0&1 = 0           (0^1)&1 = 1
-    //  1     1      1^1=0        1&0 = 0           (1^0)&0 = 0
-    // ------------------------------------------------------------------------
-    auto s = m_key_bmp;
-    auto p = quint32( buff[84] ) | quint32( buff[85] << 8 ) | quint32( buff[86] << 16 ) | quint32( buff[87] << 24 );
-    auto m = s ^ p;
-
-    auto pressed = p & m;
-    auto released= ( p ^ m ) & m;
-    if ( pressed != 0 ) { emit physKeyPressed ( pressed  ); }
-    if ( released!= 0 ) { emit physKeyReleased( released ); }
-
-    m_key_bmp = p; // changed...
-}
 
 // ============================================================================
 // cmd: read the profile from device
@@ -295,7 +242,6 @@ bool   DevCtl_Worker :: cmd_ReadStatusData()
     if ( ret ) {
         StatusData sd( QByteArray::fromRawData( reinterpret_cast<const char*>(buff),sizeof(buff)));
         if ( ! sd.isEmpty()) {
-            analysisPhyKey( buff );
             emit this->newStatusData( sd );
         }
     }
@@ -312,15 +258,14 @@ bool  DevCtl_Worker :: cmd_ReadFrameData()
     if ( ! this->isDeviceWork() || ! m_is_video_on || m_profile.isEmpty()) { return false; }
 
     bool ret = true;
-    qintptr pitch = m_profile.frontVideoRowPitch();
-    QSize sz = m_profile.frontVideoSize();
-    qintptr total_bytes = pitch * sz.height();
+    QSize sz = m_profile.videoSize();
+    qintptr total_bytes = sz.height()*sz.width();
     if ( total_bytes > 64 * 1024 * 1024 || total_bytes % 512 != 0 ) { return false; }
 
     QByteArray ba( int( total_bytes ), 0 );
     ret = this->cmdComm_strInSync( reinterpret_cast<unsigned char*>( ba.data()), ba.size());
     if ( ret ) {
-        FrameData fd( ba, m_profile, m_elapse_tmr.elapsed() );
+        FrameData fd( ba );
         emit this->newFrameData( fd );
     }
 
@@ -447,69 +392,6 @@ bool  DevCtl_Worker :: cmd_ControlSampleMotor( int stage, qint32 sps, quint8 acc
     return ret;
 }
 
-// ============================================================================
-// cmd: set the SLED value
-// ============================================================================
-bool  DevCtl_Worker :: cmd_SetSLED( qint32 v )
-{
-    if ( ! this->isDeviceWork()) { return false; }
-    unsigned char buff[512]; bool ret = true;
-    if ( ret ) {
-        buff[0] = 0x5a; buff[1] = 0x60; buff[2] = 0; buff[3] = 0;
-        gPutInt32( &buff[4], v, m_profile );
-        ret = this->cmdComm_bulkOutSync( buff, sizeof( buff ));
-        if ( ! ret ) { qWarning("send set SLED value cmd failed."); }
-    }
-    return ret;
-}
-
-// ============================================================================
-// cmd: adjust the SLED value
-// ============================================================================
-bool  DevCtl_Worker :: cmd_AdjSLED( qint8 v )
-{
-    if ( ! this->isDeviceWork()) { return false; }
-    unsigned char buff[512]; bool ret = true;
-    if ( ret ) {
-        buff[0] = 0x5a; buff[1] = 0x61; buff[2] = 0;
-        buff[3] = static_cast<unsigned char >(v);
-        ret = this->cmdComm_bulkOutSync( buff, sizeof(buff));
-        if ( ! ret ) { qWarning("send adjust SLED cmd failed"); }
-    }
-    return ret;
-}
-
-// ============================================================================
-// cmd: set the SLO value ( since 0.4 )
-// ============================================================================
-auto     DevCtl_Worker :: cmd_SetSLO( qint32 v ) -> bool
-{
-    if ( ! isDeviceWork() ) { return false; }
-    unsigned char buff[512]; bool ret = true;
-    if ( ret ) {
-        buff[0] = 0x5a; buff[1] = 0x62; buff[2] = 0; buff[3] = 0;
-        gPutInt32( &buff[4], v, m_profile );
-        ret = this->cmdComm_bulkOutSync( buff, sizeof( buff ));
-        if ( ! ret ) { qWarning("send set SLO value cmd failed."); }
-    }
-    return ret;
-}
-
-// ============================================================================
-// cmd: adjust the SLO value ( since 0.4 )
-// ============================================================================
-auto     DevCtl_Worker :: cmd_AdjSLO( qint8 v ) -> bool
-{
-    if ( ! this->isDeviceWork()) { return false; }
-    unsigned char buff[512]; bool ret = true;
-    if ( ret ) {
-        buff[0] = 0x5a; buff[1] = 0x63; buff[2] = 0;
-        buff[3] = static_cast<unsigned char >(v);
-        ret = this->cmdComm_bulkOutSync( buff, sizeof(buff));
-        if ( ! ret ) { qWarning("send adjust SLO cmd failed"); }
-    }
-    return ret;
-}
 
 // ============================================================================
 // cmd: set the lamp ON or OFF
@@ -948,36 +830,36 @@ UsbDev::FrameData    DevCtl :: takeNextPendingFrameData()
 // ============================================================================
 // convert the motor id to hardware id
 // ============================================================================
-static int  gHwMotId ( DevCtl::MotorId m_id )
-{
-    int mot_id = 0;
-    switch( m_id ) {
-    case DevCtl::MotorId_Chinrests : mot_id = 0x01; break;
-    case DevCtl::MotorId_X : mot_id = 0x02;         break;
-    case DevCtl::MotorId_Y : mot_id = 0x03;         break;
-    case DevCtl::MotorId_Z : mot_id = 0x04;         break;
-    case DevCtl::MotorId_Focus : mot_id = 0x05;     break;
-    case DevCtl::MotorId_Spectra : mot_id = 0x06;   break;
-    case DevCtl::MotorId_Light   : mot_id = 0x07;   break;
-    case DevCtl::MotorId_Sample  : mot_id = 0x08;   break;
-    }
-    return mot_id;
-}
+//static int  gHwMotId ( DevCtl::MotorId m_id )
+//{
+//    int mot_id = 0;
+//    switch( m_id ) {
+//    case DevCtl::MotorId_Chinrests : mot_id = 0x01; break;
+//    case DevCtl::MotorId_X : mot_id = 0x02;         break;
+//    case DevCtl::MotorId_Y : mot_id = 0x03;         break;
+//    case DevCtl::MotorId_Z : mot_id = 0x04;         break;
+//    case DevCtl::MotorId_Focus : mot_id = 0x05;     break;
+//    case DevCtl::MotorId_Spectra : mot_id = 0x06;   break;
+//    case DevCtl::MotorId_Light   : mot_id = 0x07;   break;
+//    case DevCtl::MotorId_Sample  : mot_id = 0x08;   break;
+//    }
+//    return mot_id;
+//}
 
 // ============================================================================
 // move the motor
 // ============================================================================
 void   DevCtl :: moveMotor( MotorId mot, qint32 sps, qint32 dist, quint8 acc_flag )
 {
-    int mot_id = gHwMotId( mot );
-    if ( mot_id > 0 && mot_id < 9 ) {
-        if ( sps <= 0 ) { sps = 400; }
-        QMetaObject::invokeMethod(
-            T_PrivPtr( m_obj )->wkrPtr(), "cmd_MoveMotor", Qt::QueuedConnection,
-            Q_ARG( int, mot_id ), Q_ARG( qint32, sps ), Q_ARG( qint32, dist ),
-            Q_ARG( quint8, acc_flag ), Q_ARG( int, 0 )
-        );
-    }
+//    int mot_id = gHwMotId( mot );
+//    if ( mot_id > 0 && mot_id < 9 ) {
+//        if ( sps <= 0 ) { sps = 400; }
+//        QMetaObject::invokeMethod(
+//            T_PrivPtr( m_obj )->wkrPtr(), "cmd_MoveMotor", Qt::QueuedConnection,
+//            Q_ARG( int, mot_id ), Q_ARG( qint32, sps ), Q_ARG( qint32, dist ),
+//            Q_ARG( quint8, acc_flag ), Q_ARG( int, 0 )
+//        );
+//    }
 }
 
 // ============================================================================
@@ -985,7 +867,7 @@ void   DevCtl :: moveMotor( MotorId mot, qint32 sps, qint32 dist, quint8 acc_fla
 // ============================================================================
 void   DevCtl :: posMotor( MotorId mot, qint32 sps, qint32 dist, quint8 acc_flag )
 {
-    int mot_id = gHwMotId( mot );
+    int mot_id = int( mot );
     if ( mot_id > 0 && mot_id < 9 ) {
         if ( sps <= 0 ) { sps = 400; }
         QMetaObject::invokeMethod(
@@ -1001,7 +883,7 @@ void   DevCtl :: posMotor( MotorId mot, qint32 sps, qint32 dist, quint8 acc_flag
 // ============================================================================
 void   DevCtl :: resetMotor( MotorId mot, qint32 sps, qint32 pos, quint8 acc_flag )
 {
-    int mot_id = gHwMotId( mot );
+    int mot_id = int( mot );
     if ( mot_id > 0 && mot_id < 9 ) {
         if ( sps <= 0 ) { sps = 400; }
         QMetaObject::invokeMethod(
@@ -1021,7 +903,7 @@ void   DevCtl :: resetMotor( MotorId mot, qreal sps, qint32 pos, quint8 acc_flag
 // ============================================================================
 void   DevCtl :: saveMotorCfg( MotorId mot, const QByteArray &cfg )
 {
-    int mot_id = gHwMotId( mot );
+    int mot_id = int( mot );
     if ( mot_id > 0 && mot_id < 9 ) {
         QMetaObject::invokeMethod(
             T_PrivPtr( m_obj )->wkrPtr(), "cmd_SaveMotorCfg", Qt::QueuedConnection,
@@ -1074,49 +956,8 @@ void   DevCtl :: setFixatLamp(qint16 cx, qint16 cy, bool on_off)
     );
 }
 
-// ============================================================================
-// set the SLED
-// ============================================================================
-void   DevCtl :: setSLED( qint32 v )
-{
-    QMetaObject::invokeMethod(
-        T_PrivPtr( m_obj )->wkrPtr(), "cmd_SetSLED", Qt::QueuedConnection,
-        Q_ARG( qint32, v )
-    );
-}
 
-// ============================================================================
-// adjust the SLED
-// ============================================================================
-void   DevCtl :: adjustSLED( qint32 v )
-{
-    QMetaObject::invokeMethod(
-        T_PrivPtr( m_obj )->wkrPtr(), "cmd_AdjSLED", Qt::QueuedConnection,
-        Q_ARG( qint8, qint8(v))
-    );
-}
 
-// ============================================================================
-// set the SLO ( since 0.4 )
-// ============================================================================
-auto     DevCtl :: setSLO( qint32 v ) -> void
-{
-    QMetaObject::invokeMethod(
-        T_PrivPtr( m_obj )->wkrPtr(), "cmd_SetSLO", Qt::QueuedConnection,
-        Q_ARG( qint32, v )
-    );
-}
-
-// ============================================================================
-// adjust the SLO ( since 0.4 )
-// ============================================================================
-auto     DevCtl :: adjustSLO( qint32 v ) -> void
-{
-    QMetaObject::invokeMethod(
-        T_PrivPtr( m_obj )->wkrPtr(), "cmd_AdjSLO", Qt::QueuedConnection,
-        Q_ARG( qint8, qint8(v))
-    );
-}
 
 // ============================================================================
 // EEPRom read/write

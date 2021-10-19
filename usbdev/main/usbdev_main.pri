@@ -71,3 +71,9 @@
 
 }
 
+HEADERS += \
+    $$PWD/usbdev_config.hxx
+
+SOURCES += \
+    $$PWD/usbdev_config.cxx
+

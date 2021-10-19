@@ -28,38 +28,53 @@ namespace UsbDev {
  * @brief describe the hardware capabilities
  */
 // ////////////////////////////////////////////////////////////////////////////
-class USBDEV_API  Profile {
+class USBDEV_API  Config {
 public:
    //! ctor
-   explicit Profile ( );
+   explicit Config ( );
 
    //! construct by spec. data
-   Profile ( const QByteArray & );
+   Config ( const QByteArray & );
 
    //! ctor ( construct )
-   Profile ( const Profile & );
+   Config ( const Config & );
 
    //! ctor ( assign )
-   Profile & operator = ( const Profile & );
+   Config & operator = ( const Config & );
 
    //! dtor
-   virtual ~Profile( );
+   virtual ~Config( );
 
    //! check if it is empty
    bool     isEmpty( ) const;
 
-   quint16 devType() const;
-
-   quint16 devVersion() const;
-
-   QSize videoSize() const;
-
-   //! return the range of the chinresets
-   QPair<qint32,qint32> motorRange( DevCtl::MotorId ) const;
-
 //   //! to json object
 //   QJsonObject  toJsonObject( ) const;
+    quint32 &crcVeryficationRef();
 
+    quint32 &deviceIDRef();
+    quint16 &centerFixationLampDARef();
+    quint16 &bigDiamondfixationLampDARef();
+    quint16 &smallDiamondFixationLampDARef();
+    quint16 &yellowBackgroundLampDARef();
+    auto &whiteBackgroundLampDARef();
+    quint16 &centerInfraredLampDARef();
+    quint16 &borderInfraredLampDARef();
+    quint16 &eyeglassFrameLampDARef();
+    auto &environmentAlarmLightDARef();
+    auto &switchColorMotorCoordRef();
+    auto &switchLightSpotMotorCoordRef();
+    qint32 &focusCoordForSpotAndColorChangeRef();
+    qint32 &mainTableCenterXCorrection();
+    qint32 &mainTableCenterYCorrection();
+    qint32 &secondaryTableCenterXCorrection();
+    qint32 &secondaryTableCenterYCorrection();
+    qint32 &maximunProjectionLightADPresetRef();
+    qint32 &xMotorCoordForLightCorrectionRef();
+    qint32 &yMotorCoordForLightCorrectionRef();
+    auto &focalLengthMotorCoordForDiamondCenterTestRef();
+    auto &focalLengthMotorCoordMappingRef();
+    auto &DbCoordMappingRef();
 private:
     void *m_obj;
 };
@@ -68,5 +83,5 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(UsbDev::Profile)
+Q_DECLARE_METATYPE(UsbDev::Config)
 #endif

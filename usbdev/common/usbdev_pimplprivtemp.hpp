@@ -55,7 +55,7 @@ public:
     // ================================================================= 
     virtual T*    duplicateIfShared ( void ** );
     
-    static T*    buildIfNull ( void **w_obj ); 
+    static T*    buildIfNull ( void **w_obj );    //create instance
     static T*    createInstance ( )           { return USBDEV_PImplPrivTemp_new( T ); }
     static T*    createInstance ( void *ref ) { return USBDEV_PImplPrivTemp_new( T,  * USBDEV_PImplPrivTemp_PtrCast( T*, ref ) ); }
     static T*    addRef    ( void *cd )       {
@@ -130,6 +130,14 @@ bool  PImplPrivTemp<T> :: releaseRef ( void *cd )
   @param w_obj [ in_out ] the object pointer of pointer
   @return object pointer duplicated or existed
   @note  this routine check the reference counter, if it is not one, \n
+  
+  
+  
+  
+  
+  
+  
+  
          use copy constructor to duplicate a new one, and return it. NOTE: \n
          the *w_obj will be changed if a new object created. \n
          User must implement the COPY CONSTRUCTOR if used this function.

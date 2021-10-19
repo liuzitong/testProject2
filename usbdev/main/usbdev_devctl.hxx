@@ -37,14 +37,14 @@ public:
 
     //! the motor ID
     enum MotorId {
-        MotorId_Chinrests = 1,
-        MotorId_X = 2,
-        MotorId_Y = 3,
-        MotorId_Z = 4,
-        MotorId_Focus = 5,
-        MotorId_Spectra = 6,
-        MotorId_Light = 7,
-        MotorId_Sample = 8
+        MotorId_X = 1,
+        MotorId_Y = 2,
+        MotorId_Focus = 3,
+        MotorId_Color = 4,
+        MotorId_Light_Spot = 5,
+        MotorId_Shutter = 6,
+        MotorId_Chin_X = 7,
+        MotorId_Chin_y = 8
     };
 
     //! sample motor control stage
@@ -142,17 +142,6 @@ public:
      */
     void  sampleMotorCtl( SampleMotorCtl_Stage stage, qint32 sps, quint8 acc_flag );
 
-    /*!
-     * \brief direct setup the DAC SLed value
-     * \param v [in] the value of the expected SLED
-     */
-    void  setSLED( qint32 v );
-
-    /*!
-     * \brief adjust the SLED value, increase or decrease
-     * \param v [in] the value need to add on current SLED value
-     */
-    void  adjustSLED( qint32 v );
 
     /*!
      * \brief setFrontVideo
@@ -217,19 +206,7 @@ public:
      *    key_bmp == 0x04020180
      *    A7 key pressed, B0 key pressed, C1 key pressed, D2 key pressed.
      */
-    Q_SIGNAL  void  physKeyPressed( quint32 key_bmp );
 
-    //! @brief emitted while physical keys released
-    //! @since 0.3.0
-    Q_SIGNAL  void  physKeyReleased( quint32 key_bmp );
-
-    /*!
-     * @brief  create the instance
-     * @param vid_pid [in] the specified vid pid.
-     * @param cfg_id  [in] optional configuration id. current is 0x01
-     * @note  the default VID_PID is pre-defined by user, current is \n
-     *     0xffffa60e
-     */
     static DevCtl*  createInstance( quint32 vid_pid = 0xffffa60e, quint32 cfg_id = 1 );
 
     //! @brief create the instance ( wait version )
@@ -241,19 +218,6 @@ public:
     static  DevCtl*  createInstanceSync( quint32 vid_pid = 0xffffa60e, quint32 cfg_id = 1 );
 
 
-    /*!
-     * \brief direct setup the DAC SLO value
-     * \param v [in] the value of the expected SLO
-     * \since 0.4
-     */
-    void  setSLO( qint32 v );
-
-    /*!
-     * \brief adjust the SLO value, increase or decrease
-     * \param v [in] the value need to add on current SLO value
-     * \since 0.4
-     */
-    void  adjustSLO( qint32 v );
 
      //! \since 0.5
     //! \param buff_ptr    [in] the data want to write

@@ -25,24 +25,27 @@ static void gRegInQt ( )
 #define T_PrivPtr( o )  usbdev_objcast( FrameDataPriv *, o )
 class USBDEV_HIDDEN  FrameDataPriv : public PImplPrivTemp< FrameDataPriv >{
 private:
-    qint64      m_tm_stamp;
+    quint32     m_crc_veryfication,
+                m_time_stamp;
+    bool        m_shutter_status;
+    quint16     m_stimulate_dot_serial_number;
+    qint32      m_x_motor_coordinate,
+                m_y_motor_coordinate;
     QByteArray  m_raw_data;
-    QImage::Format  m_format;
-    QSize  m_rect_sz; qintptr m_row_pitch;
-    bool   m_is_combined, m_is_rigth_first;
 public :
-    explicit FrameDataPriv ( );
+    explicit FrameDataPriv ();
+    explicit FrameDataPriv (const Profile& );
     FrameDataPriv ( const FrameDataPriv & );
     virtual ~FrameDataPriv( ) Q_DECL_OVERRIDE { }
-    void      init( const QByteArray &, const Profile&, const qint64 &tm );
+    void      init( const QByteArray &);
 
-    inline qint64&   tmStampRef()     { return m_tm_stamp; }
-    inline QByteArray &  rawDataRef() { return m_raw_data; }
-    inline qintptr   rowPitch( )      { return m_row_pitch; }
-    inline QImage::Format  format()   { return m_format; }
-    inline QSize &   rectSizeRef()    { return m_rect_sz;  }
-    inline bool      isCombined()     { return m_is_combined;    }
-    inline bool      isRightFirst()   { return m_is_rigth_first; }
+    inline auto crcVeryficationRef()            -> quint32&     { return m_crc_veryfication; }
+    inline auto timeStampRef()                  -> quint32&     { return m_time_stamp; }
+    inline auto shutterStatusRef()              -> bool&        { return m_shutter_status;}
+    inline auto stimulateDotSerialNumberRef()   -> quint16&     { return m_stimulate_dot_serial_number;}
+    inline auto xMotorCoordinateRef()           -> qint32&      { return m_x_motor_coordinate;}
+    inline auto yMotorCoordinateRef()           -> qint32&      { return m_y_motor_coordinate;}
+    inline auto rawDataRef()                    -> QByteArray&  { return m_raw_data; }
 };
 
 // ============================================================================
@@ -50,11 +53,29 @@ public :
 // ============================================================================
 FrameDataPriv :: FrameDataPriv ( )
 {
-    m_tm_stamp = 0;
+    m_crc_veryfication=0;
+    m_time_stamp = 0;
+    m_shutter_status=false;
+    m_stimulate_dot_serial_number=0;
+    m_x_motor_coordinate=0;
+    m_y_motor_coordinate=0;
     m_raw_data = QByteArray();
-    m_format   = QImage::Format_Grayscale8;
-    m_rect_sz  = QSize(0,0); m_row_pitch = 0;
-    m_is_combined = m_is_rigth_first = false;
+}
+
+// ============================================================================
+// ctor
+// ============================================================================
+FrameDataPriv :: FrameDataPriv (const Profile& profile )
+{
+    m_crc_veryfication=0;
+    m_time_stamp = 0;
+    m_shutter_status=false;
+    m_stimulate_dot_serial_number=0;
+    m_x_motor_coordinate=0;
+    m_y_motor_coordinate=0;
+    m_raw_data = QByteArray();
+    int size=profile.videoSize().width()*profile.videoSize().height();
+    m_raw_data.resize(size);
 }
 
 // ============================================================================
@@ -62,38 +83,28 @@ FrameDataPriv :: FrameDataPriv ( )
 // ============================================================================
 FrameDataPriv :: FrameDataPriv ( const FrameDataPriv &o )
 {
-    m_tm_stamp = o.m_tm_stamp;
-    m_raw_data = o.m_raw_data; m_format = o.m_format;
-    m_rect_sz  = o.m_rect_sz;  m_row_pitch = o.m_row_pitch;
-    m_is_combined = o.m_is_combined; m_is_rigth_first = o.m_is_rigth_first;
+    m_crc_veryfication=o.m_crc_veryfication;
+    m_time_stamp = o.m_time_stamp;
+    m_shutter_status=o.m_shutter_status;
+    m_stimulate_dot_serial_number=o.m_stimulate_dot_serial_number;
+    m_x_motor_coordinate=o.m_x_motor_coordinate;
+    m_y_motor_coordinate=o.m_y_motor_coordinate;
+    m_raw_data = o.m_raw_data;
 }
 
-// ============================================================================
-// initialize
-// ============================================================================
-void  FrameDataPriv :: init( const QByteArray &ba, const Profile &pf, const qint64 &tm )
+// ////////////////////////////////////////////////////////////////////////////
+// help function
+// ////////////////////////////////////////////////////////////////////////////
+static qint32  gReadData_Le_I32( const unsigned char *buff )
 {
-    if ( pf.isEmpty() ) { return; }
-    m_tm_stamp = tm;
+    return  (  int( buff[0] ) & 255 ) | (( int( buff[1]) & 255 ) << 8 ) |
+            (( int( buff[2] ) & 255 ) << 16 ) | (( int( buff[3]) & 255 ) << 24 );
+}
 
-    m_is_combined = pf.isFrontVideoCombined();
-    if ( m_is_combined ) { m_is_rigth_first = true; }
 
-    m_row_pitch = pf.frontVideoRowPitch();
-    m_rect_sz   = pf.frontVideoSize();
-
-    // ------------------------------------------------------------------------
-    // check if the format is 0 or other
-    // ------------------------------------------------------------------------
-    if ( ! ba.isEmpty() ) {
-        if ( ba.size() >= m_row_pitch * m_rect_sz.height() ) {
-            m_raw_data = ba;
-        } else {
-            m_raw_data = QByteArray();
-        }
-    } else {
-        m_raw_data = QByteArray();
-    }
+static qint16  gReadData_Le_I16( const unsigned char *buff )
+{
+    return  qint16( ( int( buff[0] ) & 255 ) | (( int( buff[1] ) & 255 ) << 8 ));
 }
 
 
@@ -138,16 +149,25 @@ FrameData :: ~FrameData( )
 // ============================================================================
 // ctor (build )
 // ============================================================================
-FrameData :: FrameData ( const QByteArray &ba, const Profile &pf, const qint64 &tm )
+FrameData :: FrameData ( const QByteArray &ba)
 {
     gRegInQt(); m_obj = nullptr;
-
     void *d = nullptr;
     FrameDataPriv::buildIfNull( & d );
-    T_PrivPtr( d )->init( ba, pf, tm );
-
+    auto* priv=T_PrivPtr( d );
+    const unsigned char *buff = reinterpret_cast<const unsigned char*>( ba.constData());
+    priv->crcVeryficationRef()=gReadData_Le_I32(&buff[0]);
+    priv->timeStampRef()=gReadData_Le_I32(&buff[4]);
+    priv->shutterStatusRef()=buff[8];
+    priv->xMotorCoordinateRef()=gReadData_Le_I32(&buff[12]);
+    priv->yMotorCoordinateRef()=gReadData_Le_I32(&buff[16]);
+    quint8* data=(quint8*)priv->rawDataRef().data();
+    size_t size=priv->rawDataRef().size();
+    memcpy(data,&buff[20],20);
+    memcpy(&data[20],&buff[20],size-20);
     m_obj = d;
 }
+
 
 // ============================================================================
 // method access
@@ -155,27 +175,23 @@ FrameData :: FrameData ( const QByteArray &ba, const Profile &pf, const qint64 &
 bool      FrameData :: isEmpty() const
 { return ( m_obj == nullptr ); }
 
-qint64    FrameData :: timeStamp( ) const
-{ return ( m_obj != nullptr ? T_PrivPtr( m_obj )->tmStampRef() : 0 ); }
+quint32    FrameData :: timeStamp( ) const
+{ return ( m_obj != nullptr ? T_PrivPtr( m_obj )->timeStampRef() : 0 ); }
+
+quint16   FrameData::shutterStatus() const
+{ return ( m_obj != nullptr ? T_PrivPtr( m_obj )->shutterStatusRef() : 0 ); }
+
+quint16   FrameData::stimulateDotSerialNumber() const
+{ return ( m_obj != nullptr ? T_PrivPtr( m_obj )->stimulateDotSerialNumberRef() : 0 ); }
+
+qint32   FrameData::xMotorCoordinate() const
+{ return ( m_obj != nullptr ? T_PrivPtr( m_obj )->xMotorCoordinateRef() : 0 ); }
+
+qint32   FrameData::yMotorCoordinate() const
+{ return ( m_obj != nullptr ? T_PrivPtr( m_obj )->yMotorCoordinateRef() : 0 ); }
 
 QByteArray  FrameData :: rawData( ) const
 { return ( m_obj != nullptr ? T_PrivPtr( m_obj )->rawDataRef() : QByteArray()); }
-
-QSize       FrameData :: rectSize( ) const
-{ return ( m_obj != nullptr ? T_PrivPtr( m_obj )->rectSizeRef() : QSize(0,0)); }
-
-qintptr     FrameData :: rowPitch( ) const
-{ return ( m_obj != nullptr ? T_PrivPtr( m_obj )->rowPitch() : 0 ); }
-
-QImage::Format  FrameData :: format( ) const
-{ return ( m_obj != nullptr ? T_PrivPtr( m_obj )->format() : QImage::Format_Invalid ); }
-
-bool       FrameData :: isRightFirstAtRawData( ) const
-{ return ( m_obj != nullptr ? T_PrivPtr( m_obj )->isRightFirst() : false ); }
-
-bool       FrameData :: isRightAndLeftCombined( ) const
-{ return ( m_obj != nullptr ? T_PrivPtr( m_obj )->isCombined() : false ); }
-
 
 
 }
