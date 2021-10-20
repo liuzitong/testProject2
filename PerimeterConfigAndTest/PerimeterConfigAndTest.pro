@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -25,14 +25,22 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-        main.cpp \
-        mainwindow.cpp
+        main.cpp\
+        UsbViewerQt.cpp\
+        UsbInterface.cpp\
+        log.cpp \
+    mainWindow.cpp
 
 HEADERS += \
-        mainwindow.h
+        UsbViewerQt.h \
+        UsbInterface.h \
+        log.h \
+    mainWindow.h
 
 FORMS += \
-        mainwindow.ui
+        UsbViewerQt.ui \
+    form.ui \
+    mainwindow.ui
 
 include( $$PWD/../usbdev-build/usbdev/usbdev.pri )
 
@@ -40,3 +48,6 @@ include( $$PWD/../usbdev-build/usbdev/usbdev.pri )
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    UsbViewerQt.qrc
