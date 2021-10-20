@@ -973,7 +973,6 @@ auto     DevCtl :: writeUsbEEPROM( const char *buff_ptr, int size, int eeprom_ad
 }
 
 
-
 // ////////////////////////////////////////////////////////////////////////////
 // static functions
 // ////////////////////////////////////////////////////////////////////////////
@@ -982,6 +981,8 @@ auto     DevCtl :: writeUsbEEPROM( const char *buff_ptr, int size, int eeprom_ad
 // ============================================================================
 UsbDev::DevCtl* DevCtl :: createInstance( quint32 vid_pid, quint32 cfg_id )
 {
+    qDebug()<<"hello world";
+    return nullptr;
     return usbdev_new_qobj( UsbDev::DevCtl, vid_pid, cfg_id );
 }
 
@@ -990,8 +991,10 @@ UsbDev::DevCtl* DevCtl :: createInstance( quint32 vid_pid, quint32 cfg_id )
 // ============================================================================
 UsbDev::DevCtl*   DevCtl :: createInstanceSync( quint32 vid_pid, quint32 cfg_id )
 {  return usbdev_new_qobj( UsbDev::DevCtl, vid_pid, cfg_id, true ); }
-
 }
+
+
+
 
 #include "usbdev_devctl.moc"
 #endif

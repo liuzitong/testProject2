@@ -17,6 +17,7 @@
 
     ! contains( USBDEV_CFG, usbdev_main_cfg_no_hdr ) {   
         HEADERS_MAIN += \
+              $$PWD/usbdev_config.hxx \
               $$PWD/usbdev_devctl.hxx \
               $$PWD/usbdev_profile.hxx \
               $$PWD/usbdev_statusdata.hxx \
@@ -36,6 +37,7 @@
 
      ! contains( USBDEV_CFG, usbdev_main_cfg_no_src ) {
         SOURCES += \
+               $$PWD/usbdev_config.cxx \
                $$PWD/usbdev_devctl.cxx \
                $$PWD/usbdev_profile.cxx \
                $$PWD/usbdev_statusdata.cxx \
@@ -70,10 +72,4 @@
     }
 
 }
-
-HEADERS += \
-    $$PWD/usbdev_config.hxx
-
-SOURCES += \
-    $$PWD/usbdev_config.cxx
 

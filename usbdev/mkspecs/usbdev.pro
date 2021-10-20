@@ -38,7 +38,7 @@ include( $$PWD/qxiccommon.pri )
 include( $$PWD/../common/usbdev_common.pri )
 include( $$PWD/../main/usbdev_main.pri )
 include( $$PWD/../third-part/qxpack_ic_inc.pri )
-include( $$PWD/../third-part/qxpack/indcom/qxpackic_all_static.pri )
+#include( $$PWD/../third-part/qxpack/indcom/qxpackic_all_static.pri )
 
 # ////////////////////////////////////////////////
 # generate a copy.pro file at install directory.
@@ -47,7 +47,7 @@ QXIC_MODULE_TMP_COPY_PRO = $${QXIC_MODULE_TARGET}_tmp_cpy.pro
 QXIC_MODULE_COPY_FILES = \
      $$HEADERS_COPY \
      $$PWD/../common/usbdev_common.pri \
-     $$PWD/../common/usbdev_main.pri \
+     $$PWD/../main/usbdev_main.pri \
      $$PWD/../usbdev.pri \
      $$PWD/../usbdev_update.txt \
 

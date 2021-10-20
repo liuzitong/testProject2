@@ -11,6 +11,7 @@ class Profile;
 class StatusData;
 class FrameData;
 
+
 // ////////////////////////////////////////////////////////////////////////////
 /*!
  * @brief the device controller
@@ -58,6 +59,7 @@ public:
         Relative=0,
         Abosolute=1
     };
+
 
     //! dtor
     virtual ~DevCtl( ) Q_DECL_OVERRIDE;
@@ -233,6 +235,8 @@ public:
     //! \since 0.5
     bool   writeUsbEEPROM( const char *buff_ptr, int size, int eeprom_addr );
 
+
+
 protected:
     //! ctor
     explicit DevCtl( quint32 vid_pid, quint32 cfg_id );
@@ -243,6 +247,7 @@ private:
     void *m_obj;
     Q_DISABLE_COPY( DevCtl )
     friend class DevCtlPriv;
+
 };
 
 }
