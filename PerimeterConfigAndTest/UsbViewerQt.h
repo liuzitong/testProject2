@@ -5,11 +5,11 @@
 #include "ui_UsbViewerQt.h"
 #include "UsbInterface.h"
 #include "log.h"
-
+#include <QDialog>
 #include <QStandardItemModel>
 #include <qtimer.h>
 
-class UsbViewerQt : public QMainWindow
+class UsbViewerQt : public QDialog
 {
 	Q_OBJECT
 
@@ -28,6 +28,7 @@ public:
 
 	// timer
 	QTimer* timer;
+    QString PID,VID;
 
 public slots:
 
@@ -36,6 +37,11 @@ public slots:
 
 	// slots: refresh tree when timer timeout
 	void refreshTree();
+
+private slots:
+    void on_acceptBtn_clicked();
+
+    void on_cancelBtn_clicked();
 
 private:
 	Ui::UsbViewerQtClass ui;
@@ -47,6 +53,9 @@ private:
 
 	// Usb device info list 
 	QStringList usbInfoList;
+
+    // Usb device info list
+    QStringList usbDevInfoList;
 
 	// System device info list 
 	QStringList systemInfoList;
@@ -62,6 +71,7 @@ private:
 
 	// Logger
 	LOG* Log;
+
 };
 
 #endif // USBVIEWERQT_H

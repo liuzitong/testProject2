@@ -66,7 +66,7 @@ public:
 
     //! initialize, call this to do init.
     //! @note this function will drop old context and retry connect to device
-    void   init( );
+    void   reinit( );
 
     //! return the work status
     WorkStatus  workStatus( ) const;
@@ -199,20 +199,6 @@ public:
      */
     Q_SIGNAL  void  newProfile( );
 
-    /*!
-     * @since 0.3.0
-     * @brief emitted while physical keys pressed
-     * @param  grp_keys [in]  the keys bitmap
-     * @note
-     *    b7  to b0 :  means A7 to A0 keys
-     *    b15 to b8 :  means B7 to B0 keys
-     *    b23 to b16:  means C7 to C0 keys
-     *    b31 to b24:  means D7 to D0 keys
-     *   value '0' for every key means not used, value '1' for this key is used
-     * @example
-     *    key_bmp == 0x04020180
-     *    A7 key pressed, B0 key pressed, C1 key pressed, D2 key pressed.
-     */
 
     static DevCtl*  createInstance( quint32 vid_pid = 0xffffa60e, quint32 cfg_id = 1 );
 

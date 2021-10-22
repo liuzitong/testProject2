@@ -3,10 +3,16 @@
 #include <QtNetwork\qhostinfo.h>
 
 UsbViewerQt::UsbViewerQt(QWidget *parent)
-	: QMainWindow(parent)
+    : QDialog (parent)
 {
 	ui.setupUi(this);
     setWindowIcon(QIcon(":/Icon/Token.png"));
+
+    Qt::WindowFlags windowFlag  = Qt::Dialog;
+    windowFlag                  |= Qt::WindowMinimizeButtonHint;
+    windowFlag                  |= Qt::WindowMaximizeButtonHint;
+    windowFlag                  |= Qt::WindowCloseButtonHint;
+    setWindowFlags(windowFlag);
 
 	rootModel = NULL;
 	
@@ -54,6 +60,11 @@ void UsbViewerQt::initTreeModel()
     QStandardItem* usbTreeRoot = new QStandardItem(QIcon(":/Icon/USB.png"), tr("USB"));
 	rootItem->appendRow(usbTreeRoot);
 	refreshDeviceList(DeviceClass_USB, usbTreeRoot);
+
+    // USB device Root Tree
+    QStandardItem* usbDevTreeRoot = new QStandardItem(QIcon(":/Icon/USB.png"), tr("USBDev"));
+    rootItem->appendRow(usbDevTreeRoot);
+    refreshDeviceList(DeviceClass_USBDEV, usbDevTreeRoot);
 
 	// System device Root Tree 
     QStandardItem* systemDeviceTreeRoot = new QStandardItem(QIcon(":/Icon/SystemDevice.png"), tr("SystemDevice"));
@@ -107,6 +118,10 @@ void UsbViewerQt::refreshDeviceList(DeviceClass deviceClass, QStandardItem* devi
         IconPath = ":/Icon/USB.png";
 		this->usbInfoList = deviceInfoList;
 		break;
+    case DeviceClass_USBDEV:
+        IconPath = ":/Icon/USB.png";
+        this->usbDevInfoList = deviceInfoList;
+        break;
 	case DeviceClass_MOUSE:
         IconPath = ":/Icon/Mouse.png";
 		this->mouseInfoList = deviceInfoList;
@@ -158,6 +173,10 @@ void UsbViewerQt::getTreeClicked(const QModelIndex iIndex)
 		deviceInfoList = this->usbInfoList;
 		deviceClass = DeviceClass_USB;
 	}
+    else if (parentItemText == "USBDev"){
+        deviceInfoList = this->usbDevInfoList;
+        deviceClass = DeviceClass_USBDEV;
+    }
 	else if (parentItemText == "SystemDevice"){
 		deviceInfoList = this->systemInfoList;
 		deviceClass = DeviceClass_SYSTEM;
@@ -194,33 +213,33 @@ void UsbViewerQt::getTreeClicked(const QModelIndex iIndex)
     int pos = result.indexOf("VID_");
     if(pos!=-1)
     {
-         ui.VID->setText(result.mid(pos+4,4));
+        VID = result.mid(pos+4,4);
     }
     else
     {
         pos = result.indexOf("VID");
         if(pos!=-1)
         {
-            ui.VID->setText(result.mid(pos+3,4));
+            VID = result.mid(pos+3,4);
         }
         else{
-            ui.VID->setText("invalid");
+            VID = "invalid";
         }
     }
     pos=result.indexOf("PID_");
     if(pos!=-1)
     {
-         ui.PID->setText(result.mid(pos+4,4));
+         PID=result.mid(pos+4,4);
     }
     else
     {
         pos = result.indexOf("PID");
         if(pos!=-1)
         {
-            ui.PID->setText(result.mid(pos+3,4));
+            PID=result.mid(pos+3,4);
         }
         else{
-            ui.PID->setText("invalid");
+            PID="invalid";
         }
     }
 
@@ -231,4 +250,14 @@ void UsbViewerQt::getTreeClicked(const QModelIndex iIndex)
 void UsbViewerQt::refreshTree()
 {
 	initTreeModel();
+}
+
+void UsbViewerQt::on_acceptBtn_clicked()
+{
+    accept();
+}
+
+void UsbViewerQt::on_cancelBtn_clicked()
+{
+    reject();
 }

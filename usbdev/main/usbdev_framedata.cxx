@@ -37,7 +37,7 @@ public :
     explicit FrameDataPriv (const Profile& );
     FrameDataPriv ( const FrameDataPriv & );
     virtual ~FrameDataPriv( ) Q_DECL_OVERRIDE { }
-    void      init( const QByteArray &);
+//    void      init( const QByteArray &);
 
     inline auto crcVeryficationRef()            -> quint32&     { return m_crc_veryfication; }
     inline auto timeStampRef()                  -> quint32&     { return m_time_stamp; }

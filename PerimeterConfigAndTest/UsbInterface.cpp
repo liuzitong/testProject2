@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <wchar.h>
 
+
 #pragma comment(lib, "setupapi.lib")
 
 static int wideCharToASCII(wchar_t* wchar_buffer, char** char_buffer)
@@ -37,6 +38,9 @@ int retrieveDeviceProperty(
 	case DeviceClass_USB:
 		guid = GUID_DEVCLASS_USB;
 		break;
+    case DeviceClass_USBDEV:
+        guid = {0x88bae032, 0x5a81, 0x49f0, {0xbc, 0x3d, 0xa4, 0xff, 0x13, 0x82, 0x16, 0xd6}};
+        break;
 	case DeviceClass_MOUSE:
 		guid = GUID_DEVCLASS_MOUSE;
 		break;
@@ -46,6 +50,8 @@ int retrieveDeviceProperty(
 	case DeviceClass_KEYBOARD:
 		guid = GUID_DEVCLASS_KEYBOARD;
 		break;
+
+
 	default:
 		break;
 	}

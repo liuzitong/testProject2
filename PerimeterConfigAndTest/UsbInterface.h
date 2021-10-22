@@ -8,6 +8,7 @@ enum DeviceClass{
 	DeviceClass_MOUSE,
 	DeviceClass_SYSTEM,
 	DeviceClass_USB,
+    DeviceClass_USBDEV,
 	DeviceClass_NET,
 	DeviceClass_KEYBOARD
 };

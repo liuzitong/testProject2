@@ -21,6 +21,22 @@
 
 namespace UsbDev {
 
+static QString toHexadecimal(const QByteArray &byteArray)
+{
+    QString str;
+    for(int i = 0; i< /*byteArray.length()*/50; i++){
+//        QString byteStr = QString::number(static_cast<uchar>(byteArray[i]), 16, 2);
+//        if(byteStr.length() == 1) str += "0" + byteStr;
+//        else
+//       QString tempStr;
+       QString str1 = QString("%1").arg(i,2,10, QLatin1Char('0'));
+       uchar temp=static_cast<uchar>(byteArray[i]);
+       QString str2 = QString("%1").arg(temp,2,16, QLatin1Char('0'));
+       str.append(QString("%1:%2 ").arg(str1).arg(str2));
+    }
+    return str;
+}
+
 // ////////////////////////////////////////////////////////////////////////////
 // helper function
 // ////////////////////////////////////////////////////////////////////////////
@@ -128,14 +144,16 @@ DevCtl_Worker :: ~DevCtl_Worker ( )
 }
 
 // ============================================================================
-// method: handle the initialize
+// method: handle the initialize 初始化的时候读取一次. 读取profile 和 config
 // ============================================================================
 void   DevCtl_Worker :: init( bool req_emit )
 {
+    qDebug()<<__FILE__<<__FUNCTION__<<__LINE__;
     if ( m_usb_dev == nullptr ) {
         m_wks = DevCtl::WorkStatus_S_ConnectToDev;
         if ( req_emit ) { emit this->workStatusChanged( DevCtl::WorkStatus_S_ConnectToDev ); }
-        m_usb_dev = usbdev_new( SciPack::NwkUsbObj2, m_vid_pid, uint8_t( m_cfg_id ), 0xff000000, 0, 0 );
+        m_usb_dev = usbdev_new( SciPack::NwkUsbObj2, m_vid_pid, uint8_t( m_cfg_id ), 0xff000000, 0, 0 );//连接实例
+        qDebug()<<"status is:"<<m_usb_dev->status();
         if ( m_usb_dev->status() == SciPack::NwkUsbObj2::StatusID_S_OK ) {
             m_wks = DevCtl::WorkStatus_S_OK;
             if ( req_emit ) { emit this->workStatusChanged( DevCtl::WorkStatus_S_OK ); }
@@ -152,7 +170,7 @@ void   DevCtl_Worker :: init( bool req_emit )
 }
 
 // ============================================================================
-// method: work trigger
+// method: work trigger   轮询式读取.读取视频和轮询数据.
 // ============================================================================
 void   DevCtl_Worker :: trigger_di( )
 {
@@ -202,6 +220,7 @@ bool    DevCtl_Worker :: cmdComm_strInSync( unsigned char *buff, int buff_sz )
 // ============================================================================
 bool   DevCtl_Worker :: cmd_ReadProfile( bool req_emit )
 {
+    qDebug()<<__FILE__<<__FUNCTION__<<__LINE__;
     if ( ! this->isDeviceWork()) { return false; }
 
     unsigned char buff[512]; bool ret = true;
@@ -234,15 +253,22 @@ bool   DevCtl_Worker :: cmd_ReadStatusData()
 
     unsigned char buff[512]; bool ret = true;
     if ( ret ) {
-        buff[0] = 0x5a; buff[1] = 0xf1; buff[2] = 0x55; buff[3] = 0xaa;
+        buff[0] = 0x55; buff[1] = 0xaa; buff[2] = 0xa4; buff[3] = 0x00;
+        buff[4] = 0x00; buff[5] = 0x02;
         ret = this->cmdComm_bulkOutSync( buff, sizeof( buff ));
         if ( ! ret  ) { qWarning("send read status command failed."); }
     }
     if ( ret ) {
         ret = this->cmdComm_bulkInSync( buff, sizeof( buff ));
-        if ( ! ret ) { qWarning("recv. stauts data failed."); }
+        if ( ! ret ) { qWarning("recv. status data failed."); }
     }
     if ( ret ) {
+        qDebug()<<"status Data:";
+
+        QByteArray qa;
+        qa= QByteArray::fromRawData( reinterpret_cast<const char*>(buff),sizeof(buff));
+        QString str=toHexadecimal(qa);
+        qDebug()<<qPrintable(str);
         StatusData sd( QByteArray::fromRawData( reinterpret_cast<const char*>(buff),sizeof(buff)));
         if ( ! sd.isEmpty()) {
             emit this->newStatusData( sd );
@@ -544,9 +570,6 @@ public:
     Q_SIGNAL void  newStatusData( );
     Q_SIGNAL void  newFrameData( );
     Q_SIGNAL void  newProfile( );
-    Q_SIGNAL void  physKeyPressed ( quint32 ); // since 0.3.0
-    Q_SIGNAL void  physKeyReleased( quint32 ); // since 0.3.0
-    Q_SIGNAL void  physKeyClicked ( quint32 ); // since 0.3.0
 };
 
 // ============================================================================
@@ -615,6 +638,7 @@ void  DevCtlPriv :: ensureTimer( bool sw )
 // ============================================================================
 void  DevCtlPriv :: ensureWorker( bool sw )
 {
+    qDebug()<<__FILE__<<__FUNCTION__<<__LINE__;
     if ( sw  ) {  // create worker in work thread
         this->ensureWorker( false );
         m_wkr = qobject_cast<DevCtl_Worker*>(
@@ -630,9 +654,6 @@ void  DevCtlPriv :: ensureWorker( bool sw )
         QObject::connect( m_wkr, SIGNAL(newStatusData( const UsbDev::StatusData&)), this, SLOT(wkr_onNewStatusData(const UsbDev::StatusData&)));
         QObject::connect( m_wkr, SIGNAL(newFrameData (const UsbDev::FrameData&)), this, SLOT(wkr_onNewFrameData(const UsbDev::FrameData&)));
         QObject::connect( m_wkr, SIGNAL(videoStatusChanged(bool)), this, SLOT(wkr_onVideoStatusChanged(bool)));
-        QObject::connect( m_wkr, SIGNAL(physKeyPressed (quint32)),  this, SIGNAL(physKeyPressed (quint32)));
-        QObject::connect( m_wkr, SIGNAL(physKeyReleased(quint32)),  this, SIGNAL(physKeyReleased(quint32)));
-        QObject::connect( m_wkr, SIGNAL(physKeyClicked (quint32)),  this, SIGNAL(physKeyClicked (quint32)));
 
         if ( m_trg_tmr != Q_NULLPTR ) { // connect the trigger function
            QObject::connect( m_trg_tmr, SIGNAL(timeout()), m_wkr, SLOT(trigger_di()), Qt::DirectConnection );
@@ -652,11 +673,12 @@ void  DevCtlPriv :: ensureWorker( bool sw )
 // ============================================================================
 void  DevCtlPriv :: init( bool req_sync )
 {
-    this->ensureTimer ( true );
-    this->ensureWorker( true );
+    qDebug()<<__FILE__<<__FUNCTION__<<__LINE__;
+    this->ensureTimer ( true );  //init timer .
+    this->ensureWorker( true );   //here create instance of worker and connect signals and slots include timer connect to triggerdi.
     if ( m_wkr != Q_NULLPTR ) {
         QMetaObject::invokeMethod(
-            m_wkr, "init", ( req_sync ? Qt::BlockingQueuedConnection : Qt::QueuedConnection ),
+            m_wkr, "init", ( req_sync ? Qt::BlockingQueuedConnection : Qt::QueuedConnection ),  //init dev_wkr 读取profile. config.
             Q_ARG( bool, req_sync ? false : true  ) // req_sync(true) means need not to emit signal about workstatus and profile.
         );
         if ( req_sync ) { // added since 0.3.1
@@ -727,6 +749,7 @@ void  DevCtlPriv :: wkr_onNewProfile( const UsbDev::Profile &pf )
 // ============================================================================
 static DevCtlPriv *  gCreateDevCtlPriv( DevCtl *dev, quint32 vid_pid, quint32 cfg_id )
 {
+    qDebug()<<__FILE__<<__FUNCTION__<<__LINE__;
     DevCtlPriv *priv = usbdev_new( DevCtlPriv, vid_pid, cfg_id );
 
     // ------------------------------------------------------------------------
@@ -738,9 +761,6 @@ static DevCtlPriv *  gCreateDevCtlPriv( DevCtl *dev, quint32 vid_pid, quint32 cf
     QObject::connect( priv, SIGNAL(newStatusData()), dev, SIGNAL(newStatusData()) );
     QObject::connect( priv, SIGNAL(workStatusChanged(int)), dev, SIGNAL(workStatusChanged(int)));
 
-    // since 0.3.0
-    QObject::connect( priv, SIGNAL(physKeyPressed (quint32)), dev, SIGNAL(physKeyPressed (quint32)));
-    QObject::connect( priv, SIGNAL(physKeyReleased(quint32)), dev, SIGNAL(physKeyReleased(quint32)));
 
     return priv;
 }
@@ -789,7 +809,7 @@ DevCtl::WorkStatus  DevCtl :: workStatus() const
 // ============================================================================
 // init the device
 // ============================================================================
-void  DevCtl :: init ( )
+void  DevCtl :: reinit ( )
 {
     if ( T_PrivPtr( m_obj )->isInited()) {
         quint32 vid_pid = T_PrivPtr( m_obj )->vidPid();
@@ -981,8 +1001,6 @@ auto     DevCtl :: writeUsbEEPROM( const char *buff_ptr, int size, int eeprom_ad
 // ============================================================================
 UsbDev::DevCtl* DevCtl :: createInstance( quint32 vid_pid, quint32 cfg_id )
 {
-    qDebug()<<"hello world";
-    return nullptr;
     return usbdev_new_qobj( UsbDev::DevCtl, vid_pid, cfg_id );
 }
 
