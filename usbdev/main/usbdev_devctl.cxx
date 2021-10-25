@@ -521,6 +521,7 @@ protected:
     }
 
     inline void  emitNewStatusData( )
+
     {
         if ( m_status_data_emit_cntr < 1 ) {
             ++ m_status_data_emit_cntr; emit this->newStatusData();
@@ -534,6 +535,8 @@ protected:
     Q_SLOT void  wkr_onNewStatusData( const UsbDev::StatusData & );
     Q_SLOT void  wkr_onNewProfile   ( const UsbDev::Profile & );
     Q_SLOT void  wkr_onVideoStatusChanged( bool );
+
+
 public:
     explicit DevCtlPriv( quint32 vid_pid, quint32 cfg );
     virtual ~DevCtlPriv( ) Q_DECL_OVERRIDE;

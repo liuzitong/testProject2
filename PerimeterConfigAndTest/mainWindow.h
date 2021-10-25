@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <usbdev/main/usbdev_devctl.hxx>
+#include <usbdev/main/usbdev_statusdata.hxx>
 
 namespace Ui {
 class MainWindow;
@@ -18,14 +19,16 @@ public:
     QString PID,VID;
 
 private slots:
-    void on_pushButton_clicked();
 
     void on_actionchooseDevice_triggered();
 
+    void getData();
+
+    void getData2();
 private:
     Ui::MainWindow *ui;
     UsbDev::DevCtl *devCtl;
-
+    UsbDev::StatusData data;
 };
 
 #endif // MAINWINDOW_H
