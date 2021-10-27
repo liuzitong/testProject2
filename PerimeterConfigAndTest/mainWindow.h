@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <usbdev/main/usbdev_devctl.hxx>
 #include <usbdev/main/usbdev_statusdata.hxx>
+#include <QStandardItemModel>
 
 namespace Ui {
 class MainWindow;

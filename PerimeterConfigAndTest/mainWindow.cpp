@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "UsbViewerQt.h"
+#include "UsbViewer/UsbViewerQt.h"
 #include <QDebug>
 
 
@@ -8,13 +8,18 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+
+
+
     ui->setupUi(this);
+    setWindowFlags(windowFlags()&~Qt::WindowMaximizeButtonHint);    // 禁止最大化按钮
+    setFixedSize(this->width(),this->height());                     // 禁止拖动窗口大小
     VID="FFFF";PID="A60D";
     ui->statusBar->showMessage(QString("VID:%1   PID:%2").arg(VID).arg(PID));
     quint32 vid_pid=VID.toInt(nullptr,16)<<16|PID.toInt(nullptr,16);
     qDebug("vid_pid is:%x",vid_pid);
     devCtl=UsbDev::DevCtl::createInstance(vid_pid);
-    connect(devCtl,&UsbDev::DevCtl::newStatusData,this,&MainWindow::getData);
+//    connect(devCtl,&UsbDev::DevCtl::newStatusData,this,&MainWindow::getData);
 }
 
 MainWindow::~MainWindow()
@@ -39,7 +44,7 @@ void MainWindow::on_actionchooseDevice_triggered()
     delete devCtl;
     quint32 vid_pid=VID.toInt(nullptr,16)<<16|PID.toInt(nullptr,16);
     devCtl=UsbDev::DevCtl::createInstance(vid_pid);
-    connect(devCtl,&UsbDev::DevCtl::newStatusData,this,&MainWindow::getData2);
+//    connect(devCtl,&UsbDev::DevCtl::newStatusData,this,&MainWindow::getData2);
 }
 
 void MainWindow::getData()
