@@ -29,6 +29,18 @@ QXIC_MODULE_OTHER_COPY_FILES =
 win32:VERSION = 0.5.0.0
 else: VERSION = 0.5.0
 
+SRCFILE = $$QXIC_MODULE_DESTDIR/$${TARGET}d.dll
+PERIMETERDIR = $$PWD/../../PerimeterConfigAndTest/bin/$${TARGET}d.dll
+message( $$SRCFILE)
+message( $$PERIMETERDIR)
+
+SRCFILE_WIN = $$replace(SRCFILE, "/", "\\")
+PERIMETERDIR_WIN = $$replace(PERIMETERDIR, "/", "\\")
+message( $$SRCFILE_WIN)
+message( $$PERIMETERDIR_WIN)
+
+QMAKE_POST_LINK += copy /Y $$SRCFILE_WIN $$PERIMETERDIR_WIN
+
 # ////////////////////////////////////////////////
 # sub modules section
 # ////////////////////////////////////////////////

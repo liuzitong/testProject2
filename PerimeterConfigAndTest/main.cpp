@@ -1,4 +1,3 @@
-#include "UsbViewer/UsbViewerQt.h"
 #include "mainWindow.h"
 #include <QtWidgets/QApplication>
 

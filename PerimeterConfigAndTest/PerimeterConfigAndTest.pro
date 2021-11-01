@@ -8,7 +8,7 @@ QT       += core gui network multimediawidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = PerimeterConfigAndTest
+
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -24,6 +24,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG += c++11 console
 
+DESTDIR =$$PWD/bin
+
+CONFIG(debug, debug|release) {
+    TARGET = $$join(TARGET,,,d)
+}
+
+
+
 SOURCES += \
     main.cpp \
     mainWindow.cpp
@@ -33,13 +41,13 @@ HEADERS += \
 FORMS += \
     mainwindow.ui \
 
-include( $$PWD/../usbdev-build/usbdev/usbdev.pri )
+include($$PWD/../usbdev-build/usbdev/usbdev.pri )
 include($$PWD/UsbViewer/UsbViewerQt.pri)
 
 # Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
+#qnx: target.path = /tmp/$${TARGET}/bin
+#else: unix:!android: target.path = /opt/$${TARGET}/bin
+#!isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
     permeterconfigandtest.qrc

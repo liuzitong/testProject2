@@ -26,6 +26,9 @@ private slots:
     void getData();
 
     void getData2();
+
+    void on_pushButton_relativeMoveChin_clicked();
+
 private:
     Ui::MainWindow *ui;
     UsbDev::DevCtl *devCtl;

@@ -4,7 +4,6 @@
 #include <QtWidgets/QMainWindow>
 #include "ui_UsbViewerQt.h"
 #include "UsbInterface.h"
-#include "log.h"
 #include <QDialog>
 #include <QStandardItemModel>
 #include <qtimer.h>
@@ -69,8 +68,6 @@ private:
 	// Keyboard device info list
 	QStringList keyBoardInfoList;
 
-	// Logger
-	LOG* Log;
 
 };
 

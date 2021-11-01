@@ -1,5 +1,4 @@
 #include "UsbInterface.h"
-#include "log.h"
 
 #include <Windows.h>
 #include <SetupAPI.h>
@@ -24,7 +23,6 @@ int retrieveDeviceProperty(
 	DeviceClass deviceClass,
 	char*       buffer)
 {
-	ENTER();
 
 	int res = 0;
 	HDEVINFO hDevInfo;
@@ -115,7 +113,6 @@ int retrieveDeviceProperty(
 
 		{
 			// retrieve DESCRIPTION
-			LOG_DEBUG("retrieve DESCRIPTION");
 			if (!SetupDiGetDeviceRegistryProperty(
 				hDevInfo,
 				&DeviceInfoData,
@@ -139,7 +136,6 @@ int retrieveDeviceProperty(
 
 		{
 			// retrieve HARDWAREID
-			LOG_DEBUG("retrieve HARDWAREID");
 			if (!SetupDiGetDeviceRegistryProperty(
 				hDevInfo,
 				&DeviceInfoData,
@@ -163,7 +159,6 @@ int retrieveDeviceProperty(
 
 		{
 			// retrieve COMPATIBLEIDS
-			LOG_DEBUG("retrieve COMPATIBLEIDS");
 			if (!SetupDiGetDeviceRegistryProperty(
 				hDevInfo,
 				&DeviceInfoData,
@@ -187,7 +182,6 @@ int retrieveDeviceProperty(
 
 		{
 			// retrieve SERVICE
-			LOG_DEBUG("retrieve SERVICE");
 			if (!SetupDiGetDeviceRegistryProperty(
 				hDevInfo,
 				&DeviceInfoData,
@@ -211,7 +205,6 @@ int retrieveDeviceProperty(
 
 		{
 			// retrieve CLASS
-			LOG_DEBUG("retrieve CLASS");
 			if (!SetupDiGetDeviceRegistryProperty(
 				hDevInfo,
 				&DeviceInfoData,
@@ -235,7 +228,6 @@ int retrieveDeviceProperty(
 
 		{
 			// retrieve CLASSGUID
-			LOG_DEBUG("retrieve CLASSGUID");
 			if (!SetupDiGetDeviceRegistryProperty(
 				hDevInfo,
 				&DeviceInfoData,
@@ -259,7 +251,6 @@ int retrieveDeviceProperty(
 
 		{
 			// retrieve DRIVER
-			LOG_DEBUG("retrieve DRIVER");
 			if (!SetupDiGetDeviceRegistryProperty(
 				hDevInfo,
 				&DeviceInfoData,
@@ -283,7 +274,6 @@ int retrieveDeviceProperty(
 
 		{
 			// retrieve MFG
-			LOG_DEBUG("retrieve MFG");
 			if (!SetupDiGetDeviceRegistryProperty(
 				hDevInfo,
 				&DeviceInfoData,
@@ -307,7 +297,6 @@ int retrieveDeviceProperty(
 
 		{
 			// retrieve LOCATION_INFORMATION
-			LOG_DEBUG("retrieve LOCATION_INFORMATION");
 			if (!SetupDiGetDeviceRegistryProperty(
 				hDevInfo,
 				&DeviceInfoData,
@@ -331,7 +320,6 @@ int retrieveDeviceProperty(
 
 		{
 			// retrieve DEVICE_POWER_DATA
-			LOG_DEBUG("retrieve DEVICE_POWER_DATA");
 			if (!SetupDiGetDeviceRegistryProperty(
 				hDevInfo,
 				&DeviceInfoData,
@@ -355,7 +343,6 @@ int retrieveDeviceProperty(
 
 		{
 			// retrieve FRIENDLYNAME
-			LOG_DEBUG("retrieve FRIENDLYNAME");
 			if (!SetupDiGetDeviceRegistryProperty(
 				hDevInfo,
 				&DeviceInfoData,
@@ -379,7 +366,6 @@ int retrieveDeviceProperty(
 
 		{
 			// retrieve LOCATION_PATHS
-			LOG_DEBUG("retrieve LOCATION_PATHS");
 			if (!SetupDiGetDeviceRegistryProperty(
 				hDevInfo,
 				&DeviceInfoData,
@@ -404,7 +390,6 @@ int retrieveDeviceProperty(
 
 	SetupDiDestroyDeviceInfoList(&hDevInfo);
 
-	EXIT();
 	return res;
 }
 
@@ -414,7 +399,6 @@ int getDeviceProperty(
 	int         index,
 	char*       buffer)
 {
-	ENTER();
 
 	int res = 0;
 
@@ -431,6 +415,5 @@ int getDeviceProperty(
 	res = retrieveDeviceProperty(index, deviceClass, buffer);
 
 exit:
-	EXIT();
 	return res;
 }

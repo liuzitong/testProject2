@@ -169,7 +169,7 @@
                  </widget>
                 </item>
                 <item row="0" column="3">
-                 <widget class="QLineEdit" name="lineEdit_2">
+                 <widget class="QLineEdit" name="lineEdit_speedChinHoz">
                   <property name="maximumSize">
                    <size>
                     <width>40</width>
@@ -192,7 +192,7 @@
                  </widget>
                 </item>
                 <item row="1" column="1">
-                 <widget class="QLineEdit" name="lineEdit_5">
+                 <widget class="QLineEdit" name="lineEdit_posChinVert">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -208,7 +208,7 @@
                  </widget>
                 </item>
                 <item row="0" column="1">
-                 <widget class="QLineEdit" name="lineEdit">
+                 <widget class="QLineEdit" name="lineEdit_posChinHoz">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -231,7 +231,7 @@
                  </widget>
                 </item>
                 <item row="1" column="3">
-                 <widget class="QLineEdit" name="lineEdit_6">
+                 <widget class="QLineEdit" name="lineEdit_speedChinVert">
                   <property name="maximumSize">
                    <size>
                     <width>40</width>
@@ -248,14 +248,14 @@
                  </widget>
                 </item>
                 <item row="1" column="4">
-                 <widget class="QCheckBox" name="checkBox_15">
+                 <widget class="QCheckBox" name="checkBox_testChinVert">
                   <property name="text">
                    <string/>
                   </property>
                  </widget>
                 </item>
                 <item row="0" column="4">
-                 <widget class="QCheckBox" name="checkBox_16">
+                 <widget class="QCheckBox" name="checkBox_testChinHoz">
                   <property name="text">
                    <string/>
                   </property>
@@ -268,12 +268,12 @@
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
                 </property>
-                <widget class="QPushButton" name="pushButton">
+                <widget class="QPushButton" name="pushButton_relativeMoveChin">
                  <property name="text">
                   <string>相对移动</string>
                  </property>
                 </widget>
-                <widget class="QPushButton" name="pushButton_2">
+                <widget class="QPushButton" name="pushButton_absoluteMoveChin">
                  <property name="text">
                   <string>绝对移动</string>
                  </property>
@@ -304,7 +304,7 @@
               <item>
                <layout class="QGridLayout" name="gridLayout_5">
                 <item row="3" column="4">
-                 <widget class="QCheckBox" name="checkBox_13">
+                 <widget class="QCheckBox" name="checkBox_testColor">
                   <property name="text">
                    <string/>
                   </property>
@@ -324,7 +324,7 @@
                  </spacer>
                 </item>
                 <item row="2" column="4">
-                 <widget class="QCheckBox" name="checkBox_12">
+                 <widget class="QCheckBox" name="checkBox_testFocus">
                   <property name="text">
                    <string/>
                   </property>
@@ -357,7 +357,7 @@
                  </spacer>
                 </item>
                 <item row="4" column="4">
-                 <widget class="QCheckBox" name="checkBox_14">
+                 <widget class="QCheckBox" name="checkBox_testSpot">
                   <property name="text">
                    <string/>
                   </property>
@@ -390,21 +390,21 @@
                  </spacer>
                 </item>
                 <item row="0" column="4">
-                 <widget class="QCheckBox" name="checkBox_10">
+                 <widget class="QCheckBox" name="checkBox_testX">
                   <property name="text">
                    <string/>
                   </property>
                  </widget>
                 </item>
                 <item row="1" column="4">
-                 <widget class="QCheckBox" name="checkBox_11">
+                 <widget class="QCheckBox" name="checkBox_testY">
                   <property name="text">
                    <string/>
                   </property>
                  </widget>
                 </item>
                 <item row="2" column="1">
-                 <widget class="QLineEdit" name="lineEdit_9">
+                 <widget class="QLineEdit" name="lineEdit_posFocus">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -420,7 +420,7 @@
                  </widget>
                 </item>
                 <item row="0" column="1">
-                 <widget class="QLineEdit" name="lineEdit_3">
+                 <widget class="QLineEdit" name="lineEdit_posX">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -456,7 +456,7 @@
                  </widget>
                 </item>
                 <item row="0" column="3">
-                 <widget class="QLineEdit" name="lineEdit_4">
+                 <widget class="QLineEdit" name="lineEdit_speedX">
                   <property name="maximumSize">
                    <size>
                     <width>40</width>
@@ -473,7 +473,7 @@
                  </widget>
                 </item>
                 <item row="1" column="1">
-                 <widget class="QLineEdit" name="lineEdit_7">
+                 <widget class="QLineEdit" name="lineEdit_posY">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -502,7 +502,7 @@
                  </widget>
                 </item>
                 <item row="1" column="3">
-                 <widget class="QLineEdit" name="lineEdit_8">
+                 <widget class="QLineEdit" name="lineEdit_speedY">
                   <property name="maximumSize">
                    <size>
                     <width>40</width>
@@ -526,7 +526,7 @@
                  </widget>
                 </item>
                 <item row="3" column="1">
-                 <widget class="QLineEdit" name="lineEdit_11">
+                 <widget class="QLineEdit" name="lineEdit_posColor">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -555,7 +555,7 @@
                  </widget>
                 </item>
                 <item row="2" column="3">
-                 <widget class="QLineEdit" name="lineEdit_10">
+                 <widget class="QLineEdit" name="lineEdit_speedFocus">
                   <property name="maximumSize">
                    <size>
                     <width>40</width>
@@ -565,7 +565,7 @@
                  </widget>
                 </item>
                 <item row="3" column="3">
-                 <widget class="QLineEdit" name="lineEdit_12">
+                 <widget class="QLineEdit" name="lineEdit_speedColor">
                   <property name="maximumSize">
                    <size>
                     <width>40</width>
@@ -582,7 +582,7 @@
                  </widget>
                 </item>
                 <item row="4" column="1">
-                 <widget class="QLineEdit" name="lineEdit_13">
+                 <widget class="QLineEdit" name="lineEdit_posSpot">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -624,7 +624,7 @@
                  </widget>
                 </item>
                 <item row="4" column="3">
-                 <widget class="QLineEdit" name="lineEdit_14">
+                 <widget class="QLineEdit" name="lineEdit_speedSpot">
                   <property name="maximumSize">
                    <size>
                     <width>40</width>
@@ -640,12 +640,12 @@
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
                 </property>
-                <widget class="QPushButton" name="pushButton_5">
+                <widget class="QPushButton" name="pushButton_relativeMove5Motors">
                  <property name="text">
                   <string>相对移动</string>
                  </property>
                 </widget>
-                <widget class="QPushButton" name="pushButton_6">
+                <widget class="QPushButton" name="pushButton_absoluteMove5Motors">
                  <property name="text">
                   <string>绝对移动</string>
                  </property>
@@ -668,63 +668,63 @@
              </property>
              <layout class="QGridLayout" name="gridLayout">
               <item row="1" column="2">
-               <widget class="QCheckBox" name="checkBox_6">
+               <widget class="QCheckBox" name="checkBox_resetShutter">
                 <property name="text">
                  <string>快门电机</string>
                 </property>
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QCheckBox" name="checkBox_3">
+               <widget class="QCheckBox" name="checkBox_resetFocus">
                 <property name="text">
                  <string>焦距电机</string>
                 </property>
                </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QCheckBox" name="checkBox_4">
+               <widget class="QCheckBox" name="checkBox_resetColor">
                 <property name="text">
                  <string>颜色电机</string>
                 </property>
                </widget>
               </item>
               <item row="2" column="3">
-               <widget class="QPushButton" name="pushButton_25">
+               <widget class="QPushButton" name="pushButton_resetCheckedMotors">
                 <property name="text">
                  <string>复位勾选电机</string>
                 </property>
                </widget>
               </item>
               <item row="0" column="3">
-               <widget class="QCheckBox" name="checkBox_7">
+               <widget class="QCheckBox" name="checkBox_resetChinHoz">
                 <property name="text">
                  <string>腮托水平电机</string>
                 </property>
                </widget>
               </item>
               <item row="1" column="3">
-               <widget class="QCheckBox" name="checkBox_8">
+               <widget class="QCheckBox" name="checkBox_resetChinVert">
                 <property name="text">
                  <string>腮托竖向电机</string>
                 </property>
                </widget>
               </item>
               <item row="1" column="0">
-               <widget class="QCheckBox" name="checkBox_2">
+               <widget class="QCheckBox" name="checkBox_resetY">
                 <property name="text">
                  <string>y电机</string>
                 </property>
                </widget>
               </item>
               <item row="0" column="0">
-               <widget class="QCheckBox" name="checkBox">
+               <widget class="QCheckBox" name="checkBox_resetX">
                 <property name="text">
                  <string>x电机</string>
                 </property>
                </widget>
               </item>
               <item row="0" column="2">
-               <widget class="QCheckBox" name="checkBox_5">
+               <widget class="QCheckBox" name="checkBox_resetSpot">
                 <property name="text">
                  <string>光斑电机</string>
                 </property>
@@ -765,7 +765,7 @@
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QLabel" name="label_49">
+               <widget class="QLabel" name="label_stateX">
                 <property name="text">
                  <string>闲</string>
                 </property>
@@ -779,7 +779,7 @@
                </widget>
               </item>
               <item row="0" column="3">
-               <widget class="QLabel" name="label_50">
+               <widget class="QLabel" name="label_stateFocus">
                 <property name="text">
                  <string>闲</string>
                 </property>
@@ -793,7 +793,7 @@
                </widget>
               </item>
               <item row="0" column="5">
-               <widget class="QLabel" name="label_52">
+               <widget class="QLabel" name="label_stateSpot">
                 <property name="text">
                  <string>闲</string>
                 </property>
@@ -807,7 +807,7 @@
                </widget>
               </item>
               <item row="0" column="7">
-               <widget class="QLabel" name="label_54">
+               <widget class="QLabel" name="label_stateChinHoz">
                 <property name="text">
                  <string>闲</string>
                 </property>
@@ -821,7 +821,7 @@
                </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QLabel" name="label_58">
+               <widget class="QLabel" name="label_stateY">
                 <property name="text">
                  <string>闲</string>
                 </property>
@@ -835,7 +835,7 @@
                </widget>
               </item>
               <item row="1" column="3">
-               <widget class="QLabel" name="label_62">
+               <widget class="QLabel" name="label_stateColor">
                 <property name="text">
                  <string>闲</string>
                 </property>
@@ -849,7 +849,7 @@
                </widget>
               </item>
               <item row="1" column="5">
-               <widget class="QLabel" name="label_56">
+               <widget class="QLabel" name="label_stateShutter">
                 <property name="text">
                  <string>闲</string>
                 </property>
@@ -863,7 +863,7 @@
                </widget>
               </item>
               <item row="1" column="7">
-               <widget class="QLabel" name="label_60">
+               <widget class="QLabel" name="label_stateChinVert">
                 <property name="text">
                  <string>闲</string>
                 </property>
@@ -890,6 +890,53 @@
               <string>其它状态</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_6">
+              <item row="1" column="1">
+               <widget class="QLabel" name="label_environmentDA">
+                <property name="text">
+                 <string>0</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLabel" name="label_answerState">
+                <property name="text">
+                 <string>松开</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="3">
+               <spacer name="horizontalSpacer_17">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="2" column="3">
+               <spacer name="horizontalSpacer_18">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="2" column="5">
+               <widget class="QLabel" name="label_66">
+                <property name="text">
+                 <string>镜架状态:</string>
+                </property>
+               </widget>
+              </item>
               <item row="2" column="6">
                <widget class="QLabel" name="label_65">
                 <property name="text">
@@ -898,7 +945,7 @@
                </widget>
               </item>
               <item row="1" column="6">
-               <widget class="QLabel" name="label_68">
+               <widget class="QLabel" name="label_castLightDA">
                 <property name="text">
                  <string>0</string>
                 </property>
@@ -908,13 +955,6 @@
                <widget class="QLabel" name="label_67">
                 <property name="text">
                  <string>投射光DA:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="5">
-               <widget class="QLabel" name="label_66">
-                <property name="text">
-                 <string>镜架状态:</string>
                 </property>
                </widget>
               </item>
@@ -932,19 +972,31 @@
                 </property>
                </widget>
               </item>
-              <item row="2" column="1" colspan="2">
-               <widget class="QLabel" name="label_70">
-                <property name="text">
-                 <string>松开</string>
+              <item row="1" column="7">
+               <spacer name="horizontalSpacer_19">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
                 </property>
-               </widget>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
-              <item row="1" column="1" colspan="2">
-               <widget class="QLabel" name="label_64">
-                <property name="text">
-                 <string>0</string>
+              <item row="2" column="7">
+               <spacer name="horizontalSpacer_20">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
                 </property>
-               </widget>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
              </layout>
             </widget>
@@ -1084,10 +1136,10 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QSpinBox" name="spinBox"/>
+                 <widget class="QSpinBox" name="spinBox_speedChinMove"/>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="pushButton_12">
+                 <widget class="QPushButton" name="pushButton_cameraSwitch">
                   <property name="text">
                    <string>摄像头 开/关</string>
                   </property>
@@ -1111,28 +1163,28 @@
               <item>
                <layout class="QGridLayout" name="gridLayout_7">
                 <item row="1" column="2">
-                 <widget class="QPushButton" name="pushButton_10">
+                 <widget class="QPushButton" name="pushButton_chinMoveDown">
                   <property name="text">
                    <string>下移</string>
                   </property>
                  </widget>
                 </item>
                 <item row="0" column="1" rowspan="2">
-                 <widget class="QPushButton" name="pushButton_4">
+                 <widget class="QPushButton" name="pushButton_chinMoveLeft">
                   <property name="text">
                    <string>左移</string>
                   </property>
                  </widget>
                 </item>
                 <item row="0" column="2">
-                 <widget class="QPushButton" name="pushButton_3">
+                 <widget class="QPushButton" name="pushButton_chinMoveUp">
                   <property name="text">
                    <string>上移</string>
                   </property>
                  </widget>
                 </item>
                 <item row="0" column="3" rowspan="2">
-                 <widget class="QPushButton" name="pushButton_11">
+                 <widget class="QPushButton" name="pushButton_chinMoveRight">
                   <property name="text">
                    <string>右移</string>
                   </property>
@@ -1199,7 +1251,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QSpinBox" name="spinBox_2">
+                   <widget class="QSpinBox" name="spinBox_lightSpotSize">
                     <property name="minimum">
                      <number>1</number>
                     </property>
@@ -1216,7 +1268,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QSpinBox" name="spinBox_4">
+                   <widget class="QSpinBox" name="spinBox_lightSpotHoleLoc">
                     <property name="maximum">
                      <number>6</number>
                     </property>
@@ -1251,7 +1303,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QComboBox" name="comboBox">
+                   <widget class="QComboBox" name="comboBox_color">
                     <property name="currentIndex">
                      <number>0</number>
                     </property>
@@ -1280,7 +1332,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QSpinBox" name="spinBox_3">
+                   <widget class="QSpinBox" name="spinBox_lightColorHoleLoc">
                     <property name="maximum">
                      <number>6</number>
                     </property>
@@ -1377,7 +1429,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QSpinBox" name="spinBox_10">
+                   <widget class="QSpinBox" name="spinBox_settingDb">
                     <property name="maximum">
                      <number>51</number>
                     </property>
@@ -1391,7 +1443,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLineEdit" name="lineEdit_34"/>
+                   <widget class="QLineEdit" name="lineEdit_settingFocal"/>
                   </item>
                  </layout>
                 </widget>
@@ -1426,7 +1478,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLineEdit" name="lineEdit_16">
+                   <widget class="QLineEdit" name="lineEdit_coordX">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
                       <horstretch>0</horstretch>
@@ -1467,7 +1519,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLineEdit" name="lineEdit_18">
+                   <widget class="QLineEdit" name="lineEdit_coordY">
                     <property name="minimumSize">
                      <size>
                       <width>60</width>
@@ -1490,7 +1542,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QSpinBox" name="spinBox_7">
+                   <widget class="QSpinBox" name="spinBox_speedLightDot">
                     <property name="minimumSize">
                      <size>
                       <width>50</width>
@@ -1592,7 +1644,7 @@
                    </widget>
                   </item>
                   <item row="0" column="5">
-                   <widget class="QSpinBox" name="spinBox_9">
+                   <widget class="QSpinBox" name="spinBox_speedLightMove">
                     <property name="minimumSize">
                      <size>
                       <width>50</width>
@@ -1640,7 +1692,7 @@
                    </widget>
                   </item>
                   <item row="0" column="1">
-                   <widget class="QLineEdit" name="lineEdit_29">
+                   <widget class="QLineEdit" name="lineEdit_beginCoordX">
                     <property name="minimumSize">
                      <size>
                       <width>60</width>
@@ -1656,7 +1708,7 @@
                    </widget>
                   </item>
                   <item row="1" column="3">
-                   <widget class="QLineEdit" name="lineEdit_31">
+                   <widget class="QLineEdit" name="lineEdit_endCoordY">
                     <property name="minimumSize">
                      <size>
                       <width>60</width>
@@ -1672,7 +1724,7 @@
                    </widget>
                   </item>
                   <item row="0" column="3">
-                   <widget class="QLineEdit" name="lineEdit_30">
+                   <widget class="QLineEdit" name="lineEdit_beginCoordY">
                     <property name="minimumSize">
                      <size>
                       <width>60</width>
@@ -1707,7 +1759,7 @@
                    </widget>
                   </item>
                   <item row="1" column="1">
-                   <widget class="QLineEdit" name="lineEdit_32">
+                   <widget class="QLineEdit" name="lineEdit_endCoordX">
                     <property name="minimumSize">
                      <size>
                       <width>60</width>
@@ -1723,7 +1775,7 @@
                    </widget>
                   </item>
                   <item row="1" column="5">
-                   <widget class="QLineEdit" name="lineEdit_33">
+                   <widget class="QLineEdit" name="lineEdit_stepCount">
                     <property name="maximumSize">
                      <size>
                       <width>50</width>
@@ -1776,7 +1828,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QComboBox" name="comboBox_2">
+                 <widget class="QComboBox" name="comboBox_testFucntion">
                   <item>
                    <property name="text">
                     <string>静态投射测试</string>
@@ -1810,7 +1862,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="pushButton_14">
+                 <widget class="QPushButton" name="pushButton_testStart">
                   <property name="text">
                    <string>开始测试</string>
                   </property>
@@ -1854,7 +1906,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QComboBox" name="comboBox_4">
+                <widget class="QComboBox" name="comboBox_lightSelect">
                  <item>
                   <property name="text">
                    <string>中心固视</string>
@@ -1923,7 +1975,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="lineEdit_35">
+                <widget class="QLineEdit" name="lineEdit_lightDAOrRGB">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -1945,7 +1997,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="pushButton_9">
+                <widget class="QPushButton" name="pushButton_lightSwitch">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -2007,6 +2059,18 @@
            <string>配置</string>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_60">
+           <property name="leftMargin">
+            <number>5</number>
+           </property>
+           <property name="topMargin">
+            <number>3</number>
+           </property>
+           <property name="rightMargin">
+            <number>5</number>
+           </property>
+           <property name="bottomMargin">
+            <number>5</number>
+           </property>
            <item>
             <layout class="QGridLayout" name="gridLayout_47">
              <item row="0" column="0" colspan="2">
@@ -2027,7 +2091,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLineEdit" name="lineEdit_19">
+                  <widget class="QLineEdit" name="lineEdit_deviceSerialNo">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                      <horstretch>0</horstretch>
@@ -2056,7 +2120,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLineEdit" name="lineEdit_92"/>
+                  <widget class="QLineEdit" name="lineEdit_castLightDA"/>
                  </item>
                 </layout>
                </item>
@@ -2094,7 +2158,7 @@
                      </widget>
                     </item>
                     <item>
-                     <widget class="QLineEdit" name="lineEdit_87">
+                     <widget class="QLineEdit" name="lineEdit_centralLightDA">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                         <horstretch>0</horstretch>
@@ -2140,7 +2204,7 @@
                      </widget>
                     </item>
                     <item>
-                     <widget class="QLineEdit" name="lineEdit_88">
+                     <widget class="QLineEdit" name="lineEdit_bigDiamond1DA">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                         <horstretch>0</horstretch>
@@ -2162,7 +2226,7 @@
                      </widget>
                     </item>
                     <item>
-                     <widget class="QLineEdit" name="lineEdit_182">
+                     <widget class="QLineEdit" name="lineEdit_bigDiamond2DA">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                         <horstretch>0</horstretch>
@@ -2184,7 +2248,7 @@
                      </widget>
                     </item>
                     <item>
-                     <widget class="QLineEdit" name="lineEdit_183">
+                     <widget class="QLineEdit" name="lineEdit_bigDiamond3DA">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                         <horstretch>0</horstretch>
@@ -2200,7 +2264,7 @@
                      </widget>
                     </item>
                     <item>
-                     <widget class="QLineEdit" name="lineEdit_184">
+                     <widget class="QLineEdit" name="lineEdit_diamond4DA">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                         <horstretch>0</horstretch>
@@ -2240,7 +2304,7 @@
                      </widget>
                     </item>
                     <item>
-                     <widget class="QLineEdit" name="lineEdit_89">
+                     <widget class="QLineEdit" name="lineEdit_smallDiamond1DA">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                         <horstretch>0</horstretch>
@@ -2262,7 +2326,7 @@
                      </widget>
                     </item>
                     <item>
-                     <widget class="QLineEdit" name="lineEdit_185">
+                     <widget class="QLineEdit" name="lineEdit_smallDiamond2DA">
                       <property name="maximumSize">
                        <size>
                         <width>40</width>
@@ -2272,7 +2336,7 @@
                      </widget>
                     </item>
                     <item>
-                     <widget class="QLineEdit" name="lineEdit_186">
+                     <widget class="QLineEdit" name="lineEdit_smallDiamond3DA_2">
                       <property name="maximumSize">
                        <size>
                         <width>40</width>
@@ -2282,7 +2346,7 @@
                      </widget>
                     </item>
                     <item>
-                     <widget class="QLineEdit" name="lineEdit_187">
+                     <widget class="QLineEdit" name="lineEdit_smallDiamond4DA">
                       <property name="maximumSize">
                        <size>
                         <width>40</width>
@@ -2314,7 +2378,7 @@
              <item row="1" column="2">
               <layout class="QVBoxLayout" name="verticalLayout_58">
                <item>
-                <widget class="QTableWidget" name="tableWidget_3">
+                <widget class="QTableWidget" name="tableWidget_LightSpot">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -2471,7 +2535,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLineEdit" name="lineEdit_90">
+                   <widget class="QLineEdit" name="lineEdit_yellowBackGroundLampDa">
                     <property name="maximumSize">
                      <size>
                       <width>40</width>
@@ -2494,7 +2558,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLineEdit" name="lineEdit_91">
+                   <widget class="QLineEdit" name="lineEdit_whiteBackGroundLampRGB">
                     <property name="maximumSize">
                      <size>
                       <width>55</width>
@@ -2551,7 +2615,7 @@
                    </widget>
                   </item>
                   <item row="0" column="3">
-                   <widget class="QLineEdit" name="lineEdit_180">
+                   <widget class="QLineEdit" name="lineEdit_borderLampDA">
                     <property name="maximumSize">
                      <size>
                       <width>40</width>
@@ -2561,7 +2625,7 @@
                    </widget>
                   </item>
                   <item row="1" column="1">
-                   <widget class="QLineEdit" name="lineEdit_181">
+                   <widget class="QLineEdit" name="lineEdit_eyeGlassLampDa">
                     <property name="maximumSize">
                      <size>
                       <width>40</width>
@@ -2571,7 +2635,7 @@
                    </widget>
                   </item>
                   <item row="0" column="1">
-                   <widget class="QLineEdit" name="lineEdit_179">
+                   <widget class="QLineEdit" name="lineEdit_centerInfraredLampDA">
                     <property name="maximumSize">
                      <size>
                       <width>40</width>
@@ -2655,7 +2719,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLineEdit" name="lineEdit_191">
+                   <widget class="QLineEdit" name="lineEdit_whiteLampEnvLightAlarm">
                     <property name="maximumSize">
                      <size>
                       <width>40</width>
@@ -2672,7 +2736,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLineEdit" name="lineEdit_190">
+                   <widget class="QLineEdit" name="lineEdit_yellowLampEnvLightAlarm">
                     <property name="maximumSize">
                      <size>
                       <width>40</width>
@@ -2729,7 +2793,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLineEdit" name="lineEdit_189">
+                   <widget class="QLineEdit" name="lineEdit_whiteLampPupilGray">
                     <property name="maximumSize">
                      <size>
                       <width>40</width>
@@ -2746,7 +2810,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLineEdit" name="lineEdit_188">
+                   <widget class="QLineEdit" name="lineEdit_yellowLampPupilGray">
                     <property name="maximumSize">
                      <size>
                       <width>40</width>
@@ -2774,7 +2838,7 @@
               </layout>
              </item>
              <item row="0" column="2">
-              <widget class="QTableWidget" name="tableWidget">
+              <widget class="QTableWidget" name="tableWidget_Color">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
@@ -2873,6 +2937,18 @@
               <string>关键位置</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_7">
+              <property name="leftMargin">
+               <number>5</number>
+              </property>
+              <property name="topMargin">
+               <number>3</number>
+              </property>
+              <property name="rightMargin">
+               <number>5</number>
+              </property>
+              <property name="bottomMargin">
+               <number>5</number>
+              </property>
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_65">
                 <item>
@@ -2883,7 +2959,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLineEdit" name="lineEdit_93">
+                 <widget class="QLineEdit" name="lineEdit_focusUnite">
                   <property name="minimumSize">
                    <size>
                     <width>50</width>
@@ -2906,7 +2982,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLineEdit" name="lineEdit_94">
+                 <widget class="QLineEdit" name="lineEdit_shutterOpen">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -2954,7 +3030,7 @@
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>50</width>
+                    <width>1666</width>
                     <height>16777215</height>
                    </size>
                   </property>
@@ -2964,7 +3040,7 @@
                  </widget>
                 </item>
                 <item row="0" column="1">
-                 <widget class="QLineEdit" name="lineEdit_53">
+                 <widget class="QLineEdit" name="lineEdit_focusRangeMin">
                   <property name="minimumSize">
                    <size>
                     <width>50</width>
@@ -3007,7 +3083,7 @@
                  </widget>
                 </item>
                 <item row="1" column="1">
-                 <widget class="QLineEdit" name="lineEdit_55">
+                 <widget class="QLineEdit" name="lineEdit_centerPointX">
                   <property name="minimumSize">
                    <size>
                     <width>50</width>
@@ -3030,7 +3106,7 @@
                  </widget>
                 </item>
                 <item row="1" column="3">
-                 <widget class="QLineEdit" name="lineEdit_56">
+                 <widget class="QLineEdit" name="lineEdit_centerPointY">
                   <property name="minimumSize">
                    <size>
                     <width>50</width>
@@ -3055,12 +3131,12 @@
                 <item row="2" column="0">
                  <widget class="QLabel" name="label_355">
                   <property name="text">
-                   <string>正负中心差 X:</string>
+                   <string>正副中心差 X:</string>
                   </property>
                  </widget>
                 </item>
                 <item row="2" column="1">
-                 <widget class="QLineEdit" name="lineEdit_171">
+                 <widget class="QLineEdit" name="lineEdit_centerDifferentialX">
                   <property name="minimumSize">
                    <size>
                     <width>50</width>
@@ -3083,7 +3159,7 @@
                  </widget>
                 </item>
                 <item row="2" column="3">
-                 <widget class="QLineEdit" name="lineEdit_172">
+                 <widget class="QLineEdit" name="lineEdit_centerDifferentialY">
                   <property name="minimumSize">
                    <size>
                     <width>50</width>
@@ -3113,7 +3189,7 @@
                  </widget>
                 </item>
                 <item row="3" column="1">
-                 <widget class="QLineEdit" name="lineEdit_174">
+                 <widget class="QLineEdit" name="lineEdit_lightCorrectionX">
                   <property name="minimumSize">
                    <size>
                     <width>50</width>
@@ -3136,7 +3212,7 @@
                  </widget>
                 </item>
                 <item row="3" column="3">
-                 <widget class="QLineEdit" name="lineEdit_173">
+                 <widget class="QLineEdit" name="lineEdit_lightCorrectionY">
                   <property name="minimumSize">
                    <size>
                     <width>50</width>
@@ -3153,7 +3229,7 @@
                  </widget>
                 </item>
                 <item row="3" column="5">
-                 <widget class="QLineEdit" name="lineEdit_177"/>
+                 <widget class="QLineEdit" name="lineEdit_lightCorrectionFocus"/>
                 </item>
                 <item row="4" column="0">
                  <widget class="QLabel" name="label_358">
@@ -3163,7 +3239,7 @@
                  </widget>
                 </item>
                 <item row="4" column="1">
-                 <widget class="QLineEdit" name="lineEdit_176">
+                 <widget class="QLineEdit" name="lineEdit_diamondCenterX">
                   <property name="minimumSize">
                    <size>
                     <width>50</width>
@@ -3186,7 +3262,7 @@
                  </widget>
                 </item>
                 <item row="4" column="3">
-                 <widget class="QLineEdit" name="lineEdit_175">
+                 <widget class="QLineEdit" name="lineEdit_diamondCenterY">
                   <property name="minimumSize">
                    <size>
                     <width>50</width>
@@ -3203,10 +3279,10 @@
                  </widget>
                 </item>
                 <item row="4" column="5">
-                 <widget class="QLineEdit" name="lineEdit_178"/>
+                 <widget class="QLineEdit" name="lineEdit_diamondCenterFocus"/>
                 </item>
                 <item row="0" column="3">
-                 <widget class="QLineEdit" name="lineEdit_192">
+                 <widget class="QLineEdit" name="lineEdit_focusRangeMax">
                   <property name="minimumSize">
                    <size>
                     <width>50</width>
@@ -3221,7 +3297,14 @@
             </widget>
            </item>
            <item>
-            <widget class="QTextBrowser" name="textBrowser"/>
+            <widget class="QPushButton" name="pushButton_saveConfig">
+             <property name="text">
+              <string>保存配置</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QTextBrowser" name="textBrowser_infoText"/>
            </item>
           </layout>
          </widget>

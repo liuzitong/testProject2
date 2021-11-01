@@ -16,7 +16,8 @@ static bool g_is_reg = false;
 static void gRegInQt ( )
 {
     if ( ! g_is_reg ) {
-        qRegisterMetaType<UsbDev::Config>(); g_is_reg = true;
+        qRegisterMetaType<UsbDev::Config>();
+        g_is_reg = true;
     }
 }
 

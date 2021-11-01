@@ -16,8 +16,6 @@ UsbViewerQt::UsbViewerQt(QWidget *parent)
 
 	rootModel = NULL;
 	
-	// Log
-	Log = LOG::getInstance();
 
 	// Init tree view
 	initTreeModel();
@@ -38,7 +36,6 @@ UsbViewerQt::~UsbViewerQt()
 
 void UsbViewerQt::initTreeModel()
 {
-	ENTER();
 	QTreeView * tree = ui.treeView;
 
 	// Root Tree
@@ -86,19 +83,16 @@ void UsbViewerQt::initTreeModel()
 	rootItem->appendRow(keyboardTreeRoot);
 	refreshDeviceList(DeviceClass_KEYBOARD, keyboardTreeRoot);
 
-	EXIT();
 }
 
 QString UsbViewerQt::getHostName()
 {
-	ENTER();
 	QString hostName = QHostInfo::localHostName();
 	return hostName;
 }
 
 void UsbViewerQt::refreshDeviceList(DeviceClass deviceClass, QStandardItem* deviceTreeRoot)
 {
-	ENTER();
 
 	// Retrieve all device info
 	char deviceInfo[10000] = { 0 };
@@ -146,12 +140,10 @@ void UsbViewerQt::refreshDeviceList(DeviceClass deviceClass, QStandardItem* devi
 	}
 	ui.treeView->expandAll();
 
-	EXIT();
 }
 
 void UsbViewerQt::getTreeClicked(const QModelIndex iIndex)
 {
-	ENTER();
 
 	// 1. Retrieve current selected item
 	QString objectName = ui.treeView->model()->itemData(iIndex).values()[0].toString();
@@ -163,8 +155,6 @@ void UsbViewerQt::getTreeClicked(const QModelIndex iIndex)
 	QByteArray ba_objectName = objectName.toLocal8Bit();
 	QByteArray ba_parentItemText = parentItemText.toLatin1();
 
-	LOG_DEBUG("Selected device: %s", ba_objectName.data());
-	LOG_DEBUG("The selected device' class is %s", ba_parentItemText.data());
 
 	DeviceClass deviceClass;
 	QStringList deviceInfoList;
@@ -244,7 +234,6 @@ void UsbViewerQt::getTreeClicked(const QModelIndex iIndex)
     }
 
 	ui.textEdit->setText(result);
-	EXIT();
 }
 
 void UsbViewerQt::refreshTree()

@@ -9,6 +9,7 @@
 #include <QElapsedTimer>
 #include <QAtomicInt>
 #include <memory>
+#include <QByteArray>
 
 #include "nwkusbobj2.hxx"
 #include "usbdev/common/usbdev_memcntr.hxx"
@@ -20,26 +21,22 @@
 #include "usbdev/main/usbdev_statusdata.hxx"
 
 namespace UsbDev {
-
-static QString toHexadecimal(const QByteArray &byteArray)
+// ////////////////////////////////////////////////////////////////////////////
+// helper function
+// ////////////////////////////////////////////////////////////////////////////
+static QString buffToQStr(const char* buff,size_t length)
 {
     QString str;
-    for(int i = 0; i< /*byteArray.length()*/50; i++){
-//        QString byteStr = QString::number(static_cast<uchar>(byteArray[i]), 16, 2);
-//        if(byteStr.length() == 1) str += "0" + byteStr;
-//        else
-//       QString tempStr;
+    QByteArray byteArray= QByteArray::fromRawData(buff,length);
+    for(int i = 0; i< byteArray.length(); i++){
        QString str1 = QString("%1").arg(i,2,10, QLatin1Char('0'));
        uchar temp=static_cast<uchar>(byteArray[i]);
        QString str2 = QString("%1").arg(temp,2,16, QLatin1Char('0'));
        str.append(QString("%1:%2 ").arg(str1).arg(str2));
     }
-    return str;
+    return qPrintable(str);
 }
 
-// ////////////////////////////////////////////////////////////////////////////
-// helper function
-// ////////////////////////////////////////////////////////////////////////////
 static void  gPutInt32_Le( unsigned char *buff, qint32 v )
 {
     buff[0] = quint8( v & 0x0ff );          buff[1] = quint8(( v >> 8 ) & 0x0ff );
@@ -101,7 +98,9 @@ public :
     Q_INVOKABLE bool  cmd_ReadStatusData( );
     Q_INVOKABLE bool  cmd_ReadFrameData ( );
     Q_INVOKABLE bool  cmd_TurnOnVideo ( );
+    Q_INVOKABLE void  cmd_hellowWorld ( );
     Q_INVOKABLE bool  cmd_TurnOffVideo( );
+    Q_INVOKABLE bool  cmd_MoveChinMotors  (QByteArray ba);
     Q_INVOKABLE bool  cmd_Move5Motors  ( quint8 sps[5], qint32 value[5],DevCtl::MoveMethod method );
     Q_INVOKABLE bool  cmd_SaveMotorCfg( int mot, const QByteArray &ba );
     Q_INVOKABLE bool  cmd_ControlSampleMotor( int stage, qint32 sps, quint8 acc_flag );
@@ -148,7 +147,6 @@ DevCtl_Worker :: ~DevCtl_Worker ( )
 // ============================================================================
 void   DevCtl_Worker :: init( bool req_emit )
 {
-    qDebug()<<__FILE__<<__FUNCTION__<<__LINE__;
     if ( m_usb_dev == nullptr ) {
         m_wks = DevCtl::WorkStatus_S_ConnectToDev;
         if ( req_emit ) { emit this->workStatusChanged( DevCtl::WorkStatus_S_ConnectToDev ); }
@@ -220,7 +218,6 @@ bool    DevCtl_Worker :: cmdComm_strInSync( unsigned char *buff, int buff_sz )
 // ============================================================================
 bool   DevCtl_Worker :: cmd_ReadProfile( bool req_emit )
 {
-    qDebug()<<__FILE__<<__FUNCTION__<<__LINE__;
     if ( ! this->isDeviceWork()) { return false; }
 
     unsigned char buff[512]; bool ret = true;
@@ -263,12 +260,10 @@ bool   DevCtl_Worker :: cmd_ReadStatusData()
         if ( ! ret ) { qWarning("recv. status data failed."); }
     }
     if ( ret ) {
+#ifdef QT_DEBUG
         qDebug()<<"status Data:";
-
-        QByteArray qa;
-        qa= QByteArray::fromRawData( reinterpret_cast<const char*>(buff),sizeof(buff));
-        QString str=toHexadecimal(qa);
-        qDebug()<<qPrintable(str);
+        qDebug()<<buffToQStr(reinterpret_cast<const char*>(buff),50);
+#endif
         StatusData sd( QByteArray::fromRawData( reinterpret_cast<const char*>(buff),sizeof(buff)));
         if ( ! sd.isEmpty()) {
             emit this->newStatusData( sd );
@@ -333,6 +328,11 @@ bool  DevCtl_Worker :: cmd_TurnOnVideo()
     return ret;
 }
 
+void DevCtl_Worker::cmd_hellowWorld()
+{
+    qDebug()<<"helloWorld";
+}
+
 // ============================================================================
 // turn off the video
 // ============================================================================
@@ -368,6 +368,34 @@ bool  DevCtl_Worker :: cmd_TurnOffVideo()
 // ============================================================================
 // cmd: motor move
 // ============================================================================
+bool  DevCtl_Worker :: cmd_MoveChinMotors( QByteArray ba)
+{
+    quint8* char_ptr=(quint8*)&ba.data()[0];
+    qDebug()<<char_ptr[2];
+    qDebug()<<char_ptr[3];
+    int* int_ptr=(int*)(&ba.data()[4]);
+    qDebug()<<int_ptr[0];
+    qDebug()<<int_ptr[1];
+//    unsigned char buff[512]={0};
+//        buff[0] = 0x5a;
+//        buff[1] = method  == DevCtl::MoveMethod::Relative ? 0x51 : 0x52 ;
+//        memcpy(&buff[2],&sps[0],2);
+//        memcpy(&buff[4],&dist[0],8);
+#ifdef QT_DEBUG
+        qDebug()<<"move ChinMotors Data:";
+        qDebug()<<buffToQStr(reinterpret_cast<const char*>(ba.data()),12);
+#endif
+       if ( ! this->isDeviceWork()) { return false; }
+       bool ret = this->cmdComm_bulkOutSync((unsigned char*) ba.data(), ba.size() );
+       if ( ! ret ) { qWarning("send 2motors moving command failed."); }
+    return ret;
+}
+
+
+
+// ============================================================================
+// cmd: motor move
+// ============================================================================
 bool  DevCtl_Worker :: cmd_Move5Motors( quint8 sps[5], qint32 dist[5] ,DevCtl::MoveMethod method)
 {
     if ( ! this->isDeviceWork()) { return false; }
@@ -379,7 +407,7 @@ bool  DevCtl_Worker :: cmd_Move5Motors( quint8 sps[5], qint32 dist[5] ,DevCtl::M
         memcpy(&buff[3],&sps[0],sizeof (*sps));
         memcpy(&buff[8],&dist[0],sizeof (*dist));
         ret = this->cmdComm_bulkOutSync( buff, sizeof( buff ) );
-        if ( ! ret ) { qWarning("send motor moving command failed."); }
+        if ( ! ret ) { qWarning("send 5motors moving command failed."); }
     }
     return ret;
 }
@@ -641,7 +669,6 @@ void  DevCtlPriv :: ensureTimer( bool sw )
 // ============================================================================
 void  DevCtlPriv :: ensureWorker( bool sw )
 {
-    qDebug()<<__FILE__<<__FUNCTION__<<__LINE__;
     if ( sw  ) {  // create worker in work thread
         this->ensureWorker( false );
         m_wkr = qobject_cast<DevCtl_Worker*>(
@@ -676,7 +703,6 @@ void  DevCtlPriv :: ensureWorker( bool sw )
 // ============================================================================
 void  DevCtlPriv :: init( bool req_sync )
 {
-    qDebug()<<__FILE__<<__FUNCTION__<<__LINE__;
     this->ensureTimer ( true );  //init timer .
     this->ensureWorker( true );   //here create instance of worker and connect signals and slots include timer connect to triggerdi.
     if ( m_wkr != Q_NULLPTR ) {
@@ -752,7 +778,6 @@ void  DevCtlPriv :: wkr_onNewProfile( const UsbDev::Profile &pf )
 // ============================================================================
 static DevCtlPriv *  gCreateDevCtlPriv( DevCtl *dev, quint32 vid_pid, quint32 cfg_id )
 {
-    qDebug()<<__FILE__<<__FUNCTION__<<__LINE__;
     DevCtlPriv *priv = usbdev_new( DevCtlPriv, vid_pid, cfg_id );
 
     // ------------------------------------------------------------------------
@@ -872,12 +897,39 @@ UsbDev::FrameData    DevCtl :: takeNextPendingFrameData()
 // ============================================================================
 // move the motor
 // ============================================================================
+void   DevCtl :: moveChinMotors( quint8* sps, qint32* dist,MoveMethod method)
+{
+//    bool ret;
+    QByteArray ba;
+    ba.resize(512);
+    char* ptr=static_cast<char*>(ba.data());
+    ptr[0]=0x5a;
+    method==MoveMethod::Relative? ptr[1]=0x50:0x51;
+    memcpy(ptr+2,sps,2);
+    memcpy(ptr+4,dist,8);
+    QMetaObject::invokeMethod(
+        T_PrivPtr( m_obj )->wkrPtr(), "cmd_MoveChinMotors", Qt::QueuedConnection,
+        Q_ARG( QByteArray, ba )
+    );
+    QMetaObject::invokeMethod(
+        T_PrivPtr( m_obj )->wkrPtr(), "cmd_hellowWorld", Qt::QueuedConnection
+
+    );
+//    return ret;
+}
+
+
+// ============================================================================
+// move the motor
+// ============================================================================
 void   DevCtl :: move5Motors( quint8 sps[5], qint32 dist[5],MoveMethod method)
 {
+//    bool ret;
     QMetaObject::invokeMethod(
         T_PrivPtr( m_obj )->wkrPtr(), "cmd_move5Motors", Qt::QueuedConnection,
         Q_ARG( quint8, sps[5] ), Q_ARG( qint32, dist[5] ), Q_ARG( MoveMethod, method )
     );
+//    return ret;
 }
 
 
@@ -1004,6 +1056,7 @@ auto     DevCtl :: writeUsbEEPROM( const char *buff_ptr, int size, int eeprom_ad
 // ============================================================================
 UsbDev::DevCtl* DevCtl :: createInstance( quint32 vid_pid, quint32 cfg_id )
 {
+    qDebug()<<"GG";
     return usbdev_new_qobj( UsbDev::DevCtl, vid_pid, cfg_id );
 }
 

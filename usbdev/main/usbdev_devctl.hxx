@@ -87,6 +87,8 @@ public:
      */
     void  setFixatLamp( qint16 cx, qint16 cy, bool on_off );
 
+    void  moveChinMotors( quint8* sps, qint32* value,MoveMethod method);
+
     /*!
      * \brief move spec. Motor
      * \param mot      [in]  the motor id pre-defined
@@ -203,6 +205,7 @@ public:
     static DevCtl*  createInstance( quint32 vid_pid = 0xffffa60e, quint32 cfg_id = 1 );
 
     //! @brief create the instance ( wait version )
+    //!
     //! @since 0.2.1
     //! @param vid_pid [in] the specified vid pid.
     //! @param cfg_id  [in] optional configuration id. current is 0x01
@@ -235,7 +238,5 @@ private:
     friend class DevCtlPriv;
 
 };
-
 }
-
 #endif
