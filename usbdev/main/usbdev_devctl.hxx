@@ -4,7 +4,7 @@
 #include "usbdev/common/usbdev_def.h"
 #include <QObject>
 #include <QByteArray>
-
+#include <spdlog/spdlog.h>
 namespace UsbDev {
 
 class Profile;

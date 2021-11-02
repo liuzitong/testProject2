@@ -9,6 +9,8 @@ QT *= gui
 
 DEFINES *= QT_MESSAGELOGCONTEXT
 
+INCLUDEPATH +=$$PWD/../../include
+
 CONFIG(debug,debug|release) {
     DEFINES *= USBDEV_CFG_DLL
 } else {

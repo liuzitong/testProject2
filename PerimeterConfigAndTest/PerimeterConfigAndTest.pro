@@ -41,6 +41,7 @@ HEADERS += \
 FORMS += \
     mainwindow.ui \
 
+INCLUDEPATH +=$$PWD/../include
 include($$PWD/../usbdev-build/usbdev/usbdev.pri )
 include($$PWD/UsbViewer/UsbViewerQt.pri)
 

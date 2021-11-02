@@ -19,6 +19,7 @@
 #include "usbdev/main/usbdev_profile.hxx"
 #include "usbdev/main/usbdev_framedata.hxx"
 #include "usbdev/main/usbdev_statusdata.hxx"
+#include <spdlog/sinks/rotating_file_sink.h>
 
 namespace UsbDev {
 // ////////////////////////////////////////////////////////////////////////////
@@ -1056,7 +1057,11 @@ auto     DevCtl :: writeUsbEEPROM( const char *buff_ptr, int size, int eeprom_ad
 // ============================================================================
 UsbDev::DevCtl* DevCtl :: createInstance( quint32 vid_pid, quint32 cfg_id )
 {
-    qDebug()<<"GG";
+    spdlog::info("Welcome to spdlog!usdev");
+    auto rotating_logger = spdlog::rotating_logger_mt("logger", "logs/usb_logger.txt", 1024*1024, 30);
+    auto logger = spdlog::get("logger");
+            for (int i = 0; i < 1000000; ++i)
+                logger->info("{} * {} equals {:>10}", i, i, i*i);
     return usbdev_new_qobj( UsbDev::DevCtl, vid_pid, cfg_id );
 }
 
