@@ -29,6 +29,7 @@ private slots:
 
     void on_pushButton_relativeMoveChin_clicked();
 
+    void showDevInfo(QString);
 private:
     Ui::MainWindow *ui;
     UsbDev::DevCtl *devCtl;

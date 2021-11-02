@@ -20,8 +20,10 @@
 #include "usbdev/main/usbdev_framedata.hxx"
 #include "usbdev/main/usbdev_statusdata.hxx"
 #include <spdlog/sinks/rotating_file_sink.h>
+#include <memory>
 
 namespace UsbDev {
+static std::shared_ptr<spdlog::logger> logger;
 // ////////////////////////////////////////////////////////////////////////////
 // helper function
 // ////////////////////////////////////////////////////////////////////////////
@@ -99,7 +101,6 @@ public :
     Q_INVOKABLE bool  cmd_ReadStatusData( );
     Q_INVOKABLE bool  cmd_ReadFrameData ( );
     Q_INVOKABLE bool  cmd_TurnOnVideo ( );
-    Q_INVOKABLE void  cmd_hellowWorld ( );
     Q_INVOKABLE bool  cmd_TurnOffVideo( );
     Q_INVOKABLE bool  cmd_MoveChinMotors  (QByteArray ba);
     Q_INVOKABLE bool  cmd_Move5Motors  ( quint8 sps[5], qint32 value[5],DevCtl::MoveMethod method );
@@ -113,6 +114,7 @@ public :
     Q_SIGNAL void  newFrameData ( const UsbDev::FrameData &  );
     Q_SIGNAL void  newStatusData( const UsbDev::StatusData & );
     Q_SIGNAL void  videoStatusChanged( bool );
+    Q_SIGNAL void  updateInfo( QString );
 
 
     Q_INVOKABLE bool  cmd_readUsbEEPROM ( char *buff, int size, int eeprom_addr  ); // since 0.5
@@ -265,6 +267,7 @@ bool   DevCtl_Worker :: cmd_ReadStatusData()
         qDebug()<<"status Data:";
         qDebug()<<buffToQStr(reinterpret_cast<const char*>(buff),50);
 #endif
+        emit
         StatusData sd( QByteArray::fromRawData( reinterpret_cast<const char*>(buff),sizeof(buff)));
         if ( ! sd.isEmpty()) {
             emit this->newStatusData( sd );
@@ -329,11 +332,6 @@ bool  DevCtl_Worker :: cmd_TurnOnVideo()
     return ret;
 }
 
-void DevCtl_Worker::cmd_hellowWorld()
-{
-    qDebug()<<"helloWorld";
-}
-
 // ============================================================================
 // turn off the video
 // ============================================================================
@@ -371,25 +369,34 @@ bool  DevCtl_Worker :: cmd_TurnOffVideo()
 // ============================================================================
 bool  DevCtl_Worker :: cmd_MoveChinMotors( QByteArray ba)
 {
-    quint8* char_ptr=(quint8*)&ba.data()[0];
-    qDebug()<<char_ptr[2];
-    qDebug()<<char_ptr[3];
-    int* int_ptr=(int*)(&ba.data()[4]);
-    qDebug()<<int_ptr[0];
-    qDebug()<<int_ptr[1];
+//    quint8* char_ptr=(quint8*)&ba.data()[0];
+//    qDebug()<<char_ptr[2];
+//    qDebug()<<char_ptr[3];
+//    int* int_ptr=(int*)(&ba.data()[4]);
+//    qDebug()<<int_ptr[0];
+//    qDebug()<<int_ptr[1];
 //    unsigned char buff[512]={0};
 //        buff[0] = 0x5a;
 //        buff[1] = method  == DevCtl::MoveMethod::Relative ? 0x51 : 0x52 ;
 //        memcpy(&buff[2],&sps[0],2);
 //        memcpy(&buff[4],&dist[0],8);
+    QString msg=buffToQStr(reinterpret_cast<const char*>(ba.data()),12);
+    spdlog::info(msg.toStdString());
 #ifdef QT_DEBUG
-        qDebug()<<"move ChinMotors Data:";
-        qDebug()<<buffToQStr(reinterpret_cast<const char*>(ba.data()),12);
 #endif
-       if ( ! this->isDeviceWork()) { return false; }
-       bool ret = this->cmdComm_bulkOutSync((unsigned char*) ba.data(), ba.size() );
-       if ( ! ret ) { qWarning("send 2motors moving command failed."); }
-    return ret;
+   if ( ! this->isDeviceWork()) { updateInfo("no connection!");return false; }
+   bool ret = this->cmdComm_bulkOutSync((unsigned char*) ba.data(), ba.size() );
+//   bool ret=true;
+   if(ret)
+   {
+       logger->info("move chin motor data sent:"+msg.toStdString());
+       emit updateInfo("message sent success raw data is:\n"+msg);
+   }
+   else
+   {
+       updateInfo("send 2motors moving command failed.");
+   }
+   return true;
 }
 
 
@@ -602,6 +609,7 @@ public:
     Q_SIGNAL void  newStatusData( );
     Q_SIGNAL void  newFrameData( );
     Q_SIGNAL void  newProfile( );
+    Q_SIGNAL void  updateInfo(QString );
 };
 
 // ============================================================================
@@ -622,7 +630,7 @@ DevCtlPriv :: DevCtlPriv ( quint32 vid_pid, quint32 cfg )
     m_t_tmr->start();
     m_t_worker = usbdev_new_qobj( QThread );
     QObject::connect( m_t_worker, SIGNAL(finished()), m_t_worker, SLOT(deleteLater()));
-    m_t_worker->start();    
+    m_t_worker->start();
 }
 
 // ============================================================================
@@ -685,7 +693,7 @@ void  DevCtlPriv :: ensureWorker( bool sw )
         QObject::connect( m_wkr, SIGNAL(newStatusData( const UsbDev::StatusData&)), this, SLOT(wkr_onNewStatusData(const UsbDev::StatusData&)));
         QObject::connect( m_wkr, SIGNAL(newFrameData (const UsbDev::FrameData&)), this, SLOT(wkr_onNewFrameData(const UsbDev::FrameData&)));
         QObject::connect( m_wkr, SIGNAL(videoStatusChanged(bool)), this, SLOT(wkr_onVideoStatusChanged(bool)));
-
+        QObject::connect( m_wkr, SIGNAL(updateInfo(QString)), this, SIGNAL(updateInfo(QString)));
         if ( m_trg_tmr != Q_NULLPTR ) { // connect the trigger function
            QObject::connect( m_trg_tmr, SIGNAL(timeout()), m_wkr, SLOT(trigger_di()), Qt::DirectConnection );
         }
@@ -700,7 +708,7 @@ void  DevCtlPriv :: ensureWorker( bool sw )
 }
 
 // ============================================================================
-// initialize
+// initialize   在devCtl构造函数里面init
 // ============================================================================
 void  DevCtlPriv :: init( bool req_sync )
 {
@@ -789,7 +797,7 @@ static DevCtlPriv *  gCreateDevCtlPriv( DevCtl *dev, quint32 vid_pid, quint32 cf
     QObject::connect( priv, SIGNAL(newProfile()),    dev, SIGNAL(newProfile())    );
     QObject::connect( priv, SIGNAL(newStatusData()), dev, SIGNAL(newStatusData()) );
     QObject::connect( priv, SIGNAL(workStatusChanged(int)), dev, SIGNAL(workStatusChanged(int)));
-
+    QObject::connect( priv, SIGNAL(updateInfo(QString)), dev, SIGNAL(updateInfo(QString)));
 
     return priv;
 }
@@ -909,12 +917,8 @@ void   DevCtl :: moveChinMotors( quint8* sps, qint32* dist,MoveMethod method)
     memcpy(ptr+2,sps,2);
     memcpy(ptr+4,dist,8);
     QMetaObject::invokeMethod(
-        T_PrivPtr( m_obj )->wkrPtr(), "cmd_MoveChinMotors", Qt::QueuedConnection,
+        T_PrivPtr( m_obj )->wkrPtr(), "cmd_MoveChinMotors", Qt::ConnectionType::QueuedConnection,
         Q_ARG( QByteArray, ba )
-    );
-    QMetaObject::invokeMethod(
-        T_PrivPtr( m_obj )->wkrPtr(), "cmd_hellowWorld", Qt::QueuedConnection
-
     );
 //    return ret;
 }
@@ -1057,11 +1061,9 @@ auto     DevCtl :: writeUsbEEPROM( const char *buff_ptr, int size, int eeprom_ad
 // ============================================================================
 UsbDev::DevCtl* DevCtl :: createInstance( quint32 vid_pid, quint32 cfg_id )
 {
-    spdlog::info("Welcome to spdlog!usdev");
-    auto rotating_logger = spdlog::rotating_logger_mt("logger", "logs/usb_logger.txt", 1024*1024, 30);
-    auto logger = spdlog::get("logger");
-            for (int i = 0; i < 1000000; ++i)
-                logger->info("{} * {} equals {:>10}", i, i, i*i);
+    logger = spdlog::rotating_logger_mt("logger", "logs/usb_logger.txt", 1024*1024, 30);
+//        for (int i = 0; i < 50; ++i)
+//            logger->info("{} * {} equals {:>10}", i, i, i*i);
     return usbdev_new_qobj( UsbDev::DevCtl, vid_pid, cfg_id );
 }
 

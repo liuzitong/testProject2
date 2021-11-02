@@ -14,8 +14,8 @@ MainWindow::MainWindow(QWidget *parent) :
     VID="FFFF";PID="A60D";
     ui->statusBar->showMessage(QString("VID:%1   PID:%2").arg(VID).arg(PID));
     quint32 vid_pid=VID.toInt(nullptr,16)<<16|PID.toInt(nullptr,16);
-    qDebug("vid_pid is:%x",vid_pid);
     devCtl=UsbDev::DevCtl::createInstance(vid_pid);
+    connect(devCtl,&UsbDev::DevCtl::updateInfo,this,&MainWindow::showDevInfo);
 //    connect(devCtl,&UsbDev::DevCtl::newStatusData,this,&MainWindow::getData);
 }
 
@@ -27,21 +27,19 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionchooseDevice_triggered()
 {
-    qDebug()<<"helloworld";
     auto* dialog=new UsbViewerQt(this);
     dialog->setModal(true);
     if(dialog->exec()==QDialog::Accepted)
     {
-        qDebug()<<"accepted";
         VID=dialog->VID;
         PID=dialog->PID;
-        qDebug()<<VID<<" "<<PID;
     }
     ui->statusBar->showMessage(QString("VID:%1   PID:%2").arg(VID).arg(PID));
     delete devCtl;
     quint32 vid_pid=VID.toInt(nullptr,16)<<16|PID.toInt(nullptr,16);
     devCtl=UsbDev::DevCtl::createInstance(vid_pid);
 //    connect(devCtl,&UsbDev::DevCtl::newStatusData,this,&MainWindow::getData2);
+
 }
 
 void MainWindow::getData()
@@ -67,5 +65,10 @@ void MainWindow::on_pushButton_relativeMoveChin_clicked()
 
     devCtl->moveChinMotors(speed,value,UsbDev::DevCtl::MoveMethod::Relative);
 //   /* bool ret=*/devCtl->moveChinMotors(speed,value,UsbDev::DevCtl::MoveMethod::Relative);
-//    if(ret) ui->textBrowser_infoText->append("move command excuted successfully!");
+    //    if(ret) ui->textBrowser_infoText->append("move command excuted successfully!");
+}
+
+void MainWindow::showDevInfo(QString str)
+{
+    ui->textBrowser_infoText->append(str);
 }

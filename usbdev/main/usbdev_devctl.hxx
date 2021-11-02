@@ -201,6 +201,8 @@ public:
      */
     Q_SIGNAL  void  newProfile( );
 
+    Q_SIGNAL  void  updateInfo(QString str);
+
 
     static DevCtl*  createInstance( quint32 vid_pid = 0xffffa60e, quint32 cfg_id = 1 );
 
