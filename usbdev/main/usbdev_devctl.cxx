@@ -23,7 +23,7 @@
 #include <memory>
 
 namespace UsbDev {
-static std::shared_ptr<spdlog::logger> logger;
+static std::shared_ptr<spdlog::logger> logger=NULL;
 // ////////////////////////////////////////////////////////////////////////////
 // helper function
 // ////////////////////////////////////////////////////////////////////////////
@@ -104,6 +104,7 @@ public :
     Q_INVOKABLE bool  cmd_TurnOffVideo( );
     Q_INVOKABLE bool  cmd_MoveChinMotors  (QByteArray ba);
     Q_INVOKABLE bool  cmd_Move5Motors  ( QByteArray ba  );
+    Q_INVOKABLE bool  cmd_resetMotor  ( QByteArray ba  );
     Q_INVOKABLE bool  cmd_SaveMotorCfg( int mot, const QByteArray &ba );
     Q_INVOKABLE bool  cmd_ControlSampleMotor( int stage, qint32 sps, quint8 acc_flag );
     Q_INVOKABLE bool  cmd_SetLamp ( int lamp, bool );
@@ -412,12 +413,30 @@ bool  DevCtl_Worker :: cmd_Move5Motors( QByteArray ba )
     bool ret = this->cmdComm_bulkOutSync((unsigned char*) ba.data(), ba.size() );
     if(ret)
     {
-        logger->info("move chin motor data sent:"+msg.toStdString());
+        logger->info("cmd_Move5Motors data sent:"+msg.toStdString());
         emit updateInfo("message sent success raw data is:\n"+msg);
     }
     else
     {
         updateInfo("send cmd_Move5Motors failed.");
+    }
+    return true;
+}
+
+bool DevCtl_Worker::cmd_resetMotor(QByteArray ba)
+{
+    QString msg=buffToQStr(reinterpret_cast<const char*>(ba.data()),28);
+    spdlog::info(msg.toStdString());
+    if ( ! this->isDeviceWork()) { updateInfo("no connection!");return false; }
+    bool ret = this->cmdComm_bulkOutSync((unsigned char*) ba.data(), ba.size() );
+    if(ret)
+    {
+        logger->info("cmd_resetMotor data sent:"+msg.toStdString());
+        emit updateInfo("message sent success raw data is:\n"+msg);
+    }
+    else
+    {
+        updateInfo("send cmd_resetMotor failed.");
     }
     return true;
 }
@@ -939,28 +958,22 @@ void   DevCtl :: move5Motors( quint8* sps, qint32* dist,MoveMethod method)
         T_PrivPtr( m_obj )->wkrPtr(), "cmd_Move5Motors", Qt::QueuedConnection,
         Q_ARG( QByteArray, ba  )
     );
-
 }
 
 
 // ============================================================================
 // reset the motor
 // ============================================================================
-void   DevCtl :: resetMotor( MotorId mot, qint32 sps, qint32 pos, quint8 acc_flag )
+void   DevCtl :: resetMotor( MotorId mot,quint8 speed )
 {
-    int mot_id = int( mot );
-    if ( mot_id > 0 && mot_id < 9 ) {
-        if ( sps <= 0 ) { sps = 400; }
-        QMetaObject::invokeMethod(
-            T_PrivPtr( m_obj )->wkrPtr(), "cmd_MoveMotor", Qt::QueuedConnection,
-            Q_ARG( int, mot_id ), Q_ARG( qint32, qint32(sps) ), Q_ARG( qint32, pos ),
-            Q_ARG( quint8, acc_flag ), Q_ARG( int, 2 )
-        );
-    }
+    QByteArray ba(512,0);
+    char* ptr=static_cast<char*>(ba.data());
+    ptr[0]=0x5a;ptr[1]=0x57;ptr[2]=mot;ptr[3]=speed;
+    QMetaObject::invokeMethod(
+        T_PrivPtr( m_obj )->wkrPtr(), "cmd_resetMotor", Qt::QueuedConnection,
+        Q_ARG( QByteArray, ba  )
+    );
 }
-
-void   DevCtl :: resetMotor( MotorId mot, qreal sps, qint32 pos, quint8 acc_flag)
-{ resetMotor( mot, qint32(sps), pos, acc_flag ); }
 
 
 // ============================================================================
@@ -1066,7 +1079,7 @@ auto     DevCtl :: writeUsbEEPROM( const char *buff_ptr, int size, int eeprom_ad
 // ============================================================================
 UsbDev::DevCtl* DevCtl :: createInstance( quint32 vid_pid, quint32 cfg_id )
 {
-    logger = spdlog::rotating_logger_mt("logger", "logs/usb_logger.txt", 1024*1024, 30);
+    if(logger!=NULL) logger = spdlog::rotating_logger_mt("logger", "logs/usb_logger.txt", 1024*1024, 30);
 //        for (int i = 0; i < 50; ++i)
 //            logger->info("{} * {} equals {:>10}", i, i, i*i);
     return usbdev_new_qobj( UsbDev::DevCtl, vid_pid, cfg_id );

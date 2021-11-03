@@ -199,8 +199,8 @@ QPair<qint32,qint32>  Profile :: motorRange( DevCtl::MotorId mot_id ) const
     case DevCtl::MotorId_Color:         return T_PrivPtr(m_obj)->colorMotorRangeRef();
     case DevCtl::MotorId_Light_Spot:    return T_PrivPtr(m_obj)->lightSpotMotorRangeRef();
     case DevCtl::MotorId_Shutter:       return T_PrivPtr(m_obj)->shutterMoterRangeRef();
-    case DevCtl::MotorId_Chin_X:        return T_PrivPtr(m_obj)->xChinMotorRangeRef();
-    case DevCtl::MotorId_Chin_y:        return T_PrivPtr(m_obj)->yChinMotorRangeRef();
+    case DevCtl::MotorId_Chin_Hoz:        return T_PrivPtr(m_obj)->xChinMotorRangeRef();
+    case DevCtl::MotorId_Chin_Vert:        return T_PrivPtr(m_obj)->yChinMotorRangeRef();
     default:return QPair<qint32,qint32>(0,0);
     }
 

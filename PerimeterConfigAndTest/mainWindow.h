@@ -40,7 +40,7 @@ private:
     void moveChinMotors(UsbDev::DevCtl::MoveMethod);
     void move5Motors(UsbDev::DevCtl::MoveMethod);
     Ui::MainWindow *ui;
-    UsbDev::DevCtl *devCtl;
+    UsbDev::DevCtl *devCtl=NULL;
     UsbDev::StatusData data;
 };
 

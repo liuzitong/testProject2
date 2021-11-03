@@ -44,8 +44,8 @@ public:
         MotorId_Color = 4,
         MotorId_Light_Spot = 5,
         MotorId_Shutter = 6,
-        MotorId_Chin_X = 7,
-        MotorId_Chin_y = 8
+        MotorId_Chin_Hoz = 7,
+        MotorId_Chin_Vert = 8
     };
 
     //! sample motor control stage
@@ -102,19 +102,8 @@ public:
      *        while 'acc_flga' is 1, 'sps' should be [ 0, 800 ]
      *
      */
-    void  move5Motors( quint8 sps[5], qint32 value[5],MoveMethod method);
+    void  move5Motors( quint8* sps, qint32* value,MoveMethod method);
 
-    /*!
-     * \brief Positioning spec. Motor
-     * \param mot      [in]  the motor id pre-defined
-     * \param sps      [in]  speed pre seconds. How many motor steps moved in 1 seconds.
-     * \param pos      [in]  absolute position
-     * \param acc_flag [in]  a flag used to means use acceleration or not.
-     *                       0x01 means use acceleration
-     * \note  'sps' parameter can be use 0 or < 0, it will automatically use \n
-     *     default speed.
-     */
-    void  pos5Motors( MotorId mot, qint32 sps, qint32 pos, quint8 acc_flag );
 
     /*!
      * \brief reset Motor, the motor moved to reset position
@@ -126,8 +115,7 @@ public:
      * \note  'sps' parameter can be use 0 or < 0, it will automatically use \n
      *    default speed.
      */
-    void  resetMotor( MotorId mot, qreal sps, qint32 pos, quint8 acc_flag );
-    void  resetMotor( MotorId mot, qint32 sps, qint32 pos, quint8 acc_flag );
+    void  resetMotor( MotorId mot,quint8 speed);
 
     /*!
      * \brief save the motor configuration data

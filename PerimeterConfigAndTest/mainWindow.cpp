@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "UsbViewer/UsbViewerQt.h"
 #include <QDebug>
+#include <QSettings>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -11,10 +12,18 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     setWindowFlags(windowFlags()&~Qt::WindowMaximizeButtonHint);    // 禁止最大化按钮
     setFixedSize(this->width(),this->height());                     // 禁止拖动窗口大小
-    VID="FFFF";PID="A60D";
-    ui->statusBar->showMessage(QString("VID:%1   PID:%2").arg(VID).arg(PID));
+//    VID="FFFF";PID="A60D";
+//    ui->statusBar->showMessage(QString("VID:%1   PID:%2").arg(VID).arg(PID));
+    QSettings *configIni = new QSettings("para.ini", QSettings::IniFormat);
+    VID=configIni->value("ID/VID").toString();
+    PID=configIni->value("ID/PID").toString();
     quint32 vid_pid=VID.toInt(nullptr,16)<<16|PID.toInt(nullptr,16);
     devCtl=UsbDev::DevCtl::createInstance(vid_pid);
+    if(devCtl!=NULL)
+    {
+        ui->label_VID->setText(VID);
+        ui->label_PID->setText(PID);
+    }
     connect(devCtl,&UsbDev::DevCtl::updateInfo,this,&MainWindow::showDevInfo);
 //    connect(devCtl,&UsbDev::DevCtl::newStatusData,this,&MainWindow::getData);
 }
@@ -34,10 +43,15 @@ void MainWindow::on_actionchooseDevice_triggered()
         VID=dialog->VID;
         PID=dialog->PID;
     }
-    ui->statusBar->showMessage(QString("VID:%1   PID:%2").arg(VID).arg(PID));
-    delete devCtl;
+//    ui->statusBar->showMessage(QString("VID:%1   PID:%2").arg(VID).arg(PID));
+    if(devCtl!=NULL) delete devCtl;
     quint32 vid_pid=VID.toInt(nullptr,16)<<16|PID.toInt(nullptr,16);
     devCtl=UsbDev::DevCtl::createInstance(vid_pid);
+    if(devCtl!=NULL)
+    {
+        ui->label_VID->setText(VID);
+        ui->label_PID->setText(PID);
+    }
 //    connect(devCtl,&UsbDev::DevCtl::newStatusData,this,&MainWindow::getData2);
 }
 
@@ -81,7 +95,16 @@ void MainWindow::on_pushButton_absoluteMove5Motors_clicked()
 
 void MainWindow::on_pushButton_resetCheckedMotors_clicked()
 {
-//   ui->groupBox_resetMotor->
+    UsbDev::DevCtl::MotorId motorid;
+    if(ui->radioButton_xMotor->isChecked()) motorid = UsbDev::DevCtl::MotorId::MotorId_X;
+    if(ui->radioButton_yMotor->isChecked()) motorid = UsbDev::DevCtl::MotorId::MotorId_Y;
+    if(ui->radioButton_colorMotor->isChecked()) motorid = UsbDev::DevCtl::MotorId::MotorId_Color;
+    if(ui->radioButton_focusMotor->isChecked()) motorid = UsbDev::DevCtl::MotorId::MotorId_Focus;
+    if(ui->radioButton_spotMotor->isChecked()) motorid = UsbDev::DevCtl::MotorId::MotorId_Light_Spot;
+    if(ui->radioButton_shutterMotor->isChecked()) motorid = UsbDev::DevCtl::MotorId::MotorId_Shutter;
+    if(ui->radioButton_chinHozMotor->isChecked()) motorid = UsbDev::DevCtl::MotorId::MotorId_Chin_Hoz;
+    if(ui->radioButton_chinVertMotor->isChecked()) motorid = UsbDev::DevCtl::MotorId::MotorId_Chin_Vert;
+    devCtl->resetMotor(motorid,ui->lineEdit_resetSpeed->text().toInt());
 }
 
 void MainWindow::moveChinMotors(UsbDev::DevCtl::MoveMethod method)

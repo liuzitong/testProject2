@@ -87,8 +87,8 @@ public :
     inline auto  colorMotorRef()                -> StatusData_MotorItem& { return m_color_motor;  }
     inline auto  lightSpotMotorRef()            -> StatusData_MotorItem& { return m_light_spot_motor; }
     inline auto  shutterMotorRef()              -> StatusData_MotorItem& { return m_shutter_motor; }
-    inline auto  xChinMotorRef()                -> StatusData_MotorItem& { return m_x_chin_motor; }
-    inline auto  yChinMotorRef()                -> StatusData_MotorItem& { return m_y_chin_motor; }
+    inline auto  hozChinMotorRef()                -> StatusData_MotorItem& { return m_x_chin_motor; }
+    inline auto  vertChinMotorRef()                -> StatusData_MotorItem& { return m_y_chin_motor; }
 };
 
 // ============================================================================
@@ -191,24 +191,24 @@ StatusData :: StatusData ( const QByteArray &ba )
     priv->colorMotorRef().isBusyRef()=buff[8];
     priv->lightSpotMotorRef().isBusyRef()=buff[9];
     priv->shutterMotorRef().isBusyRef()=buff[10];
-    priv->xChinMotorRef().isBusyRef()=buff[11];
-    priv->yChinMotorRef().isBusyRef()=buff[12];
+    priv->hozChinMotorRef().isBusyRef()=buff[11];
+    priv->vertChinMotorRef().isBusyRef()=buff[12];
     priv->xMotorRef().cmdCntrRef()=buff[13];
     priv->yMotorRef().cmdCntrRef()=buff[14];
     priv->focusMotorRef().cmdCntrRef()=buff[15];
     priv->colorMotorRef().cmdCntrRef()=buff[16];
     priv->lightSpotMotorRef().cmdCntrRef()=buff[17];
     priv->shutterMotorRef().cmdCntrRef()=buff[18];
-    priv->xChinMotorRef().cmdCntrRef()=buff[19];
-    priv->yChinMotorRef().cmdCntrRef()=buff[20];
+    priv->hozChinMotorRef().cmdCntrRef()=buff[19];
+    priv->vertChinMotorRef().cmdCntrRef()=buff[20];
     priv->xMotorRef().positionRef()=gReadData_Le_I32(&buff[24]);
     priv->yMotorRef().positionRef()=gReadData_Le_I32(&buff[28]);
     priv->focusMotorRef().positionRef()=gReadData_Le_I32(&buff[32]);
     priv->colorMotorRef().positionRef()=gReadData_Le_I32(&buff[36]);
     priv->lightSpotMotorRef().positionRef()=gReadData_Le_I32(&buff[40]);
     priv->shutterMotorRef().positionRef()=gReadData_Le_I32(&buff[44]);
-    priv->xChinMotorRef().positionRef()=gReadData_Le_I32(&buff[48]);
-    priv->yChinMotorRef().positionRef()=gReadData_Le_I32(&buff[52]);
+    priv->hozChinMotorRef().positionRef()=gReadData_Le_I32(&buff[48]);
+    priv->vertChinMotorRef().positionRef()=gReadData_Le_I32(&buff[52]);
     priv->envLightDARef()=gReadData_Le_I32(&buff[56]);
     priv->castLightDARef()=gReadData_Le_I32(&buff[60]);
 
@@ -237,8 +237,8 @@ bool     StatusData :: isMotorBusy( DevCtl::MotorId mot_id ) const
     case DevCtl::MotorId_Color:         return T_PrivPtr(m_obj)->colorMotorRef().isBusyRef();
     case DevCtl::MotorId_Light_Spot:    return T_PrivPtr(m_obj)->lightSpotMotorRef().isBusyRef();
     case DevCtl::MotorId_Shutter:       return T_PrivPtr(m_obj)->shutterMotorRef().isBusyRef();
-    case DevCtl::MotorId_Chin_X:        return T_PrivPtr(m_obj)->xChinMotorRef().isBusyRef();
-    case DevCtl::MotorId_Chin_y:        return T_PrivPtr(m_obj)->yChinMotorRef().isBusyRef();
+    case DevCtl::MotorId_Chin_Hoz:      return T_PrivPtr(m_obj)->hozChinMotorRef().isBusyRef();
+    case DevCtl::MotorId_Chin_Vert:     return T_PrivPtr(m_obj)->vertChinMotorRef().isBusyRef();
     default: return false;
     }
 }
@@ -255,8 +255,8 @@ int      StatusData :: motorCmdCntr( DevCtl::MotorId  mot_id ) const
     case DevCtl::MotorId_Color:         return T_PrivPtr(m_obj)->colorMotorRef().cmdCntrRef();
     case DevCtl::MotorId_Light_Spot:    return T_PrivPtr(m_obj)->lightSpotMotorRef().cmdCntrRef();
     case DevCtl::MotorId_Shutter:       return T_PrivPtr(m_obj)->shutterMotorRef().cmdCntrRef();
-    case DevCtl::MotorId_Chin_X:        return T_PrivPtr(m_obj)->xChinMotorRef().cmdCntrRef();
-    case DevCtl::MotorId_Chin_y:        return T_PrivPtr(m_obj)->yChinMotorRef().cmdCntrRef();
+    case DevCtl::MotorId_Chin_Hoz:      return T_PrivPtr(m_obj)->hozChinMotorRef().cmdCntrRef();
+    case DevCtl::MotorId_Chin_Vert:     return T_PrivPtr(m_obj)->vertChinMotorRef().cmdCntrRef();
     default: return false;
     }
 }
@@ -271,8 +271,8 @@ qint32   StatusData :: motorPosition( DevCtl::MotorId mot_id ) const
     case DevCtl::MotorId_Color:         return T_PrivPtr(m_obj)->colorMotorRef().positionRef();
     case DevCtl::MotorId_Light_Spot:    return T_PrivPtr(m_obj)->lightSpotMotorRef().positionRef();
     case DevCtl::MotorId_Shutter:       return T_PrivPtr(m_obj)->shutterMotorRef().positionRef();
-    case DevCtl::MotorId_Chin_X:        return T_PrivPtr(m_obj)->xChinMotorRef().positionRef();
-    case DevCtl::MotorId_Chin_y:        return T_PrivPtr(m_obj)->yChinMotorRef().positionRef();
+    case DevCtl::MotorId_Chin_Hoz:      return T_PrivPtr(m_obj)->hozChinMotorRef().positionRef();
+    case DevCtl::MotorId_Chin_Vert:     return T_PrivPtr(m_obj)->vertChinMotorRef().positionRef();
     default: return false;
     }
 }
