@@ -103,7 +103,7 @@ public :
     Q_INVOKABLE bool  cmd_TurnOnVideo ( );
     Q_INVOKABLE bool  cmd_TurnOffVideo( );
     Q_INVOKABLE bool  cmd_MoveChinMotors  (QByteArray ba);
-    Q_INVOKABLE bool  cmd_Move5Motors  ( quint8 sps[5], qint32 value[5],DevCtl::MoveMethod method );
+    Q_INVOKABLE bool  cmd_Move5Motors  ( QByteArray ba  );
     Q_INVOKABLE bool  cmd_SaveMotorCfg( int mot, const QByteArray &ba );
     Q_INVOKABLE bool  cmd_ControlSampleMotor( int stage, qint32 sps, quint8 acc_flag );
     Q_INVOKABLE bool  cmd_SetLamp ( int lamp, bool );
@@ -394,7 +394,7 @@ bool  DevCtl_Worker :: cmd_MoveChinMotors( QByteArray ba)
    }
    else
    {
-       updateInfo("send 2motors moving command failed.");
+       updateInfo("send cmd_MoveChinMotors failed.");
    }
    return true;
 }
@@ -404,20 +404,22 @@ bool  DevCtl_Worker :: cmd_MoveChinMotors( QByteArray ba)
 // ============================================================================
 // cmd: motor move
 // ============================================================================
-bool  DevCtl_Worker :: cmd_Move5Motors( quint8 sps[5], qint32 dist[5] ,DevCtl::MoveMethod method)
+bool  DevCtl_Worker :: cmd_Move5Motors( QByteArray ba )
 {
-    if ( ! this->isDeviceWork()) { return false; }
-    unsigned char buff[512]; bool ret = true;
-
-    if ( ret ) {
-        buff[0] = 0x5a;
-        buff[1] = method  == DevCtl::MoveMethod::Relative ? 0x52 : 0x53 ;
-        memcpy(&buff[3],&sps[0],sizeof (*sps));
-        memcpy(&buff[8],&dist[0],sizeof (*dist));
-        ret = this->cmdComm_bulkOutSync( buff, sizeof( buff ) );
-        if ( ! ret ) { qWarning("send 5motors moving command failed."); }
+    QString msg=buffToQStr(reinterpret_cast<const char*>(ba.data()),28);
+    spdlog::info(msg.toStdString());
+    if ( ! this->isDeviceWork()) { updateInfo("no connection!");return false; }
+    bool ret = this->cmdComm_bulkOutSync((unsigned char*) ba.data(), ba.size() );
+    if(ret)
+    {
+        logger->info("move chin motor data sent:"+msg.toStdString());
+        emit updateInfo("message sent success raw data is:\n"+msg);
     }
-    return ret;
+    else
+    {
+        updateInfo("send cmd_Move5Motors failed.");
+    }
+    return true;
 }
 
 // ============================================================================
@@ -906,35 +908,38 @@ UsbDev::FrameData    DevCtl :: takeNextPendingFrameData()
 // ============================================================================
 // move the motor
 // ============================================================================
-void   DevCtl :: moveChinMotors( quint8* sps, qint32* dist,MoveMethod method)
+void  DevCtl :: moveChinMotors( quint8* sps, qint32* dist,MoveMethod method)
 {
-//    bool ret;
-    QByteArray ba;
-    ba.resize(512);
+
+    QByteArray ba(512,0);
     char* ptr=static_cast<char*>(ba.data());
     ptr[0]=0x5a;
     method==MoveMethod::Relative? ptr[1]=0x50:0x51;
     memcpy(ptr+2,sps,2);
     memcpy(ptr+4,dist,8);
     QMetaObject::invokeMethod(
-        T_PrivPtr( m_obj )->wkrPtr(), "cmd_MoveChinMotors", Qt::ConnectionType::QueuedConnection,
+        T_PrivPtr( m_obj )->wkrPtr(), "cmd_MoveChinMotors", Qt::QueuedConnection,
         Q_ARG( QByteArray, ba )
     );
-//    return ret;
 }
 
 
 // ============================================================================
 // move the motor
 // ============================================================================
-void   DevCtl :: move5Motors( quint8 sps[5], qint32 dist[5],MoveMethod method)
+void   DevCtl :: move5Motors( quint8* sps, qint32* dist,MoveMethod method)
 {
-//    bool ret;
+    QByteArray ba(512,0);
+    char* ptr=static_cast<char*>(ba.data());
+    ptr[0]=0x5a;
+    method==MoveMethod::Relative? ptr[1]=0x52:0x53;
+    memcpy(ptr+3,sps,5);
+    memcpy(ptr+8,dist,20);
     QMetaObject::invokeMethod(
-        T_PrivPtr( m_obj )->wkrPtr(), "cmd_move5Motors", Qt::QueuedConnection,
-        Q_ARG( quint8, sps[5] ), Q_ARG( qint32, dist[5] ), Q_ARG( MoveMethod, method )
+        T_PrivPtr( m_obj )->wkrPtr(), "cmd_Move5Motors", Qt::QueuedConnection,
+        Q_ARG( QByteArray, ba  )
     );
-//    return ret;
+
 }
 
 

@@ -23,14 +23,22 @@ private slots:
 
     void on_actionchooseDevice_triggered();
 
-    void getData();
-
-    void getData2();
-
     void on_pushButton_relativeMoveChin_clicked();
 
+    void on_pushButton_absoluteMoveChin_clicked();
+
+    void on_pushButton_relativeMove5Motors_clicked();
+
+    void on_pushButton_absoluteMove5Motors_clicked();
+
+    void on_pushButton_resetCheckedMotors_clicked();
+
     void showDevInfo(QString);
+    void getData();
+    void getData2();
 private:
+    void moveChinMotors(UsbDev::DevCtl::MoveMethod);
+    void move5Motors(UsbDev::DevCtl::MoveMethod);
     Ui::MainWindow *ui;
     UsbDev::DevCtl *devCtl;
     UsbDev::StatusData data;

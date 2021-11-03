@@ -656,7 +656,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QGroupBox" name="groupBox_11">
+            <widget class="QGroupBox" name="groupBox_resetMotor">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
                <horstretch>0</horstretch>
@@ -668,65 +668,65 @@
              </property>
              <layout class="QGridLayout" name="gridLayout">
               <item row="1" column="2">
-               <widget class="QCheckBox" name="checkBox_resetShutter">
+               <widget class="QRadioButton" name="radioButton_shutterMotor">
                 <property name="text">
                  <string>快门电机</string>
                 </property>
                </widget>
               </item>
-              <item row="0" column="1">
-               <widget class="QCheckBox" name="checkBox_resetFocus">
+              <item row="1" column="0">
+               <widget class="QRadioButton" name="radioButton_yMotor">
                 <property name="text">
-                 <string>焦距电机</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QCheckBox" name="checkBox_resetColor">
-                <property name="text">
-                 <string>颜色电机</string>
+                 <string>y电机</string>
                 </property>
                </widget>
               </item>
               <item row="2" column="3">
                <widget class="QPushButton" name="pushButton_resetCheckedMotors">
                 <property name="text">
-                 <string>复位勾选电机</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="3">
-               <widget class="QCheckBox" name="checkBox_resetChinHoz">
-                <property name="text">
-                 <string>腮托水平电机</string>
+                 <string>勾选电机</string>
                 </property>
                </widget>
               </item>
               <item row="1" column="3">
-               <widget class="QCheckBox" name="checkBox_resetChinVert">
+               <widget class="QRadioButton" name="radioButton_chinVertMotor">
                 <property name="text">
                  <string>腮托竖向电机</string>
                 </property>
                </widget>
               </item>
-              <item row="1" column="0">
-               <widget class="QCheckBox" name="checkBox_resetY">
-                <property name="text">
-                 <string>y电机</string>
-                </property>
-               </widget>
-              </item>
               <item row="0" column="0">
-               <widget class="QCheckBox" name="checkBox_resetX">
+               <widget class="QRadioButton" name="radioButton_xMotor">
                 <property name="text">
                  <string>x电机</string>
                 </property>
                </widget>
               </item>
+              <item row="0" column="1">
+               <widget class="QRadioButton" name="radioButton_focusMotor">
+                <property name="text">
+                 <string>焦距电机</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="3">
+               <widget class="QRadioButton" name="radioButton_chinHozMotor">
+                <property name="text">
+                 <string>腮托水平电机</string>
+                </property>
+               </widget>
+              </item>
               <item row="0" column="2">
-               <widget class="QCheckBox" name="checkBox_resetSpot">
+               <widget class="QRadioButton" name="radioButton_spotMotor">
                 <property name="text">
                  <string>光斑电机</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QRadioButton" name="radioButton_colorMotor">
+                <property name="text">
+                 <string>颜色电机</string>
                 </property>
                </widget>
               </item>
