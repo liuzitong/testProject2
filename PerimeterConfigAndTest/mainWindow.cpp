@@ -1,32 +1,68 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "UsbViewer/UsbViewerQt.h"
 #include <QDebug>
 #include <QSettings>
-
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/rotating_file_sink.h>
+#include <usbdev/main/usbdev_statusdata.hxx>
+#include <QImage>
+#include <QPainter>
+#pragma execution_character_set("utf-8")
+// 不能删
+static std::shared_ptr<spdlog::logger> logger=NULL;
+static QString buffToQStr(const char* buff,size_t length)
+{
+    QString str;
+    QByteArray byteArray= QByteArray::fromRawData(buff,length);
+    for(int i = 0; i< byteArray.length(); i++){
+       QString str1 = QString("%1").arg(i,2,10, QLatin1Char('0'));
+       uchar temp=static_cast<uchar>(byteArray[i]);
+       QString str2 = QString("%1").arg(temp,2,16, QLatin1Char('0'));
+       str.append(QString("%1:%2 ").arg(str1).arg(str2));
+    }
+    return qPrintable(str);
+}
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    if(logger!=NULL) logger = spdlog::rotating_logger_mt("logger", "logs/perimeterConfig.txt", 1024*1024, 30);
     ui->setupUi(this);
-    setWindowFlags(windowFlags()&~Qt::WindowMaximizeButtonHint);    // 禁止最大化按钮
-    setFixedSize(this->width(),this->height());                     // 禁止拖动窗口大小
-//    VID="FFFF";PID="A60D";
-//    ui->statusBar->showMessage(QString("VID:%1   PID:%2").arg(VID).arg(PID));
+    setWindowFlags(windowFlags()&~Qt::WindowMaximizeButtonHint);                    // 禁止最大化按钮
+    setFixedSize(this->width(),this->height());                                     // 禁止拖动窗口大小
     QSettings *configIni = new QSettings("para.ini", QSettings::IniFormat);
     VID=configIni->value("ID/VID").toString();
     PID=configIni->value("ID/PID").toString();
-    quint32 vid_pid=VID.toInt(nullptr,16)<<16|PID.toInt(nullptr,16);
-    devCtl=UsbDev::DevCtl::createInstance(vid_pid);
-    if(devCtl!=NULL)
-    {
-        ui->label_VID->setText(VID);
-        ui->label_PID->setText(PID);
-    }
-    connect(devCtl,&UsbDev::DevCtl::updateInfo,this,&MainWindow::showDevInfo);
-//    connect(devCtl,&UsbDev::DevCtl::newStatusData,this,&MainWindow::getData);
+    m_timer=new QTimer();
+    connect(m_timer,&QTimer::timeout,[&](){ui->label_connectionStatus->setText("连接断开");});
+    init();
 }
+
+void MainWindow::init()
+{
+    quint32 vid_pid=VID.toInt(nullptr,16)<<16|PID.toInt(nullptr,16);
+    m_devCtl=UsbDev::DevCtl::createInstance(vid_pid);
+    ui->label_VID->setText(VID);
+    ui->label_PID->setText(PID);
+    connect(m_devCtl,&UsbDev::DevCtl::workStatusChanged,this,&MainWindow::refreshConnectionStatus);
+    connect(m_devCtl,&UsbDev::DevCtl::updateInfo,this,&MainWindow::showDevInfo);
+    connect(m_devCtl,&UsbDev::DevCtl::newStatusData,this,&MainWindow::refreshStatus);
+    connect(m_devCtl,&UsbDev::DevCtl::newFrameData,this,&MainWindow::refreshVideo);
+}
+
+void MainWindow::uninit()
+{
+    m_timer->stop();
+    ui->label_connectionStatus->setText("未连接");
+    disconnect(m_devCtl,&UsbDev::DevCtl::workStatusChanged,this,&MainWindow::refreshConnectionStatus);
+    disconnect(m_devCtl,&UsbDev::DevCtl::updateInfo,this,&MainWindow::showDevInfo);
+    disconnect(m_devCtl,&UsbDev::DevCtl::newStatusData,this,&MainWindow::refreshStatus);
+    disconnect(m_devCtl,&UsbDev::DevCtl::newFrameData,this,&MainWindow::refreshVideo);
+    delete m_devCtl;
+}
+
 
 MainWindow::~MainWindow()
 {
@@ -43,28 +79,124 @@ void MainWindow::on_actionchooseDevice_triggered()
         VID=dialog->VID;
         PID=dialog->PID;
     }
-//    ui->statusBar->showMessage(QString("VID:%1   PID:%2").arg(VID).arg(PID));
-    if(devCtl!=NULL) delete devCtl;
-    quint32 vid_pid=VID.toInt(nullptr,16)<<16|PID.toInt(nullptr,16);
-    devCtl=UsbDev::DevCtl::createInstance(vid_pid);
-    if(devCtl!=NULL)
+    if(m_devCtl!=NULL)
     {
-        ui->label_VID->setText(VID);
-        ui->label_PID->setText(PID);
+        uninit();
     }
-//    connect(devCtl,&UsbDev::DevCtl::newStatusData,this,&MainWindow::getData2);
+    init();
 }
 
-void MainWindow::getData()
+void MainWindow::refreshStatus()
 {
-    qDebug()<<"getData";
-    data=devCtl->takeNextPendingStatusData();
+    spdlog::info("refreshStatus");
+    m_timer->start(1000);
+    ui->label_connectionStatus->setText("保持连接");
+    m_statusData=m_devCtl->takeNextPendingStatusData();
+    ui->label_stateX->setText(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId::MotorId_X)?"忙":"闲");
+    ui->label_stateY->setText(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId::MotorId_Y)?"忙":"闲");
+    ui->label_stateFocus->setText(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId::MotorId_Focus)?"忙":"闲");
+    ui->label_stateColor->setText(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId::MotorId_Color)?"忙":"闲");
+    ui->label_stateSpot->setText(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId::MotorId_Light_Spot)?"忙":"闲");
+    ui->label_stateShutter->setText(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId::MotorId_Shutter)?"忙":"闲");
+    ui->label_stateChinHoz->setText(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId::MotorId_Chin_Hoz)?"忙":"闲");
+    ui->label_stateChinVert->setText(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId::MotorId_Chin_Vert)?"忙":"闲");
+
+    ui->label_answerState->setText(m_statusData.answerpadStatus()?"按下":"松开");
+    ui->label_eyeglassStatus->setText(m_statusData.eyeglassStatus()?"升起":"放下");
+
+    ui->label_castLightDA->setText(QString(m_statusData.castLightDA()));
+    ui->label_environmentDA->setText(QString(m_statusData.envLightDA()));
 }
 
-void MainWindow::getData2()
+
+void MainWindow::refreshVideo()
 {
-    qDebug()<<"getData2";
-    data=devCtl->takeNextPendingStatusData();
+    spdlog::info("refreshVideo");
+    m_frameData=m_devCtl->takeNextPendingFrameData();
+    uchar* data=(uchar*)m_frameData.rawData().data();
+    QSize size=m_profile.videoSize();
+    QImage image(data,size.width(),size.height(),QImage::Format::Format_Grayscale8);
+    QPainter painter(ui->openGLWidget);
+    QPixmap pix;
+    pix.convertFromImage(image);
+    painter.begin(ui->openGLWidget);
+    painter.drawPixmap(0,0,pix.width(), pix.height(),pix);
+    painter.end();
+    auto str=("frame time stamp:"+buffToQStr((const char*)(data)+4,4)).toStdString().c_str();
+    spdlog::info(str);
+}
+
+void MainWindow::refreshConnectionStatus(int status)
+{
+    switch (status)
+    {
+    case UsbDev::DevCtl::WorkStatus::WorkStatus_E_UnExpected:ui->label_connectionStatus->setText("连接异常");break;
+    case UsbDev::DevCtl::WorkStatus::WorkStatus_S_ConnectToDev:ui->label_connectionStatus->setText("正在连接");break;
+    case UsbDev::DevCtl::WorkStatus::WorkStatus_S_Disconnected:ui->label_connectionStatus->setText("连接断开");break;
+    case UsbDev::DevCtl::WorkStatus::WorkStatus_S_OK:ui->label_connectionStatus->setText("连接正常");break;
+    }
+    m_timer->start();
+}
+
+void MainWindow::on_pushButton_cameraSwitch_clicked()
+{
+    m_devCtl->setFrontVideo(!m_statusData.cameraStatus());
+}
+
+void MainWindow::on_pushButton_chinMoveUp_pressed()
+{
+    qint32 value[2]={0};quint8 speed[2]={0};
+    speed[1]=ui->spinBox_speedChinMove->text().toInt();
+    value[1]=m_profile.motorRange(UsbDev::DevCtl::MotorId::MotorId_Y).first;
+    m_devCtl->moveChinMotors(speed,value,UsbDev::DevCtl::MoveMethod::Abosolute);
+}
+
+void MainWindow::on_pushButton_chinMoveUp_released()
+{
+    qint32 value[2]={0};quint8 speed[2]={0};
+    m_devCtl->moveChinMotors(speed,value,UsbDev::DevCtl::MoveMethod::Abosolute);
+}
+
+void MainWindow::on_pushButton_chinMoveDown_pressed()
+{
+    qint32 value[2]={0};quint8 speed[2]={0};
+    speed[1]=ui->spinBox_speedChinMove->text().toInt();
+    value[1]=m_profile.motorRange(UsbDev::DevCtl::MotorId::MotorId_Y).second;
+    m_devCtl->moveChinMotors(speed,value,UsbDev::DevCtl::MoveMethod::Abosolute);
+}
+
+void MainWindow::on_pushButton_chinMoveDown_released()
+{
+    qint32 value[2]={0};quint8 speed[2]={0};
+    m_devCtl->moveChinMotors(speed,value,UsbDev::DevCtl::MoveMethod::Abosolute);
+}
+
+void MainWindow::on_pushButton_chinMoveLeft_pressed()
+{
+    qint32 value[2]={0};quint8 speed[2]={0};
+    speed[0]=ui->spinBox_speedChinMove->text().toInt();
+    value[0]=m_profile.motorRange(UsbDev::DevCtl::MotorId::MotorId_X).first;
+    m_devCtl->moveChinMotors(speed,value,UsbDev::DevCtl::MoveMethod::Abosolute);
+}
+
+void MainWindow::on_pushButton_chinMoveLeft_released()
+{
+    qint32 value[2]={0};quint8 speed[2]={0};
+    m_devCtl->moveChinMotors(speed,value,UsbDev::DevCtl::MoveMethod::Abosolute);
+}
+
+void MainWindow::on_pushButton_chinMoveRight_pressed()
+{
+    qint32 value[2]={0};quint8 speed[2]={0};
+    speed[0]=ui->spinBox_speedChinMove->text().toInt();
+    value[0]=m_profile.motorRange(UsbDev::DevCtl::MotorId::MotorId_X).second;
+    m_devCtl->moveChinMotors(speed,value,UsbDev::DevCtl::MoveMethod::Abosolute);
+}
+
+void MainWindow::on_pushButton_chinMoveRight_released()
+{
+    qint32 value[2]={0};quint8 speed[2]={0};
+    m_devCtl->moveChinMotors(speed,value,UsbDev::DevCtl::MoveMethod::Abosolute);
 }
 
 void MainWindow::on_pushButton_relativeMoveChin_clicked()
@@ -104,7 +236,7 @@ void MainWindow::on_pushButton_resetCheckedMotors_clicked()
     if(ui->radioButton_shutterMotor->isChecked()) motorid = UsbDev::DevCtl::MotorId::MotorId_Shutter;
     if(ui->radioButton_chinHozMotor->isChecked()) motorid = UsbDev::DevCtl::MotorId::MotorId_Chin_Hoz;
     if(ui->radioButton_chinVertMotor->isChecked()) motorid = UsbDev::DevCtl::MotorId::MotorId_Chin_Vert;
-    devCtl->resetMotor(motorid,ui->lineEdit_resetSpeed->text().toInt());
+    m_devCtl->resetMotor(motorid,ui->lineEdit_resetSpeed->text().toInt());
 }
 
 void MainWindow::moveChinMotors(UsbDev::DevCtl::MoveMethod method)
@@ -121,7 +253,7 @@ void MainWindow::moveChinMotors(UsbDev::DevCtl::MoveMethod method)
         value[1] = ui->lineEdit_posChinVert->text().toInt();
         speed[1] = ui->lineEdit_speedChinVert->text().toInt();
     }
-    devCtl->moveChinMotors(speed,value,method);
+    m_devCtl->moveChinMotors(speed,value,method);
 }
 
 void MainWindow::move5Motors(UsbDev::DevCtl::MoveMethod method)
@@ -153,5 +285,6 @@ void MainWindow::move5Motors(UsbDev::DevCtl::MoveMethod method)
         value[4]=ui->lineEdit_posSpot->text().toInt();
         speed[4]=ui->lineEdit_speedSpot->text().toInt();
     }
-    devCtl->move5Motors(speed,value,method);
+    m_devCtl->move5Motors(speed,value,method);
 }
+

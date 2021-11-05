@@ -1,10 +1,13 @@
-#ifndef MAINWINDOW_H
+﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
 #include <usbdev/main/usbdev_devctl.hxx>
 #include <usbdev/main/usbdev_statusdata.hxx>
+#include <usbdev/main/usbdev_framedata.hxx>
+#include <usbdev/main/usbdev_profile.hxx>
 #include <QStandardItemModel>
+#include <QTimer>
 
 namespace Ui {
 class MainWindow;
@@ -21,6 +24,10 @@ public:
 
 private slots:
 
+    void showDevInfo(QString);
+    void refreshStatus();
+    void refreshVideo();
+    void refreshConnectionStatus(int);
     void on_actionchooseDevice_triggered();
 
     void on_pushButton_relativeMoveChin_clicked();
@@ -33,15 +40,36 @@ private slots:
 
     void on_pushButton_resetCheckedMotors_clicked();
 
-    void showDevInfo(QString);
-    void getData();
-    void getData2();
+    void on_pushButton_cameraSwitch_clicked();
+
+    void on_pushButton_chinMoveUp_pressed();
+
+    void on_pushButton_chinMoveUp_released();
+
+    void on_pushButton_chinMoveDown_pressed();
+
+    void on_pushButton_chinMoveDown_released();
+
+    void on_pushButton_chinMoveLeft_pressed();
+
+    void on_pushButton_chinMoveLeft_released();
+
+    void on_pushButton_chinMoveRight_pressed();
+
+    void on_pushButton_chinMoveRight_released();
+
+
 private:
     void moveChinMotors(UsbDev::DevCtl::MoveMethod);
     void move5Motors(UsbDev::DevCtl::MoveMethod);
+    void init();
+    void uninit();
     Ui::MainWindow *ui;
-    UsbDev::DevCtl *devCtl=NULL;
-    UsbDev::StatusData data;
+    UsbDev::DevCtl *m_devCtl=NULL;
+    UsbDev::StatusData m_statusData;
+    UsbDev::FrameData m_frameData;
+    UsbDev::Profile m_profile;
+    QTimer* m_timer=NULL;
 };
 
 #endif // MAINWINDOW_H

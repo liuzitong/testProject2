@@ -1,4 +1,4 @@
-#ifndef USBDEV_DEVCTL_CXX
+﻿#ifndef USBDEV_DEVCTL_CXX
 #define USBDEV_DEVCTL_CXX
 
 #include "usbdev_devctl.hxx"
@@ -155,7 +155,7 @@ void   DevCtl_Worker :: init( bool req_emit )
         m_wks = DevCtl::WorkStatus_S_ConnectToDev;
         if ( req_emit ) { emit this->workStatusChanged( DevCtl::WorkStatus_S_ConnectToDev ); }
         m_usb_dev = usbdev_new( SciPack::NwkUsbObj2, m_vid_pid, uint8_t( m_cfg_id ), 0xff000000, 0, 0 );//连接实例
-        qDebug()<<"status is:"<<m_usb_dev->status();
+//        qDebug()<<"status is:"<<m_usb_dev->status();
         if ( m_usb_dev->status() == SciPack::NwkUsbObj2::StatusID_S_OK ) {
             m_wks = DevCtl::WorkStatus_S_OK;
             if ( req_emit ) { emit this->workStatusChanged( DevCtl::WorkStatus_S_OK ); }
@@ -228,11 +228,11 @@ bool   DevCtl_Worker :: cmd_ReadProfile( bool req_emit )
     if ( ret ) {
         buff[0] = 0x5a; buff[1] = 0xf0; buff[2] = 0x00; buff[3] = 0;
         ret = this->cmdComm_bulkOutSync( buff, sizeof( buff ) );
-        if ( ! ret ) { qWarning("send read profile command failed."); }
+        if ( ! ret ) { spdlog::warn("send read profile command failed."); }
     }
     if ( ret ) {
         ret = this->cmdComm_bulkInSync( buff, sizeof( buff ));
-        if ( ! ret ) { qWarning("recv. profile data failed."); }
+        if ( ! ret ) { spdlog::warn("recv. profile data failed."); }
     }
     if ( ret ) {
         Profile profile( QByteArray::fromRawData( reinterpret_cast<const char*>(buff), sizeof(buff)));
@@ -252,23 +252,19 @@ bool   DevCtl_Worker :: cmd_ReadStatusData()
 
     if ( ! this->isDeviceWork()) { return false; }
 
-    unsigned char buff[512]; bool ret = true;
+    unsigned char buff[512]={0}; bool ret = true;
     if ( ret ) {
-        buff[0] = 0x55; buff[1] = 0xaa; buff[2] = 0xa4; buff[3] = 0x00;
-        buff[4] = 0x00; buff[5] = 0x02;
+        buff[0] = 0x55; buff[1] = 0xf3;
+//        buff[2] = 0xa4; buff[3] = 0x00;buff[4] = 0x00; buff[5] = 0x02;
         ret = this->cmdComm_bulkOutSync( buff, sizeof( buff ));
-        if ( ! ret  ) { qWarning("send read status command failed."); }
+        if ( ! ret  ) { spdlog::warn("send read status command failed."); }
     }
     if ( ret ) {
         ret = this->cmdComm_bulkInSync( buff, sizeof( buff ));
-        if ( ! ret ) { qWarning("recv. status data failed."); }
+        if ( ! ret ) { spdlog::warn("recv. status data failed."); }
     }
     if ( ret ) {
-#ifdef QT_DEBUG
-        qDebug()<<"status Data:";
-        qDebug()<<buffToQStr(reinterpret_cast<const char*>(buff),50);
-#endif
-        emit
+        spdlog::info("recv. status data succesfully.");
         StatusData sd( QByteArray::fromRawData( reinterpret_cast<const char*>(buff),sizeof(buff)));
         if ( ! sd.isEmpty()) {
             emit this->newStatusData( sd );
@@ -297,7 +293,6 @@ bool  DevCtl_Worker :: cmd_ReadFrameData()
         FrameData fd( ba );
         emit this->newFrameData( fd );
     }
-
     return ret;
 }
 
@@ -315,7 +310,7 @@ bool  DevCtl_Worker :: cmd_TurnOnVideo()
         pkg.m_req_type = 0x40; pkg.m_req = 0xb2; pkg.m_value = 0;
         pkg.m_index = 0x01; pkg.m_length = 0;
         if ( m_usb_dev->ctlTransSync( & pkg, nullptr, nullptr ) != SCIPACK_S_OK ) {
-            qWarning("control transfer failed, can not open EP2 IN.");
+            spdlog::warn("control transfer failed, can not open EP2 IN.");
             ret = false;
         }
     }
@@ -323,7 +318,7 @@ bool  DevCtl_Worker :: cmd_TurnOnVideo()
         unsigned char buff[512];
         buff[0] = 0x5a; buff[1] = 0x70; buff[2] = 0x00; buff[3] = 0x01;
         ret = this->cmdComm_bulkOutSync( buff, sizeof( buff ));
-        if ( ! ret ) { qWarning("send video-on cmd failed."); }
+        if ( ! ret ) { spdlog::warn("send video-on cmd failed."); }
     }
     if ( ret ) {
         m_is_video_on = true; m_elapse_tmr.start();
@@ -346,14 +341,14 @@ bool  DevCtl_Worker :: cmd_TurnOffVideo()
         unsigned char buff[512];
         buff[0] = 0x5a; buff[1] = 0x70; buff[2] = 0x00; buff[3] = 0x00;
         ret = this->cmdComm_bulkOutSync( buff, sizeof( buff ));
-        if ( ! ret ) { qWarning("send video-off cmd failed."); }
+        if ( ! ret ) { spdlog::warn("send video-off cmd failed."); }
     }
     if ( ret ) { // turn off EP2
         SciPack::NwkUsbObj2::SetupPacket pkg;
         pkg.m_req_type = 0x40; pkg.m_req = 0xb2; pkg.m_value = 0;
         pkg.m_index = 0x02; pkg.m_length = 0;
         if ( m_usb_dev->ctlTransSync( & pkg, nullptr, nullptr ) != SCIPACK_S_OK ) {
-            qWarning("control transfer failed, can not close EP2 IN.");
+            spdlog::warn("control transfer failed, can not close EP2 IN.");
             ret = false;
         }
     }
@@ -452,7 +447,7 @@ bool  DevCtl_Worker :: cmd_SaveMotorCfg( int mot, const QByteArray &ba )
         buff[0] = 0x5a; buff[1] = 0x53; buff[2] = quint8( mot ); buff[3] = 0;
         std::memcpy( & buff[4], ba.constData(), size_t( ba.size() >= 500 ? 500 : ba.size()));
         ret = this->cmdComm_bulkOutSync( buff, sizeof(buff) );
-        if ( ! ret ) { qWarning("send save motor config. failed."); }
+        if ( ! ret ) { spdlog::warn("send save motor config. failed."); }
     }
     return ret;
 }
@@ -470,7 +465,7 @@ bool  DevCtl_Worker :: cmd_ControlSampleMotor( int stage, qint32 sps, quint8 acc
         gPutInt32( & buff[8], 0, m_profile );
         buff[12] = acc_flag;
         ret = this->cmdComm_bulkOutSync( buff, sizeof( buff ));
-        if ( ! ret ) { qWarning("send control sample motor cmd failed."); }
+        if ( ! ret ) { spdlog::warn("send control sample motor cmd failed."); }
     }
     return ret;
 }
@@ -486,7 +481,7 @@ bool  DevCtl_Worker :: cmd_SetLamp( int lamp, bool sw )
     unsigned char buff[512];
     buff[0] = 0x5a; buff[1] = 0x90; buff[2] = quint8( lamp ); buff[3] = ( sw ? 0x01 : 0x00 );
     bool ret = this->cmdComm_bulkOutSync( buff, sizeof( buff ));
-    if ( ! ret ) { qWarning("send set lamp command failed."); }
+    if ( ! ret ) { spdlog::warn("send set lamp command failed."); }
     return ret;
 }
 
@@ -501,7 +496,7 @@ bool   DevCtl_Worker :: cmd_SetFixatLamp( qint16 cx, qint16 cy, bool on_off )
     gPutInt16( & buff[4], cx, m_profile );
     gPutInt16( & buff[6], cy, m_profile );
     bool ret = this->cmdComm_bulkOutSync( buff, sizeof(buff));
-    if ( ! ret ) { qWarning("send set fixat lamp cmd failed."); }
+    if ( ! ret ) { spdlog::warn("send set fixat lamp cmd failed."); }
     return ret;
 }
 
@@ -521,7 +516,7 @@ auto     DevCtl_Worker :: cmd_readUsbEEPROM ( char *buff, int size, int eeprom_a
     data_pkg.dat_ptr = buff; data_pkg.dat_size = size;
     intptr_t bytes_trans;
     auto ret = ( m_usb_dev->ctlTransSync( & setup_pkg, & data_pkg, & bytes_trans ) == SCIPACK_S_OK );
-    if ( ! ret ) { qWarning("read USB EEPROM cmd failed!"); }
+    if ( ! ret ) { spdlog::warn("read USB EEPROM cmd failed!"); }
     if ( ret ) {
         qDebug( "readEEPROM: %d address OK", eeprom_addr );
     }
@@ -540,7 +535,7 @@ auto     DevCtl_Worker :: cmd_writeUsbEEPROM( const char *buff, int size, int ee
     data_pkg.dat_ptr = const_cast<void*>( reinterpret_cast<const void*>( buff )); data_pkg.dat_size = size;
     intptr_t bytes_trans;
     auto ret = ( m_usb_dev->ctlTransSync( & setup_pkg, & data_pkg, & bytes_trans ) == SCIPACK_S_OK );
-    if ( ! ret ) { qWarning("write USB EEPROM cmd failed!"); }
+    if ( ! ret ) { spdlog::warn("write USB EEPROM cmd failed!"); }
     if ( ret ) {
         qDebug( "writeEEPROM: %d address OK", eeprom_addr );
     }

@@ -684,7 +684,7 @@
               <item row="2" column="3">
                <widget class="QPushButton" name="pushButton_resetCheckedMotors">
                 <property name="text">
-                 <string>勾选电机</string>
+                 <string>复位电机</string>
                 </property>
                </widget>
               </item>
@@ -899,7 +899,7 @@
              <property name="title">
               <string>其它状态</string>
              </property>
-             <widget class="QWidget" name="">
+             <widget class="QWidget" name="layoutWidget">
               <property name="geometry">
                <rect>
                 <x>12</x>
@@ -1039,7 +1039,7 @@
                 </widget>
                </item>
                <item row="2" column="3">
-                <widget class="QLabel" name="label_65">
+                <widget class="QLabel" name="label_eyeglassStatus">
                  <property name="text">
                   <string>放下</string>
                  </property>
@@ -3001,6 +3001,12 @@
                <layout class="QHBoxLayout" name="horizontalLayout_65">
                 <item>
                  <widget class="QLabel" name="label_133">
+                  <property name="minimumSize">
+                   <size>
+                    <width>40</width>
+                    <height>0</height>
+                   </size>
+                  </property>
                   <property name="text">
                    <string>焦距联动:</string>
                   </property>
@@ -3045,7 +3051,7 @@
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>100</width>
+                    <width>50</width>
                     <height>16777215</height>
                    </size>
                   </property>
@@ -3058,7 +3064,7 @@
                   </property>
                   <property name="sizeHint" stdset="0">
                    <size>
-                    <width>100</width>
+                    <width>20</width>
                     <height>20</height>
                    </size>
                   </property>
@@ -3374,7 +3380,7 @@
      <x>0</x>
      <y>0</y>
      <width>1120</width>
-     <height>23</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">

@@ -1,4 +1,4 @@
-#ifndef USBDEV_STATUSDATA_CXX
+﻿#ifndef USBDEV_STATUSDATA_CXX
 #define USBDEV_STATUSDATA_CXX
 
 #include "usbdev_statusdata.hxx"
@@ -60,15 +60,16 @@ private:
                             m_color_motor,
                             m_light_spot_motor,
                             m_shutter_motor,
-                            m_x_chin_motor,
-                            m_y_chin_motor;
+                            m_hoz_chin_motor,
+                            m_vert_chin_motor;
     int                     m_sn_no,
                             m_env_light_DA,
                             m_cast_light_DA;
     bool                    m_cache_normal_flag,
                             m_cache_move_flag,
                             m_answerpad_status,
-                            m_camera_status;
+                            m_camera_status,
+                            m_eyeglass_status;
 public :
     explicit StatusDataPriv ( );
     StatusDataPriv ( const StatusDataPriv & );
@@ -78,6 +79,7 @@ public :
     inline auto  CacheNormalFlagRef()           -> bool& { return m_cache_normal_flag; }
     inline auto  CacheMoveFlagRef()             -> bool& { return m_cache_move_flag;  }
     inline auto  CameraStatusRef()              -> bool& { return m_camera_status; }
+    inline auto  EyeglassStatusRef()            -> bool& { return m_eyeglass_status; }
     inline auto  AnswerPadStatusRef()           -> bool& { return m_answerpad_status; }
     inline auto  envLightDARef()                -> int&  { return m_env_light_DA; }
     inline auto  castLightDARef()               -> int&  { return m_cast_light_DA; }
@@ -87,8 +89,8 @@ public :
     inline auto  colorMotorRef()                -> StatusData_MotorItem& { return m_color_motor;  }
     inline auto  lightSpotMotorRef()            -> StatusData_MotorItem& { return m_light_spot_motor; }
     inline auto  shutterMotorRef()              -> StatusData_MotorItem& { return m_shutter_motor; }
-    inline auto  hozChinMotorRef()                -> StatusData_MotorItem& { return m_x_chin_motor; }
-    inline auto  vertChinMotorRef()                -> StatusData_MotorItem& { return m_y_chin_motor; }
+    inline auto  hozChinMotorRef()                -> StatusData_MotorItem& { return m_hoz_chin_motor; }
+    inline auto  vertChinMotorRef()                -> StatusData_MotorItem& { return m_vert_chin_motor; }
 };
 
 // ============================================================================
@@ -97,7 +99,7 @@ public :
 StatusDataPriv :: StatusDataPriv ( )
 {
     m_sn_no=m_env_light_DA=m_cast_light_DA = 0;
-    m_cache_normal_flag=m_cache_move_flag=m_answerpad_status=m_camera_status=false;
+    m_cache_normal_flag=m_cache_move_flag=m_answerpad_status=m_camera_status=m_eyeglass_status=false;
 }
 
 // ============================================================================
@@ -106,7 +108,7 @@ StatusDataPriv :: StatusDataPriv ( )
 StatusDataPriv :: StatusDataPriv ( const StatusDataPriv &o )
     :m_x_motor(o.m_x_motor),m_y_motor(o.m_y_motor),m_focus_motor(o.m_focus_motor),
      m_color_motor(o.m_color_motor),m_light_spot_motor(o.m_light_spot_motor),m_shutter_motor(o.m_shutter_motor),
-     m_x_chin_motor(o.m_x_chin_motor),m_y_chin_motor(o.m_y_chin_motor)
+     m_hoz_chin_motor(o.m_hoz_chin_motor),m_vert_chin_motor(o.m_vert_chin_motor), m_eyeglass_status(o.m_eyeglass_status)
 {}
 
 // ////////////////////////////////////////////////////////////////////////////
@@ -185,22 +187,23 @@ StatusData :: StatusData ( const QByteArray &ba )
     priv->CacheMoveFlagRef()=buff[2];
     priv->AnswerPadStatusRef()=buff[3];
     priv->CameraStatusRef()=buff[4];
-    priv->xMotorRef().isBusyRef()=buff[5];
-    priv->yMotorRef().isBusyRef()=buff[6];
-    priv->focusMotorRef().isBusyRef()=buff[7];
-    priv->colorMotorRef().isBusyRef()=buff[8];
-    priv->lightSpotMotorRef().isBusyRef()=buff[9];
-    priv->shutterMotorRef().isBusyRef()=buff[10];
-    priv->hozChinMotorRef().isBusyRef()=buff[11];
-    priv->vertChinMotorRef().isBusyRef()=buff[12];
-    priv->xMotorRef().cmdCntrRef()=buff[13];
-    priv->yMotorRef().cmdCntrRef()=buff[14];
-    priv->focusMotorRef().cmdCntrRef()=buff[15];
-    priv->colorMotorRef().cmdCntrRef()=buff[16];
-    priv->lightSpotMotorRef().cmdCntrRef()=buff[17];
-    priv->shutterMotorRef().cmdCntrRef()=buff[18];
-    priv->hozChinMotorRef().cmdCntrRef()=buff[19];
-    priv->vertChinMotorRef().cmdCntrRef()=buff[20];
+    priv->EyeglassStatusRef()=buff[5];
+    priv->xMotorRef().isBusyRef()=buff[6];
+    priv->yMotorRef().isBusyRef()=buff[7];
+    priv->focusMotorRef().isBusyRef()=buff[8];
+    priv->colorMotorRef().isBusyRef()=buff[9];
+    priv->lightSpotMotorRef().isBusyRef()=buff[10];
+    priv->shutterMotorRef().isBusyRef()=buff[11];
+    priv->hozChinMotorRef().isBusyRef()=buff[12];
+    priv->vertChinMotorRef().isBusyRef()=buff[13];
+    priv->xMotorRef().cmdCntrRef()=buff[14];
+    priv->yMotorRef().cmdCntrRef()=buff[15];
+    priv->focusMotorRef().cmdCntrRef()=buff[16];
+    priv->colorMotorRef().cmdCntrRef()=buff[17];
+    priv->lightSpotMotorRef().cmdCntrRef()=buff[18];
+    priv->shutterMotorRef().cmdCntrRef()=buff[19];
+    priv->hozChinMotorRef().cmdCntrRef()=buff[20];
+    priv->vertChinMotorRef().cmdCntrRef()=buff[21];
     priv->xMotorRef().positionRef()=gReadData_Le_I32(&buff[24]);
     priv->yMotorRef().positionRef()=gReadData_Le_I32(&buff[28]);
     priv->focusMotorRef().positionRef()=gReadData_Le_I32(&buff[32]);
@@ -277,10 +280,10 @@ qint32   StatusData :: motorPosition( DevCtl::MotorId mot_id ) const
     }
 }
 
-qint32   StatusData :: cacheNormalFlag( ) const
+bool   StatusData :: cacheNormalFlag( ) const
 { return ( m_obj != nullptr ? T_PrivPtr( m_obj )->CacheNormalFlagRef() : 0); }
 
-qint32   StatusData :: cacheMoveFlag( ) const
+bool   StatusData :: cacheMoveFlag( ) const
 { return ( m_obj != nullptr ? T_PrivPtr( m_obj )->CacheMoveFlagRef() : 0 ); }
 
 bool     StatusData :: answerpadStatus() const
@@ -289,10 +292,13 @@ bool     StatusData :: answerpadStatus() const
 bool     StatusData :: cameraStatus() const
 { return ( m_obj != nullptr ? T_PrivPtr( m_obj )->CameraStatusRef() : false ); }
 
-bool     StatusData :: envLightDA() const
+bool StatusData::eyeglassStatus() const
+{ return ( m_obj != nullptr ? T_PrivPtr( m_obj )->EyeglassStatusRef() : false ); }
+
+qint32     StatusData :: envLightDA() const
 { return ( m_obj != nullptr ? T_PrivPtr( m_obj )->envLightDARef() : false ); }
 
-bool     StatusData :: castLightDA() const
+qint32     StatusData :: castLightDA() const
 { return ( m_obj != nullptr ? T_PrivPtr( m_obj )->castLightDARef() : false ); }
 
 }

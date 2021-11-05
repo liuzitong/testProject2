@@ -1,4 +1,4 @@
-#ifndef USBDEV_STATUSDATA_HXX
+﻿#ifndef USBDEV_STATUSDATA_HXX
 #define USBDEV_STATUSDATA_HXX
 
 #include "usbdev/common/usbdev_def.h"
@@ -50,12 +50,13 @@ public:
    //! current position of chinrests
    qint32    motorPosition( DevCtl::MotorId ) const;
 
-   qint32 cacheNormalFlag() const;
-   qint32 cacheMoveFlag() const;
+   bool cacheNormalFlag() const;
+   bool cacheMoveFlag() const;
    bool answerpadStatus() const;
    bool cameraStatus() const;
-   bool envLightDA() const;
-   bool castLightDA() const;
+   bool eyeglassStatus() const;
+   qint32 envLightDA() const;
+   qint32 castLightDA() const;
 private:
     void *m_obj;
 };
