@@ -1,4 +1,4 @@
-#ifndef USBDEV_DEVCTL_HXX
+﻿#ifndef USBDEV_DEVCTL_HXX
 #define USBDEV_DEVCTL_HXX
 
 #include "usbdev/common/usbdev_def.h"
@@ -25,6 +25,7 @@ public:
     //! enumeric
     enum WorkStatus {
         WorkStatus_S_Disconnected = 0,     //!< device has been disconnect from device
+        
         WorkStatus_S_ConnectToDev = 1,      //!< device has been connect to device
         WorkStatus_S_OK = 2,                //!< the device has been connected and all are OK
         WorkStatus_E_UnExpected   = 0x81,   //!< some error ocurred
@@ -32,8 +33,14 @@ public:
 
     //! lamp id
     enum LampId {
-        LampId_FrontIr = 0,   //!< fron IR lamp,
-        LampId_OuterFixat = 1 //!< the outer fixat lamp
+        LampId_centerFixation = 0,
+        LampId_bigDiamond,
+        LampId_smallDiamond,
+        LampId_yellowBackground,
+        LampId_centerInfrared,
+        LampId_borderInfrared,
+        LampId_eyeglassInfrared,
+        LampId_whiteBackground
     };
 
     //! the motor ID
@@ -77,15 +84,11 @@ public:
      * \param level  [in] light level, range is 0 to 255, rsvd
      * \param on_off [in] true means lamp turn on.
      */
-    void  setLamp( LampId lamp, int level, bool on_off );
+    void  setLamp( LampId lampId,quint8 lampNumber, quint16 da);
 
-    /*!
-     * \brief control the fixat lamp ( inner )
-     * \param cx  [in] the coord. x
-     * \param cy  [in] the coord. y
-     * \param on_off [in] true means fixat lamp is ON
-     */
-    void  setFixatLamp( qint16 cx, qint16 cy, bool on_off );
+    void  setWhiteLamp(quint8 r,quint8 g,quint8 b);
+
+    void openShutter(quint16 durationTime,qint32 coord_shutter);
 
     void  moveChinMotors( quint8* sps, qint32* value,MoveMethod method);
 

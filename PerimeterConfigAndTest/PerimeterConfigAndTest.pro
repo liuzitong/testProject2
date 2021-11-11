@@ -34,9 +34,12 @@ CONFIG(debug, debug|release) {
 
 SOURCES += \
     main.cpp \
-    mainWindow.cpp
+    mainWindow.cpp \
+    local_config.cpp
+
 HEADERS += \
-    mainWindow.h
+    mainWindow.h \
+    local_config.h
 
 FORMS += \
     mainwindow.ui \

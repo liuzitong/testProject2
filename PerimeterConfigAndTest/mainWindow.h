@@ -8,6 +8,8 @@
 #include <usbdev/main/usbdev_profile.hxx>
 #include <QStandardItemModel>
 #include <QTimer>
+#include <QJsonObject>
+#include <Qpair>
 
 namespace Ui {
 class MainWindow;
@@ -58,6 +60,11 @@ private slots:
 
     void on_pushButton_chinMoveRight_released();
 
+    void on_pushButton_lightSwitch_clicked();
+
+    void on_comboBox_lightSelect_currentIndexChanged(int index);
+
+    void on_pushButton_testStart_clicked();
 
 private:
     void moveChinMotors(UsbDev::DevCtl::MoveMethod);
@@ -70,6 +77,7 @@ private:
     UsbDev::FrameData m_frameData;
     UsbDev::Profile m_profile;
     QTimer* m_timer=NULL;
+    QJsonObject* m_localConfig=NULL;
 };
 
 #endif // MAINWINDOW_H

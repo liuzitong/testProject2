@@ -6,20 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1120</width>
-    <height>800</height>
+    <width>1100</width>
+    <height>850</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>0</width>
-    <height>800</height>
+    <height>0</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>16777215</width>
-    <height>800</height>
+    <width>1920</width>
+    <height>1080</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -1299,13 +1299,45 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QSpinBox" name="spinBox_lightSpotSize">
-                    <property name="minimum">
-                     <number>1</number>
+                   <widget class="QComboBox" name="comboBox_spotSize">
+                    <property name="currentIndex">
+                     <number>0</number>
                     </property>
-                    <property name="maximum">
-                     <number>5</number>
-                    </property>
+                    <item>
+                     <property name="text">
+                      <string>1</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>2</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>3</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>4</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>5</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>6</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>--</string>
+                     </property>
+                    </item>
                    </widget>
                   </item>
                   <item>
@@ -1370,6 +1402,11 @@
                       <string>绿</string>
                      </property>
                     </item>
+                    <item>
+                     <property name="text">
+                      <string>--</string>
+                     </property>
+                    </item>
                    </widget>
                   </item>
                   <item>
@@ -1414,14 +1451,14 @@
                   <item>
                    <widget class="QLabel" name="label_26">
                     <property name="text">
-                     <string>延迟(ms):</string>
+                     <string>打开时间:</string>
                     </property>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLineEdit" name="lineEdit_15">
+                   <widget class="QLineEdit" name="lineEdit_durationTime">
                     <property name="enabled">
-                     <bool>false</bool>
+                     <bool>true</bool>
                     </property>
                     <property name="text">
                      <string>200</string>
@@ -1439,7 +1476,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLineEdit" name="lineEdit_17">
+                   <widget class="QLineEdit" name="lineEdit_shutterPos">
                     <property name="enabled">
                      <bool>false</bool>
                     </property>
@@ -1633,19 +1670,6 @@
                   <string>移动投射位置</string>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_3">
-                  <item row="1" column="6">
-                   <spacer name="horizontalSpacer_8">
-                    <property name="orientation">
-                     <enum>Qt::Horizontal</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>40</width>
-                      <height>20</height>
-                     </size>
-                    </property>
-                   </spacer>
-                  </item>
                   <item row="0" column="0">
                    <widget class="QLabel" name="label_41">
                     <property name="minimumSize">
@@ -1662,6 +1686,45 @@
                     </property>
                     <property name="text">
                      <string>X坐标:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="4">
+                   <widget class="QLabel" name="label_39">
+                    <property name="text">
+                     <string>速度:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="6">
+                   <spacer name="horizontalSpacer_7">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item row="1" column="2">
+                   <widget class="QLabel" name="label_43">
+                    <property name="minimumSize">
+                     <size>
+                      <width>40</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>40</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>Y坐标:</string>
                     </property>
                    </widget>
                   </item>
@@ -1684,10 +1747,61 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="0" column="4">
-                   <widget class="QLabel" name="label_39">
+                  <item row="1" column="4">
+                   <widget class="QLabel" name="label_44">
                     <property name="text">
-                     <string>速度:</string>
+                     <string>步数:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="2">
+                   <widget class="QLabel" name="label_40">
+                    <property name="minimumSize">
+                     <size>
+                      <width>40</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>40</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>Y坐标:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="3">
+                   <widget class="QLineEdit" name="lineEdit_beginCoordY">
+                    <property name="minimumSize">
+                     <size>
+                      <width>60</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>60</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QLineEdit" name="lineEdit_beginCoordX">
+                    <property name="minimumSize">
+                     <size>
+                      <width>60</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>60</width>
+                      <height>16777215</height>
+                     </size>
                     </property>
                    </widget>
                   </item>
@@ -1713,101 +1827,8 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="0" column="2">
-                   <widget class="QLabel" name="label_40">
-                    <property name="minimumSize">
-                     <size>
-                      <width>40</width>
-                      <height>0</height>
-                     </size>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>40</width>
-                      <height>16777215</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>Y坐标:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="4">
-                   <widget class="QLabel" name="label_44">
-                    <property name="text">
-                     <string>步数:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QLineEdit" name="lineEdit_beginCoordX">
-                    <property name="minimumSize">
-                     <size>
-                      <width>60</width>
-                      <height>0</height>
-                     </size>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>60</width>
-                      <height>16777215</height>
-                     </size>
-                    </property>
-                   </widget>
-                  </item>
                   <item row="1" column="3">
                    <widget class="QLineEdit" name="lineEdit_endCoordY">
-                    <property name="minimumSize">
-                     <size>
-                      <width>60</width>
-                      <height>0</height>
-                     </size>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>60</width>
-                      <height>16777215</height>
-                     </size>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="3">
-                   <widget class="QLineEdit" name="lineEdit_beginCoordY">
-                    <property name="minimumSize">
-                     <size>
-                      <width>60</width>
-                      <height>0</height>
-                     </size>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>60</width>
-                      <height>16777215</height>
-                     </size>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="2">
-                   <widget class="QLabel" name="label_43">
-                    <property name="minimumSize">
-                     <size>
-                      <width>40</width>
-                      <height>0</height>
-                     </size>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>40</width>
-                      <height>16777215</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>Y坐标:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="1">
-                   <widget class="QLineEdit" name="lineEdit_endCoordX">
                     <property name="minimumSize">
                      <size>
                       <width>60</width>
@@ -1832,8 +1853,24 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="0" column="6">
-                   <spacer name="horizontalSpacer_7">
+                  <item row="1" column="1">
+                   <widget class="QLineEdit" name="lineEdit_endCoordX">
+                    <property name="minimumSize">
+                     <size>
+                      <width>60</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>60</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="6">
+                   <spacer name="horizontalSpacer_8">
                     <property name="orientation">
                      <enum>Qt::Horizontal</enum>
                     </property>
@@ -1879,12 +1916,7 @@
                  <widget class="QComboBox" name="comboBox_testFucntion">
                   <item>
                    <property name="text">
-                    <string>静态投射测试</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>移动投射测试</string>
+                    <string>焦距测试</string>
                    </property>
                   </item>
                   <item>
@@ -1894,17 +1926,27 @@
                   </item>
                   <item>
                    <property name="text">
-                    <string>DB测试</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
                     <string>颜色测试</string>
                    </property>
                   </item>
                   <item>
                    <property name="text">
+                    <string>DB测试</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
                     <string>快门测试</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>静态投射测试</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>移动投射测试</string>
                    </property>
                   </item>
                  </widget>
@@ -1933,7 +1975,7 @@
               </widget>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="1,1,1,1,1,0">
+              <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="1,1,0,1,1,1,0">
                <item>
                 <widget class="QLabel" name="label_71">
                  <property name="minimumSize">
@@ -1955,6 +1997,12 @@
                </item>
                <item>
                 <widget class="QComboBox" name="comboBox_lightSelect">
+                 <property name="minimumSize">
+                  <size>
+                   <width>100</width>
+                   <height>0</height>
+                  </size>
+                 </property>
                  <item>
                   <property name="text">
                    <string>中心固视</string>
@@ -1992,13 +2040,46 @@
                  </item>
                  <item>
                   <property name="text">
-                   <string>白色灯控命令</string>
+                   <string>白色背景灯</string>
                   </property>
                  </item>
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="label_72">
+                <widget class="QComboBox" name="comboBox_lampNumber">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>35</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string>1</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>2</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>3</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>4</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_da_RGB">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -2007,18 +2088,18 @@
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>40</width>
+                   <width>25</width>
                    <height>0</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
-                   <width>50</width>
+                   <width>25</width>
                    <height>16777215</height>
                   </size>
                  </property>
                  <property name="text">
-                  <string>DA/RGB:</string>
+                  <string>DA:</string>
                  </property>
                 </widget>
                </item>
@@ -2032,13 +2113,13 @@
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>10</width>
+                   <width>60</width>
                    <height>0</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
-                   <width>300</width>
+                   <width>60</width>
                    <height>16777215</height>
                   </size>
                  </property>
@@ -2076,7 +2157,7 @@
                  </property>
                  <property name="sizeHint" stdset="0">
                   <size>
-                   <width>40</width>
+                   <width>100</width>
                    <height>20</height>
                   </size>
                  </property>
@@ -2974,6 +3055,11 @@
                 <property name="text">
                  <string>颜色机位</string>
                 </property>
+                <property name="font">
+                 <font>
+                  <family>Agency FB</family>
+                 </font>
+                </property>
                </column>
               </widget>
              </item>
@@ -3379,7 +3465,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1120</width>
+     <width>1100</width>
      <height>22</height>
     </rect>
    </property>

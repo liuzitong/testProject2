@@ -51,12 +51,12 @@ static void  gPutInt16_Le( unsigned char *buff, qint16 v )
     buff[0] = quint8( v & 0x0ff );          buff[1] = quint8(( v >> 8 ) & 0x0ff );
 }
 
-static void  gPutInt32( unsigned char *buff, qint32 v, const Profile &pf )
+static void  gPutInt32( unsigned char *buff, qint32 v)
 {
         gPutInt32_Le( buff, v );
 }
 
-static void  gPutInt16( unsigned char *buff, qint16 v, const Profile &pf )
+static void  gPutInt16( unsigned char *buff, qint16 v)
 {
         gPutInt16_Le( buff, v );
 }
@@ -102,13 +102,8 @@ public :
     Q_INVOKABLE bool  cmd_ReadFrameData ( );
     Q_INVOKABLE bool  cmd_TurnOnVideo ( );
     Q_INVOKABLE bool  cmd_TurnOffVideo( );
-    Q_INVOKABLE bool  cmd_MoveChinMotors  (QByteArray ba);
-    Q_INVOKABLE bool  cmd_Move5Motors  ( QByteArray ba  );
-    Q_INVOKABLE bool  cmd_resetMotor  ( QByteArray ba  );
     Q_INVOKABLE bool  cmd_SaveMotorCfg( int mot, const QByteArray &ba );
-    Q_INVOKABLE bool  cmd_ControlSampleMotor( int stage, qint32 sps, quint8 acc_flag );
-    Q_INVOKABLE bool  cmd_SetLamp ( int lamp, bool );
-    Q_INVOKABLE bool  cmd_SetFixatLamp( qint16, qint16, bool);
+    Q_INVOKABLE bool  cmd_GeneralCmd( QByteArray ba  ,QString funcName,quint32 dataLen);
 
     Q_SIGNAL void  workStatusChanged( int );
     Q_SIGNAL void  newProfile   ( const UsbDev::Profile &    );
@@ -218,15 +213,15 @@ bool    DevCtl_Worker :: cmdComm_strInSync( unsigned char *buff, int buff_sz )
 
 
 // ============================================================================
-// cmd: read the profile from device
+// cmd: read the profile from device ok
 // ============================================================================
 bool   DevCtl_Worker :: cmd_ReadProfile( bool req_emit )
 {
     if ( ! this->isDeviceWork()) { return false; }
 
-    unsigned char buff[512]; bool ret = true;
+    unsigned char buff[512]={0}; bool ret = true;
     if ( ret ) {
-        buff[0] = 0x5a; buff[1] = 0xf0; buff[2] = 0x00; buff[3] = 0;
+        buff[0] = 0x5a; buff[1] = 0xf0;
         ret = this->cmdComm_bulkOutSync( buff, sizeof( buff ) );
         if ( ! ret ) { spdlog::warn("send read profile command failed."); }
     }
@@ -244,7 +239,7 @@ bool   DevCtl_Worker :: cmd_ReadProfile( bool req_emit )
 }
 
 // ============================================================================
-// cmd: read the status data from device
+// cmd: read the status data from device ok
 // ============================================================================
 bool   DevCtl_Worker :: cmd_ReadStatusData()
 {
@@ -297,7 +292,7 @@ bool  DevCtl_Worker :: cmd_ReadFrameData()
 }
 
 // ============================================================================
-// cmd: the video open or close control
+// cmd: the video open or close control  ok
 // ============================================================================
 bool  DevCtl_Worker :: cmd_TurnOnVideo()
 {
@@ -317,6 +312,8 @@ bool  DevCtl_Worker :: cmd_TurnOnVideo()
     if ( ret ) { // turn on video
         unsigned char buff[512];
         buff[0] = 0x5a; buff[1] = 0x70; buff[2] = 0x00; buff[3] = 0x01;
+        QString msg=buffToQStr(reinterpret_cast<const char*>(buff),4);
+        spdlog::info(msg.toStdString());
         ret = this->cmdComm_bulkOutSync( buff, sizeof( buff ));
         if ( ! ret ) { spdlog::warn("send video-on cmd failed."); }
     }
@@ -329,7 +326,7 @@ bool  DevCtl_Worker :: cmd_TurnOnVideo()
 }
 
 // ============================================================================
-// turn off the video
+// turn off the video  ok
 // ============================================================================
 bool  DevCtl_Worker :: cmd_TurnOffVideo()
 {
@@ -340,6 +337,8 @@ bool  DevCtl_Worker :: cmd_TurnOffVideo()
     if ( ret ) { // turn off video
         unsigned char buff[512];
         buff[0] = 0x5a; buff[1] = 0x70; buff[2] = 0x00; buff[3] = 0x00;
+        QString msg=buffToQStr(reinterpret_cast<const char*>(buff),4);
+        spdlog::info(msg.toStdString());
         ret = this->cmdComm_bulkOutSync( buff, sizeof( buff ));
         if ( ! ret ) { spdlog::warn("send video-off cmd failed."); }
     }
@@ -360,81 +359,7 @@ bool  DevCtl_Worker :: cmd_TurnOffVideo()
     return ret;
 }
 
-// ============================================================================
-// cmd: motor move
-// ============================================================================
-bool  DevCtl_Worker :: cmd_MoveChinMotors( QByteArray ba)
-{
-//    quint8* char_ptr=(quint8*)&ba.data()[0];
-//    qDebug()<<char_ptr[2];
-//    qDebug()<<char_ptr[3];
-//    int* int_ptr=(int*)(&ba.data()[4]);
-//    qDebug()<<int_ptr[0];
-//    qDebug()<<int_ptr[1];
-//    unsigned char buff[512]={0};
-//        buff[0] = 0x5a;
-//        buff[1] = method  == DevCtl::MoveMethod::Relative ? 0x51 : 0x52 ;
-//        memcpy(&buff[2],&sps[0],2);
-//        memcpy(&buff[4],&dist[0],8);
-    QString msg=buffToQStr(reinterpret_cast<const char*>(ba.data()),12);
-    spdlog::info(msg.toStdString());
-#ifdef QT_DEBUG
-#endif
-   if ( ! this->isDeviceWork()) { updateInfo("no connection!");return false; }
-   bool ret = this->cmdComm_bulkOutSync((unsigned char*) ba.data(), ba.size() );
-//   bool ret=true;
-   if(ret)
-   {
-       logger->info("move chin motor data sent:"+msg.toStdString());
-       emit updateInfo("message sent success raw data is:\n"+msg);
-   }
-   else
-   {
-       updateInfo("send cmd_MoveChinMotors failed.");
-   }
-   return true;
-}
 
-
-
-// ============================================================================
-// cmd: motor move
-// ============================================================================
-bool  DevCtl_Worker :: cmd_Move5Motors( QByteArray ba )
-{
-    QString msg=buffToQStr(reinterpret_cast<const char*>(ba.data()),28);
-    spdlog::info(msg.toStdString());
-    if ( ! this->isDeviceWork()) { updateInfo("no connection!");return false; }
-    bool ret = this->cmdComm_bulkOutSync((unsigned char*) ba.data(), ba.size() );
-    if(ret)
-    {
-        logger->info("cmd_Move5Motors data sent:"+msg.toStdString());
-        emit updateInfo("message sent success raw data is:\n"+msg);
-    }
-    else
-    {
-        updateInfo("send cmd_Move5Motors failed.");
-    }
-    return true;
-}
-
-bool DevCtl_Worker::cmd_resetMotor(QByteArray ba)
-{
-    QString msg=buffToQStr(reinterpret_cast<const char*>(ba.data()),28);
-    spdlog::info(msg.toStdString());
-    if ( ! this->isDeviceWork()) { updateInfo("no connection!");return false; }
-    bool ret = this->cmdComm_bulkOutSync((unsigned char*) ba.data(), ba.size() );
-    if(ret)
-    {
-        logger->info("cmd_resetMotor data sent:"+msg.toStdString());
-        emit updateInfo("message sent success raw data is:\n"+msg);
-    }
-    else
-    {
-        updateInfo("send cmd_resetMotor failed.");
-    }
-    return true;
-}
 
 // ============================================================================
 // cmd: save the motor configuration data
@@ -452,53 +377,29 @@ bool  DevCtl_Worker :: cmd_SaveMotorCfg( int mot, const QByteArray &ba )
     return ret;
 }
 
-// ============================================================================
-// cmd: sample motor control
-// ============================================================================
-bool  DevCtl_Worker :: cmd_ControlSampleMotor( int stage, qint32 sps, quint8 acc_flag )
+
+
+
+bool DevCtl_Worker::cmd_GeneralCmd(QByteArray ba, QString funcName,quint32 dataLen)
 {
-    if ( ! this->isDeviceWork()) { return false; }
-    unsigned char buff[512]; bool ret = true;
-    if ( ret ) {
-        buff[0] = 0x5a; buff[1] = 0x54; buff[2] = quint8( stage ); buff[3] = 0;
-        gPutInt32( & buff[4], sps, m_profile );
-        gPutInt32( & buff[8], 0, m_profile );
-        buff[12] = acc_flag;
-        ret = this->cmdComm_bulkOutSync( buff, sizeof( buff ));
-        if ( ! ret ) { spdlog::warn("send control sample motor cmd failed."); }
+    QString msg=buffToQStr(reinterpret_cast<const char*>(ba.data()),dataLen);
+    spdlog::info(msg.toStdString());
+    updateInfo("sending "+ funcName);
+    if ( ! this->isDeviceWork()) { updateInfo("no connection!");return false; }
+    bool ret = this->cmdComm_bulkOutSync((unsigned char*) ba.data(), ba.size() );
+    if(ret)
+    {
+        logger->info(funcName.toStdString()+ "data sent:"+msg.toStdString());
+        emit updateInfo("message sent success raw data is:\n"+msg);
     }
-    return ret;
+    else
+    {
+        updateInfo("send "+ funcName+" failed.");
+    }
+    return true;
 }
 
 
-// ============================================================================
-// cmd: set the lamp ON or OFF
-// ============================================================================
-bool  DevCtl_Worker :: cmd_SetLamp( int lamp, bool sw )
-{
-    if ( ! this->isDeviceWork()) { return false; }
-    if ( lamp < DevCtl::LampId_FrontIr || lamp > DevCtl::LampId_OuterFixat ) { return false; }
-    unsigned char buff[512];
-    buff[0] = 0x5a; buff[1] = 0x90; buff[2] = quint8( lamp ); buff[3] = ( sw ? 0x01 : 0x00 );
-    bool ret = this->cmdComm_bulkOutSync( buff, sizeof( buff ));
-    if ( ! ret ) { spdlog::warn("send set lamp command failed."); }
-    return ret;
-}
-
-// ============================================================================
-// cmd: set the fixat lamp
-// ============================================================================
-bool   DevCtl_Worker :: cmd_SetFixatLamp( qint16 cx, qint16 cy, bool on_off )
-{
-    if ( ! this->isDeviceWork()) { return false; }
-    unsigned char buff[512];
-    buff[0] = 0x5a; buff[1] = 0x91; buff[2] = 0; buff[3] = ( on_off ? 0x01 : 0x00 );
-    gPutInt16( & buff[4], cx, m_profile );
-    gPutInt16( & buff[6], cy, m_profile );
-    bool ret = this->cmdComm_bulkOutSync( buff, sizeof(buff));
-    if ( ! ret ) { spdlog::warn("send set fixat lamp cmd failed."); }
-    return ret;
-}
 
 // ============================================================================
 // eeprom read/write
@@ -900,24 +801,6 @@ UsbDev::FrameData    DevCtl :: takeNextPendingFrameData()
     return ( ret ? fd : UsbDev::FrameData());
 }
 
-// ============================================================================
-// convert the motor id to hardware id
-// ============================================================================
-//static int  gHwMotId ( DevCtl::MotorId m_id )
-//{
-//    int mot_id = 0;
-//    switch( m_id ) {
-//    case DevCtl::MotorId_Chinrests : mot_id = 0x01; break;
-//    case DevCtl::MotorId_X : mot_id = 0x02;         break;
-//    case DevCtl::MotorId_Y : mot_id = 0x03;         break;
-//    case DevCtl::MotorId_Z : mot_id = 0x04;         break;
-//    case DevCtl::MotorId_Focus : mot_id = 0x05;     break;
-//    case DevCtl::MotorId_Spectra : mot_id = 0x06;   break;
-//    case DevCtl::MotorId_Light   : mot_id = 0x07;   break;
-//    case DevCtl::MotorId_Sample  : mot_id = 0x08;   break;
-//    }
-//    return mot_id;
-//}
 
 // ============================================================================
 // move the motor
@@ -926,14 +809,14 @@ void  DevCtl :: moveChinMotors( quint8* sps, qint32* dist,MoveMethod method)
 {
 
     QByteArray ba(512,0);
-    char* ptr=static_cast<char*>(ba.data());
+    unsigned char* ptr=reinterpret_cast<unsigned char*>(ba.data());
     ptr[0]=0x5a;
-    method==MoveMethod::Relative? ptr[1]=0x50:0x51;
+    method==MoveMethod::Relative? ptr[1]=0x50: ptr[1]=0x51;
     memcpy(ptr+2,sps,2);
     memcpy(ptr+4,dist,8);
     QMetaObject::invokeMethod(
-        T_PrivPtr( m_obj )->wkrPtr(), "cmd_MoveChinMotors", Qt::QueuedConnection,
-        Q_ARG( QByteArray, ba )
+        T_PrivPtr( m_obj )->wkrPtr(), "cmd_GeneralCmd", Qt::QueuedConnection,
+        Q_ARG( QByteArray, ba ),Q_ARG( QString,QString(__FUNCTION__)),Q_ARG( quint32, 12 )
     );
 }
 
@@ -944,14 +827,14 @@ void  DevCtl :: moveChinMotors( quint8* sps, qint32* dist,MoveMethod method)
 void   DevCtl :: move5Motors( quint8* sps, qint32* dist,MoveMethod method)
 {
     QByteArray ba(512,0);
-    char* ptr=static_cast<char*>(ba.data());
+    unsigned char* ptr=reinterpret_cast<unsigned char*>(ba.data());
     ptr[0]=0x5a;
-    method==MoveMethod::Relative? ptr[1]=0x52:0x53;
+    method==MoveMethod::Relative? ptr[1]=0x52: ptr[1]=0x53;
     memcpy(ptr+3,sps,5);
     memcpy(ptr+8,dist,20);
     QMetaObject::invokeMethod(
-        T_PrivPtr( m_obj )->wkrPtr(), "cmd_Move5Motors", Qt::QueuedConnection,
-        Q_ARG( QByteArray, ba  )
+        T_PrivPtr( m_obj )->wkrPtr(), "cmd_GeneralCmd", Qt::QueuedConnection,
+        Q_ARG( QByteArray, ba  ),Q_ARG( QString,QString(__FUNCTION__)),Q_ARG( quint32, 28 )
     );
 }
 
@@ -962,11 +845,11 @@ void   DevCtl :: move5Motors( quint8* sps, qint32* dist,MoveMethod method)
 void   DevCtl :: resetMotor( MotorId mot,quint8 speed )
 {
     QByteArray ba(512,0);
-    char* ptr=static_cast<char*>(ba.data());
+    unsigned char* ptr=reinterpret_cast<unsigned char*>(ba.data());
     ptr[0]=0x5a;ptr[1]=0x57;ptr[2]=mot;ptr[3]=speed;
     QMetaObject::invokeMethod(
-        T_PrivPtr( m_obj )->wkrPtr(), "cmd_resetMotor", Qt::QueuedConnection,
-        Q_ARG( QByteArray, ba  )
+        T_PrivPtr( m_obj )->wkrPtr(), "cmd_GeneralCmd", Qt::QueuedConnection,
+        Q_ARG( QByteArray, ba  ),Q_ARG( QString,QString(__FUNCTION__)),Q_ARG( quint32, 4 )
     );
 }
 
@@ -1010,23 +893,40 @@ void   DevCtl :: setFrontVideo( bool on_off )
 // ============================================================================
 // set the lamp
 // ============================================================================
-void   DevCtl :: setLamp( LampId lamp, int, bool on_off )
+void   DevCtl :: setLamp( LampId lampId,quint8 lampNumber, quint16 da)
 {
+    QByteArray ba(512,0);
+    unsigned char* ptr=reinterpret_cast<unsigned char*>(ba.data());
+    ptr[0]=0x5a;ptr[1]=0x80;ptr[2]=lampId;ptr[3]=lampNumber;
+    gPutInt16(&ptr[4],da);
     QMetaObject::invokeMethod(
-        T_PrivPtr( m_obj )->wkrPtr(), "cmd_SetLamp", Qt::QueuedConnection,
-        Q_ARG( int, lamp ), Q_ARG( bool, on_off )
-    );
+        T_PrivPtr( m_obj )->wkrPtr(), "cmd_GeneralCmd", Qt::QueuedConnection,
+        Q_ARG( QByteArray, ba),Q_ARG( QString,QString(__FUNCTION__)),Q_ARG( quint32, 6 )
+        );
 }
 
-// ============================================================================
-// set the fixat lamp
-// ============================================================================
-void   DevCtl :: setFixatLamp(qint16 cx, qint16 cy, bool on_off)
+void DevCtl::setWhiteLamp(quint8 r,quint8 g,quint8 b)
 {
+    QByteArray ba(512,0);
+    unsigned char* ptr=reinterpret_cast<unsigned char*>(ba.data());
+    ptr[0]=0x5a;ptr[1]=0x80;ptr[2]=r;ptr[3]=g;ptr[4]=b;
     QMetaObject::invokeMethod(
-        T_PrivPtr( m_obj )->wkrPtr(), "cmd_SetFixatLamp", Qt::QueuedConnection,
-        Q_ARG( qint16, cx ), Q_ARG( qint16, cy ), Q_ARG( bool, on_off )
-    );
+        T_PrivPtr( m_obj )->wkrPtr(), "cmd_GeneralCmd", Qt::QueuedConnection,
+        Q_ARG( QByteArray, ba),Q_ARG( QString,QString(__FUNCTION__)),Q_ARG( quint32, 5 )
+                );
+}
+
+void DevCtl::openShutter(quint16 durationTime, qint32 coord_shutter)
+{
+    QByteArray ba(512,0);
+    unsigned char* ptr=reinterpret_cast<unsigned char*>(ba.data());
+    ptr[0]=0x5a;ptr[1]=0x56;
+    gPutInt16(&ptr[2],durationTime);
+    gPutInt32(&ptr[4],coord_shutter);
+    QMetaObject::invokeMethod(
+        T_PrivPtr( m_obj )->wkrPtr(), "cmd_GeneralCmd", Qt::QueuedConnection,
+        Q_ARG( QByteArray, ba),Q_ARG( QString,QString(__FUNCTION__)),Q_ARG( quint32, 5 )
+                );
 }
 
 

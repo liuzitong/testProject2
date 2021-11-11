@@ -140,11 +140,15 @@ void MainWindow::refreshConnectionStatus(int status)
 
 void MainWindow::on_pushButton_cameraSwitch_clicked()
 {
-    m_devCtl->setFrontVideo(!m_statusData.cameraStatus());
+    if(!m_statusData.isEmpty())
+        m_devCtl->setFrontVideo(!m_statusData.cameraStatus());
+    else
+        showDevInfo("empty status");
 }
 
 void MainWindow::on_pushButton_chinMoveUp_pressed()
 {
+    if(m_profile.isEmpty()){showDevInfo("empty profile");return;}
     qint32 value[2]={0};quint8 speed[2]={0};
     speed[1]=ui->spinBox_speedChinMove->text().toInt();
     value[1]=m_profile.motorRange(UsbDev::DevCtl::MotorId::MotorId_Y).first;
@@ -159,6 +163,7 @@ void MainWindow::on_pushButton_chinMoveUp_released()
 
 void MainWindow::on_pushButton_chinMoveDown_pressed()
 {
+    if(m_profile.isEmpty()){showDevInfo("empty profile");return;}
     qint32 value[2]={0};quint8 speed[2]={0};
     speed[1]=ui->spinBox_speedChinMove->text().toInt();
     value[1]=m_profile.motorRange(UsbDev::DevCtl::MotorId::MotorId_Y).second;
@@ -173,6 +178,7 @@ void MainWindow::on_pushButton_chinMoveDown_released()
 
 void MainWindow::on_pushButton_chinMoveLeft_pressed()
 {
+    if(m_profile.isEmpty()){showDevInfo("empty profile");return;}
     qint32 value[2]={0};quint8 speed[2]={0};
     speed[0]=ui->spinBox_speedChinMove->text().toInt();
     value[0]=m_profile.motorRange(UsbDev::DevCtl::MotorId::MotorId_X).first;
@@ -187,6 +193,7 @@ void MainWindow::on_pushButton_chinMoveLeft_released()
 
 void MainWindow::on_pushButton_chinMoveRight_pressed()
 {
+    if(m_profile.isEmpty()){showDevInfo("empty profile");return;}
     qint32 value[2]={0};quint8 speed[2]={0};
     speed[0]=ui->spinBox_speedChinMove->text().toInt();
     value[0]=m_profile.motorRange(UsbDev::DevCtl::MotorId::MotorId_X).second;
@@ -198,6 +205,51 @@ void MainWindow::on_pushButton_chinMoveRight_released()
     qint32 value[2]={0};quint8 speed[2]={0};
     m_devCtl->moveChinMotors(speed,value,UsbDev::DevCtl::MoveMethod::Abosolute);
 }
+
+void MainWindow::on_pushButton_lightSwitch_clicked()
+{
+    UsbDev::DevCtl::LampId lampId=(UsbDev::DevCtl::LampId)ui->comboBox_lightSelect->currentIndex();
+    if(lampId!=UsbDev::DevCtl::LampId::LampId_whiteBackground)
+    {
+        m_devCtl->setLamp(lampId,ui->comboBox_lampNumber->currentIndex(),ui->lineEdit_lightDAOrRGB->text().toInt());
+    }
+    else
+    {
+        int rgb=ui->lineEdit_lightDAOrRGB->text().toInt(nullptr,16);
+        m_devCtl->setWhiteLamp(rgb>>16,rgb>>8,rgb);
+    }
+}
+
+void MainWindow::on_comboBox_lightSelect_currentIndexChanged(int index)
+{
+    ui->comboBox_lampNumber->setEnabled(index==1||index==2);
+    index!=7?ui->label_da_RGB->setText("DA:"):ui->label_da_RGB->setText("RGB:");
+}
+
+void MainWindow::on_pushButton_testStart_clicked()
+{
+    switch (ui->comboBox_testFucntion->currentIndex())
+    {
+    case 0:break;
+    case 1:
+    {
+
+        break;
+    }
+    case 2:break;
+    case 3:break;
+    case 4:
+    {
+        quint16 durationTime=ui->lineEdit_durationTime->text().toInt();
+        qint32 pos=ui->lineEdit_shutterPos->text().toInt();
+        m_devCtl->openShutter(durationTime,pos);
+        break;
+    }
+    case 5:break;
+    case 6:break;
+    }
+}
+
 
 void MainWindow::on_pushButton_relativeMoveChin_clicked()
 {
