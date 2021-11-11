@@ -19,7 +19,7 @@ public:
     QString VID;
     QString PID;
 
-    QList<QPair<int,int>> spotSizeToSlot;
+    QList<QPair<QString,int>> spotSizeToSlot;
     QList<QPair<QString,int>> colorToSlot;
     QList<DotInfo> dotInfoList;
 };

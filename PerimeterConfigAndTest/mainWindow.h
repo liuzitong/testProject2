@@ -10,6 +10,7 @@
 #include <QTimer>
 #include <QJsonObject>
 #include <Qpair>
+#include <local_config.h>
 
 namespace Ui {
 class MainWindow;
@@ -66,9 +67,20 @@ private slots:
 
     void on_pushButton_testStart_clicked();
 
+    void on_comboBox_spotSize_currentIndexChanged(int);
+
+    void on_spinBox_lightSpotHoleLoc_valueChanged(int arg1);
+
+    void on_comboBox_color_currentIndexChanged(int index);
+
+    void on_spinBox_lightColorHoleLoc_valueChanged(int arg1);
+
+    void on_pushButton_shuterMotor_clicked();
+
 private:
     void moveChinMotors(UsbDev::DevCtl::MoveMethod);
     void move5Motors(UsbDev::DevCtl::MoveMethod);
+    void staticCastTest();
     void init();
     void uninit();
     Ui::MainWindow *ui;
@@ -77,7 +89,7 @@ private:
     UsbDev::FrameData m_frameData;
     UsbDev::Profile m_profile;
     QTimer* m_timer=NULL;
-    QJsonObject* m_localConfig=NULL;
+    LocalConfig m_localConfig;
 };
 
 #endif // MAINWINDOW_H

@@ -228,26 +228,87 @@ void MainWindow::on_comboBox_lightSelect_currentIndexChanged(int index)
 
 void MainWindow::on_pushButton_testStart_clicked()
 {
+    quint8 db=ui->spinBox_settingDb->text().toInt();
+
+
+
+    quint16 durationTime=ui->lineEdit_durationTime->text().toInt();
+    qint32 pos=ui->lineEdit_shutterPos->text().toInt();
+    m_devCtl->openShutter(durationTime,pos);
+
     switch (ui->comboBox_testFucntion->currentIndex())
     {
-    case 0:break;
+    case 0:
+    {
+        break;
+    }
     case 1:
     {
 
         break;
     }
-    case 2:break;
-    case 3:break;
-    case 4:
+    }
+
+}
+
+void MainWindow::on_comboBox_spotSize_currentIndexChanged(int)
+{
+   spdlog::info("comboBox called");
+   QString text=ui->comboBox_spotSize->currentText();
+   for(auto &v:m_localConfig.spotSizeToSlot)
+   {
+       if(v.first==text) ui->spinBox_lightSpotHoleLoc->setValue(v.second);
+   }
+
+}
+
+void MainWindow::on_spinBox_lightSpotHoleLoc_valueChanged(int arg1)
+{
+    spdlog::info("spinBox called");
+    for(auto &v:m_localConfig.spotSizeToSlot)
     {
-        quint16 durationTime=ui->lineEdit_durationTime->text().toInt();
-        qint32 pos=ui->lineEdit_shutterPos->text().toInt();
-        m_devCtl->openShutter(durationTime,pos);
-        break;
+         if(v.second==arg1)
+         {
+             ui->comboBox_spotSize->setCurrentText(v.first);return;
+         }
     }
-    case 5:break;
-    case 6:break;
+    ui->comboBox_spotSize->setCurrentText("--");
+}
+
+void MainWindow::on_comboBox_color_currentIndexChanged(int)
+{
+    spdlog::info("comboBox called");
+    QString text=ui->comboBox_color->currentText();
+    spdlog::info(text.toStdString());
+    for(auto &v:m_localConfig.colorToSlot)
+    {
+        spdlog::info(v.first.toStdString());
+        if(v.first==text)
+        {
+            spdlog::info(v.second);
+            ui->spinBox_lightColorHoleLoc->setValue(v.second);
+        }
     }
+}
+
+void MainWindow::on_spinBox_lightColorHoleLoc_valueChanged(int arg1)
+{
+    spdlog::info("spinBox called");
+    for(auto &v:m_localConfig.colorToSlot)
+    {
+         if(v.second==arg1)
+         {
+             ui->comboBox_color->setCurrentText(v.first);return;
+         }
+    }
+    ui->comboBox_color->setCurrentText("--");
+}
+
+void MainWindow::on_pushButton_shuterMotor_clicked()
+{
+    quint16 time = ui->lineEdit_shutterMotorTime->text().toInt();
+    quint32 pos = ui->lineEdit_shutterMotorPos->text().toInt();
+    m_devCtl->openShutter(time,pos);
 }
 
 

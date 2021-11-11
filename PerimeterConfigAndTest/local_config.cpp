@@ -7,9 +7,11 @@
 LocalConfig::LocalConfig()
 {
     VID="adbd";PID="ggg";
-    QPair<int,int> a(3,6);
-    spotSizeToSlot.append(QPair<int,int>(3,6));
-    spotSizeToSlot.append(QPair<int,int>(5,8));
+    spotSizeToSlot.append(QPair<QString,int>("1",3));
+    spotSizeToSlot.append(QPair<QString,int>("2",6));
+    colorToSlot.append(QPair<QString,int>("R",1));
+    colorToSlot.append(QPair<QString,int>("G",3));
+    colorToSlot.append(QPair<QString,int>("B",5));
     dotInfoList.append(DotInfo(2,3,5,6,7));
     dotInfoList.append(DotInfo(5,3,56,5,7));
 
