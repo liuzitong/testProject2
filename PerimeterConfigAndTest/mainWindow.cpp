@@ -42,6 +42,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::init()
 {
+    m_slotPosModel=new SlotPosModel(this);
+    ui->tableView_->setModel(m_slotPosModel);
+//    m_slotPosModel=new SlotPosModel(this);
+//    ui->tableView_->setModel(m_slotPosModel);
     quint32 vid_pid=VID.toInt(nullptr,16)<<16|PID.toInt(nullptr,16);
     m_devCtl=UsbDev::DevCtl::createInstance(vid_pid);
     ui->label_VID->setText(VID);

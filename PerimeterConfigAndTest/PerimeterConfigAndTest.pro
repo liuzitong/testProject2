@@ -35,11 +35,13 @@ CONFIG(debug, debug|release) {
 SOURCES += \
     main.cpp \
     mainWindow.cpp \
-    local_config.cpp
+    local_config.cpp \
+    slot_step_model.cpp
 
 HEADERS += \
     mainWindow.h \
-    local_config.h
+    local_config.h \
+    slot_step_model.h
 
 FORMS += \
     mainwindow.ui \

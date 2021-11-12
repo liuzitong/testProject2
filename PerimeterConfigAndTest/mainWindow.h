@@ -11,6 +11,7 @@
 #include <QJsonObject>
 #include <Qpair>
 #include <local_config.h>
+#include <slot_step_model.h>
 
 namespace Ui {
 class MainWindow;
@@ -90,6 +91,7 @@ private:
     UsbDev::Profile m_profile;
     QTimer* m_timer=NULL;
     LocalConfig m_localConfig;
+    SlotPosModel* m_slotPosModel=NULL;
 };
 
 #endif // MAINWINDOW_H
