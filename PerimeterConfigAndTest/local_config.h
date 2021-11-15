@@ -3,6 +3,7 @@
 
 #include <QPair>
 #include <QList>
+#include <QJsonArray>
 
 struct DotInfo
 {
@@ -15,13 +16,12 @@ class LocalConfig
 {
 public:
     LocalConfig();
-    void ShowAndWrite();
-    QString VID;
-    QString PID;
-
-    QList<QPair<QString,int>> spotSizeToSlot;
-    QList<QPair<QString,int>> colorToSlot;
-    QList<DotInfo> dotInfoList;
+    QString m_VID;
+    QString m_PID;
+    QList<QPair<QString,int>> m_colorToSlot;
+    QList<QPair<QString,int>> m_spotSizeToSlot;
+    QList<DotInfo> m_dotInfoList;
+    void Write();
 };
 
 #endif // LOCAL_CONFIG_H

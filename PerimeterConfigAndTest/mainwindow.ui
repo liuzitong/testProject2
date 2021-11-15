@@ -1664,7 +1664,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QSpinBox" name="spinBox_lightSpotHoleLoc">
+                   <widget class="QSpinBox" name="spinBox_spotSlot">
                     <property name="minimumSize">
                      <size>
                       <width>40</width>
@@ -1758,10 +1758,10 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QSpinBox" name="spinBox_lightColorHoleLoc">
+                   <widget class="QSpinBox" name="spinBox_colorSlot">
                     <property name="minimumSize">
                      <size>
-                      <width>30</width>
+                      <width>40</width>
                       <height>0</height>
                      </size>
                     </property>

@@ -1,5 +1,5 @@
-#ifndef USBDEV_PROFILE_CXX
-#define USBDEV_PROFILE_CXX
+﻿#ifndef USBDEV_CONFIG_CXX
+#define USBDEV_CONFIG_CXX
 
 #include <QString>
 #include "usbdev_config.hxx"

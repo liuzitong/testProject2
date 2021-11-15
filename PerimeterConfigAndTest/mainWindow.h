@@ -6,12 +6,14 @@
 #include <usbdev/main/usbdev_statusdata.hxx>
 #include <usbdev/main/usbdev_framedata.hxx>
 #include <usbdev/main/usbdev_profile.hxx>
+#include <usbdev/main/usbdev_config.hxx>
 #include <QStandardItemModel>
 #include <QTimer>
 #include <QJsonObject>
 #include <Qpair>
 #include <local_config.h>
 #include <slot_step_model.h>
+
 
 namespace Ui {
 class MainWindow;
@@ -70,11 +72,11 @@ private slots:
 
     void on_comboBox_spotSize_currentIndexChanged(int);
 
-    void on_spinBox_lightSpotHoleLoc_valueChanged(int arg1);
+    void on_spinBox_spotSlot_valueChanged(int arg1);
 
     void on_comboBox_color_currentIndexChanged(int index);
 
-    void on_spinBox_lightColorHoleLoc_valueChanged(int arg1);
+    void on_spinBox_colorSlot_valueChanged(int arg1);
 
     void on_pushButton_shuterMotor_clicked();
 
@@ -86,6 +88,7 @@ private:
     void uninit();
     Ui::MainWindow *ui;
     UsbDev::DevCtl *m_devCtl=NULL;
+    UsbDev::Config m_config;
     UsbDev::StatusData m_statusData;
     UsbDev::FrameData m_frameData;
     UsbDev::Profile m_profile;

@@ -32,9 +32,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     setWindowFlags(windowFlags()&~Qt::WindowMaximizeButtonHint);                    // 禁止最大化按钮
     setFixedSize(this->width(),this->height());                                     // 禁止拖动窗口大小
-    QSettings *configIni = new QSettings("para.ini", QSettings::IniFormat);
-    VID=configIni->value("ID/VID").toString();
-    PID=configIni->value("ID/PID").toString();
+//    QSettings *configIni = new QSettings("para.ini", QSettings::IniFormat);
+    VID=m_localConfig.m_VID;
+    PID=m_localConfig.m_PID;
     m_timer=new QTimer();
     connect(m_timer,&QTimer::timeout,[&](){ui->label_connectionStatus->setText("连接断开");});
     init();
@@ -44,8 +44,6 @@ void MainWindow::init()
 {
     m_slotPosModel=new SlotPosModel(this);
     ui->tableView_->setModel(m_slotPosModel);
-//    m_slotPosModel=new SlotPosModel(this);
-//    ui->tableView_->setModel(m_slotPosModel);
     quint32 vid_pid=VID.toInt(nullptr,16)<<16|PID.toInt(nullptr,16);
     m_devCtl=UsbDev::DevCtl::createInstance(vid_pid);
     ui->label_VID->setText(VID);
@@ -234,8 +232,6 @@ void MainWindow::on_pushButton_testStart_clicked()
 {
     quint8 db=ui->spinBox_settingDb->text().toInt();
 
-
-
     quint16 durationTime=ui->lineEdit_durationTime->text().toInt();
     qint32 pos=ui->lineEdit_shutterPos->text().toInt();
     m_devCtl->openShutter(durationTime,pos);
@@ -259,22 +255,27 @@ void MainWindow::on_comboBox_spotSize_currentIndexChanged(int)
 {
    spdlog::info("comboBox called");
    QString text=ui->comboBox_spotSize->currentText();
-   for(auto &v:m_localConfig.spotSizeToSlot)
+   for(auto &v:m_localConfig.m_spotSizeToSlot)
    {
-       if(v.first==text) ui->spinBox_lightSpotHoleLoc->setValue(v.second);
+       qDebug()<<v.first;
+       qDebug()<<v.second;
+       if(v.first==text) ui->spinBox_spotSlot->setValue(v.second);
    }
 
 }
 
-void MainWindow::on_spinBox_lightSpotHoleLoc_valueChanged(int arg1)
+void MainWindow::on_spinBox_spotSlot_valueChanged(int arg1)
 {
     spdlog::info("spinBox called");
-    for(auto &v:m_localConfig.spotSizeToSlot)
+    for(auto &v:m_localConfig.m_spotSizeToSlot)
     {
-         if(v.second==arg1)
-         {
-             ui->comboBox_spotSize->setCurrentText(v.first);return;
-         }
+
+        qDebug()<<v.first;
+        qDebug()<<v.second;
+        if(v.second==arg1)
+        {
+         ui->comboBox_spotSize->setCurrentText(v.first);return;
+        }
     }
     ui->comboBox_spotSize->setCurrentText("--");
 }
@@ -284,21 +285,21 @@ void MainWindow::on_comboBox_color_currentIndexChanged(int)
     spdlog::info("comboBox called");
     QString text=ui->comboBox_color->currentText();
     spdlog::info(text.toStdString());
-    for(auto &v:m_localConfig.colorToSlot)
+    for(auto &v:m_localConfig.m_colorToSlot)
     {
         spdlog::info(v.first.toStdString());
         if(v.first==text)
         {
             spdlog::info(v.second);
-            ui->spinBox_lightColorHoleLoc->setValue(v.second);
+            ui->spinBox_colorSlot->setValue(v.second);
         }
     }
 }
 
-void MainWindow::on_spinBox_lightColorHoleLoc_valueChanged(int arg1)
+void MainWindow::on_spinBox_colorSlot_valueChanged(int arg1)
 {
     spdlog::info("spinBox called");
-    for(auto &v:m_localConfig.colorToSlot)
+    for(auto &v:m_localConfig.m_colorToSlot)
     {
          if(v.second==arg1)
          {

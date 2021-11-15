@@ -3,36 +3,86 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonDocument>
+#include <iostream>
 
 LocalConfig::LocalConfig()
 {
-    VID="adbd";PID="ggg";
-    spotSizeToSlot.append(QPair<QString,int>("1",3));
-    spotSizeToSlot.append(QPair<QString,int>("2",6));
-    colorToSlot.append(QPair<QString,int>("R",1));
-    colorToSlot.append(QPair<QString,int>("G",3));
-    colorToSlot.append(QPair<QString,int>("B",5));
-    dotInfoList.append(DotInfo(2,3,5,6,7));
-    dotInfoList.append(DotInfo(5,3,56,5,7));
+    QFile loadFile("config.json");
+
+    if(!loadFile.open(QIODevice::ReadOnly))
+    {
+        qDebug() << "could't open projects json";
+        return;
+    }
+
+    QByteArray allData = loadFile.readAll();
+    loadFile.close();
+
+    QJsonParseError jsonError;
+    QJsonDocument jsonDoc(QJsonDocument::fromJson(allData, &jsonError));
+
+    if(jsonError.error != QJsonParseError::NoError)
+    {
+        qDebug() << "json error!" << jsonError.errorString();
+        return;
+    }
+
+    QJsonObject rootObj = jsonDoc.object();
+
+    QStringList keys = rootObj.keys();
+    for(int i = 0; i < keys.size(); i++)
+    {
+        qDebug() << "key" << i << " is:" << keys.at(i);
+    }
 
 
+    m_PID = rootObj.value("PID").toString();
+    m_VID = rootObj.value("VID").toString();
+
+    QJsonArray dotInfoList=rootObj.value("dotInfoList").toArray();
+    QJsonArray spotSizeToSlot=rootObj.value("spotSizeToSlot").toArray();
+    QJsonArray colorToSlot=rootObj.value("colorToSlot").toArray();
+
+    for(auto i:dotInfoList)
+    {
+        QJsonObject obj=i.toObject();
+        m_dotInfoList.append({obj["coordx"].toInt(),obj["coordy"].toInt(),obj["focalDistance"].toInt(),obj["motorXPos"].toInt(),obj["motorYPos"].toInt()});
+    }
+
+    for(auto i:spotSizeToSlot)
+    {
+        QJsonObject obj=i.toObject();
+        QString spotSize=obj["spotSize"].toString();
+        int slot=obj["Slot"].toInt();
+        m_spotSizeToSlot.append({spotSize,slot});
+    }
+
+    for(auto i:colorToSlot)
+    {
+        QJsonObject obj=i.toObject();
+        QString color=obj["Color"].toString();
+        int slot=obj["Slot"].toInt();
+        m_colorToSlot.append({color,slot});
+    }
 }
 
-void LocalConfig::ShowAndWrite()
+
+
+void LocalConfig::Write()
 {
     QJsonObject obj;
-    obj.insert("VID",VID);
-    obj.insert("PID",PID);
+    obj.insert("VID",m_VID);
+    obj.insert("PID",m_PID);
 
     QJsonArray array,array2;
-    for(auto&v:spotSizeToSlot){
+    for(auto&v:m_spotSizeToSlot){
         QJsonObject spotSlot;
         spotSlot.insert("spotSize",v.first);
         spotSlot.insert("Slot",v.second);
         array2.append(spotSlot);
     }
 
-    for(auto&v:dotInfoList){
+    for(auto&v:m_dotInfoList){
         QJsonObject dotInfo;
         dotInfo.insert("coordx",v.coordX);
         dotInfo.insert("coordy",v.coordY);
