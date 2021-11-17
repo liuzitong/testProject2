@@ -8,6 +8,8 @@
 #include <usbdev/main/usbdev_statusdata.hxx>
 #include <QImage>
 #include <QPainter>
+#include <math.h>
+
 #pragma execution_character_set("utf-8")
 // 不能删
 static std::shared_ptr<spdlog::logger> logger=NULL;
@@ -52,6 +54,8 @@ void MainWindow::init()
     connect(m_devCtl,&UsbDev::DevCtl::updateInfo,this,&MainWindow::showDevInfo);
     connect(m_devCtl,&UsbDev::DevCtl::newStatusData,this,&MainWindow::refreshStatus);
     connect(m_devCtl,&UsbDev::DevCtl::newFrameData,this,&MainWindow::refreshVideo);
+    on_comboBox_color_currentIndexChanged(1);
+    on_comboBox_spotSize_currentIndexChanged(1);
 }
 
 void MainWindow::uninit()
@@ -64,6 +68,28 @@ void MainWindow::uninit()
     disconnect(m_devCtl,&UsbDev::DevCtl::newFrameData,this,&MainWindow::refreshVideo);
     delete m_devCtl;
 }
+
+int MainWindow::interpolation(int value[], QPoint loc)
+{
+    int secondVal[2];
+    secondVal[0]=value[0]+(value[1]-value[0])*(loc.x()/6.0);
+    secondVal[1]=value[2]+(value[3]-value[2])*(loc.x()/6.0);
+    int ret=secondVal[0]+(secondVal[1]-secondVal[0])*(loc.y()/6.0);
+    return ret;
+}
+
+int MainWindow::getFocusMotorPosByDist(int focalDist)
+{
+    int i = m_config.deviceIDRef();
+    auto map = m_config.focalLengthMotorCoordMappingRef();
+    int indexDist=ui->spinBox_spotSlot->value();
+    int indexSpot= floor(focalDist/10)-8;
+    int pos1=map[indexDist][indexSpot];
+    int pos2=map[indexDist+1][indexSpot];
+    int focalMotorPos=pos1+(pos2-pos1)*(focalDist%10)/10;
+    return focalMotorPos;
+}
+
 
 
 MainWindow::~MainWindow()
@@ -230,25 +256,37 @@ void MainWindow::on_comboBox_lightSelect_currentIndexChanged(int index)
 
 void MainWindow::on_pushButton_testStart_clicked()
 {
-    quint8 db=ui->spinBox_settingDb->text().toInt();
-
-    quint16 durationTime=ui->lineEdit_durationTime->text().toInt();
-    qint32 pos=ui->lineEdit_shutterPos->text().toInt();
-    m_devCtl->openShutter(durationTime,pos);
-
     switch (ui->comboBox_testFucntion->currentIndex())
     {
-    case 0:
-    {
-        break;
-    }
-    case 1:
-    {
+        case 0:
+        {
+            quint8 db=ui->spinBox_settingDb->text().toInt();
+            quint16 durationTime=ui->lineEdit_durationTime->text().toInt();
+            qint32 pos=ui->lineEdit_shutterPos->text().toInt();
+            int spotSlot=ui->spinBox_spotSlot->value();
+            int colorSlot=ui->spinBox_colorSlot->value();
+            int coordX=ui->lineEdit_coordX->text().toInt();
+            int coordY=ui->lineEdit_coordY->text().toInt();
+            int sps=ui->spinBox_speedLightMove->text().toInt();
+            DotInfo dot;dot.coordX=coordX;dot.coordY=coordY;
+            if(!getXYMotorPosAndFocalDistFromCoord(dot)) return;
+            quint8 focalDist;
+            if(!ui->checkBox_autoCalcFocalDist->isChecked())
+            {
+                focalDist=ui->lineEdit_settingFocal->text().toInt();
+            }
+            else{
+                focalDist=dot.focalDistance;ui->lineEdit_settingFocal->setText(QString(focalDist));
+            }
+            staticCastTest(coordX,coordY,focalDist,spotSlot,colorSlot,db,sps);
+            break;
+        }
+        case 1:
+        {
 
-        break;
+            break;
+        }
     }
-    }
-
 }
 
 void MainWindow::on_comboBox_spotSize_currentIndexChanged(int)
@@ -314,6 +352,16 @@ void MainWindow::on_pushButton_shuterMotor_clicked()
     quint16 time = ui->lineEdit_shutterMotorTime->text().toInt();
     quint32 pos = ui->lineEdit_shutterMotorPos->text().toInt();
     m_devCtl->openShutter(time,pos);
+}
+
+void MainWindow::on_checkBox_autoCalcFocalDist_stateChanged(int arg1)
+{
+    ui->lineEdit_settingFocal->setEnabled(!(arg1==Qt::CheckState::Checked));
+}
+
+void MainWindow::on_checkBox_useConfigPos_stateChanged(int arg1)
+{
+    ui->lineEdit_shutterPos->setEnabled(!(arg1==Qt::CheckState::Checked));
 }
 
 
@@ -405,4 +453,70 @@ void MainWindow::move5Motors(UsbDev::DevCtl::MoveMethod method)
     }
     m_devCtl->move5Motors(speed,value,method);
 }
+
+bool MainWindow::getXYMotorPosAndFocalDistFromCoord(DotInfo& dotInfo)
+{
+    int x1=floor(dotInfo.coordX/6.0f)*6;int x2=ceil(dotInfo.coordX/6.0f)*6;
+    int y1=floor(dotInfo.coordY/6.0f)*6;int y2=ceil(dotInfo.coordY/6.0f)*6;
+    QList<DotInfo> list2;
+    DotInfo fourDots[4];
+    int count = 0;
+    for(auto& v:m_localConfig.m_dotInfoList)
+    {
+        if((v.coordX==x1)&&(v.coordY==y1)) {fourDots[0]=v;count++;}
+        if((v.coordX==x2)&&(v.coordY==y1)) {fourDots[0]=v;count++;}
+        if((v.coordX==x1)&&(v.coordY==y2)) {fourDots[0]=v;count++;}
+        if((v.coordX==x2)&&(v.coordY==y2)) {fourDots[0]=v;count++;}
+    }
+    if(count != 4)
+    {
+        count=0;
+        for(auto& v:m_localConfig.m_secondaryDotInfoList)
+        {
+            if((v.coordX==x1)&&(v.coordY==y1)) {fourDots[0]=v;count++;}
+            if((v.coordX==x2)&&(v.coordY==y1)) {fourDots[0]=v;count++;}
+            if((v.coordX==x1)&&(v.coordY==y2)) {fourDots[0]=v;count++;}
+            if((v.coordX==x2)&&(v.coordY==y2)) {fourDots[0]=v;count++;}
+        }
+    }
+    if(count!=4)
+    {
+        showDevInfo("point is out of range!");
+        return false;
+    }
+
+    QPoint loc(dotInfo.coordX-fourDots[0].coordX,dotInfo.coordY-fourDots[0].coordY);
+    int arr[4];
+    for(unsigned int i=0;i<sizeof(arr)/sizeof(int);i++) {arr[i]=fourDots[i].motorXPos;}
+    dotInfo.motorXPos=interpolation(arr,loc);
+    for(unsigned int i=0;i<sizeof(arr)/sizeof(int);i++) {arr[i]=fourDots[i].motorYPos;}
+    dotInfo.motorYPos=interpolation(arr,loc);
+    for(unsigned int i=0;i<sizeof(arr)/sizeof(int);i++) {arr[i]=fourDots[i].focalDistance;}
+    dotInfo.focalDistance=interpolation(arr,loc);
+    return true;
+}
+
+void MainWindow::staticCastTest(int coordX, int coordY, int coordFocal, int focalDist, int spotSlot, int colorSlot, int sps)
+{
+    quint8 spsArr[5]={0};
+    qint32 coordArr[5]={0};
+    if(!m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus))
+    {
+        spsArr[2]=sps;
+
+    }
+
+    if(!m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_X)&&!m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_X))
+
+    coordArr[0]=coordX;
+    coordArr[1]=coordY;
+
+//    m_devCtl->move5Motors(spsArr,({1,1,1,1,1}),UsbDev::DevCtl::MoveMethod::Abosolute);
+
+
+}
+
+
+
+
 

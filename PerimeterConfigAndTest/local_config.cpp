@@ -40,6 +40,7 @@ LocalConfig::LocalConfig()
     m_VID = rootObj.value("VID").toString();
 
     QJsonArray dotInfoList=rootObj.value("dotInfoList").toArray();
+    QJsonArray secondaryDotInfoList=rootObj.value("secondaryDotInfoList").toArray();
     QJsonArray spotSizeToSlot=rootObj.value("spotSizeToSlot").toArray();
     QJsonArray colorToSlot=rootObj.value("colorToSlot").toArray();
 
@@ -47,6 +48,12 @@ LocalConfig::LocalConfig()
     {
         QJsonObject obj=i.toObject();
         m_dotInfoList.append({obj["coordx"].toInt(),obj["coordy"].toInt(),obj["focalDistance"].toInt(),obj["motorXPos"].toInt(),obj["motorYPos"].toInt()});
+    }
+
+    for(auto i:secondaryDotInfoList)
+    {
+        QJsonObject obj=i.toObject();
+        m_secondaryDotInfoList.append({obj["coordx"].toInt(),obj["coordy"].toInt(),obj["focalDistance"].toInt(),obj["motorXPos"].toInt(),obj["motorYPos"].toInt()});
     }
 
     for(auto i:spotSizeToSlot)
@@ -94,7 +101,6 @@ void LocalConfig::Write()
     obj.insert("dotInfoList",array);
     obj.insert("spotSizeToSlot",array2);
     qDebug()<<obj;
-
     QJsonDocument qjDoc(obj);
     auto ba= qjDoc.toJson();
     QFile file("config.json");

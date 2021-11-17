@@ -4,9 +4,11 @@
 #include <QPair>
 #include <QList>
 #include <QJsonArray>
+#include <QMap>
 
 struct DotInfo
 {
+    DotInfo()=default;
     DotInfo(qint32 _coordX,qint32 _coordY,qint32 _motorXPos,qint32 _motorYPos,qint32 _focalDistance)
         :coordX(_coordX),coordY(_coordY),motorXPos(_motorXPos),motorYPos(_motorYPos),focalDistance(_focalDistance){}
     qint32 coordX,coordY,motorXPos,motorYPos,focalDistance;
@@ -21,6 +23,7 @@ public:
     QList<QPair<QString,int>> m_colorToSlot;
     QList<QPair<QString,int>> m_spotSizeToSlot;
     QList<DotInfo> m_dotInfoList;
+    QList<DotInfo> m_secondaryDotInfoList;
     void Write();
 };
 

@@ -80,12 +80,19 @@ private slots:
 
     void on_pushButton_shuterMotor_clicked();
 
+    void on_checkBox_autoCalcFocalDist_stateChanged(int arg1);
+
+    void on_checkBox_useConfigPos_stateChanged(int arg1);
+
 private:
     void moveChinMotors(UsbDev::DevCtl::MoveMethod);
     void move5Motors(UsbDev::DevCtl::MoveMethod);
-    void staticCastTest();
+    bool getXYMotorPosAndFocalDistFromCoord(DotInfo& dotInfo);
+    void staticCastTest(int coordX,int coordY,int coordFocal,int focalDist,int spotSlot ,int colorSlot,int sps);
     void init();
     void uninit();
+    int interpolation(int value[4],QPoint loc);
+    int getFocusMotorPosByDist(int focalDist);
     Ui::MainWindow *ui;
     UsbDev::DevCtl *m_devCtl=NULL;
     UsbDev::Config m_config;

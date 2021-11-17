@@ -59,33 +59,33 @@ public :
     ConfigPriv ( );
     ConfigPriv ( const ConfigPriv & );
     virtual ~ConfigPriv( ) Q_DECL_OVERRIDE;
-    inline auto crcVeryficationRef( )                               -> quint32& {return m_crc_veryfication;}
-    inline auto deviceIDRef( )                                      -> quint32& {return m_device_ID;}
-    inline auto centerFixationLampDARef()                           -> quint16& {return m_center_fixation_lamp_DA;}
-    inline auto bigDiamondfixationLampDARef()                       -> quint16& {return m_big_diamond_fixation_lamp_DA;}
-    inline auto smallDiamondFixationLampDARef()                     -> quint16& {return m_small_diamond_fixation_lamp_DA;}
-    inline auto yellowBackgroundLampDARef()                         -> quint16& {return m_yellow_background_lamp_DA;}
-    inline auto whiteBackgroundLampDARef()                          -> auto&    {return m_white_background_lamp_DA;}
-    inline auto centerInfraredLampDARef()                           -> quint16& {return m_center_fixation_lamp_DA;}
-    inline auto borderInfraredLampDARef()                           -> quint16& {return m_border_infrared_lamp_DA;}
-    inline auto eyeglassFrameLampDARef()                            -> quint16& {return m_eyeglass_frame_lamp_DA;}
-    inline auto environmentAlarmLightDARef()                        -> auto&    {return m_environment_light_alarm_DA;}
-    inline auto switchColorMotorCoordRef()                          -> auto&    {return m_switch_color_motor_coord;}
-    inline auto switchLightSpotMotorCoordRef()                      -> auto&    {return m_switch_light_spot_coord;}
-    inline auto focusCoordForSpotAndColorChangeRef()                -> qint32&  {return m_focus_coord_for_sport_and_color_change;}
-    inline auto mainTableCenterXCorrectionRef()                     -> qint32&  {return m_main_table_center_x_correction;}
-    inline auto mainTableCenterYCorrectionRef()                     -> qint32&  {return m_main_table_center_y_correction;}
-    inline auto secondaryTableCenterXCorrectionRef()                -> qint32&  {return m_secondary_table_center_x_correction;}
-    inline auto secondaryTableCenterYCorrectionRef()                -> qint32&  {return m_secondary_table_center_y_correction;}
-    inline auto maximunProjectionLightADPresetRef()                 -> qint32&  {return m_maximun_projection_light_AD_preset;}
-    inline auto xMotorCoordForLightCorrectionRef()                  -> qint32&  {return m_x_motor_coord_for_light_correction;}
-    inline auto yMotorCoordForLightCorrectionRef()                  -> qint32&  {return m_y_motor_coord_for_light_correction;}
-    inline auto focalLengthMotorCoordForLightCorrectionRef()        -> qint32&  {return m_focal_length_motor_coord_for_light_correction;}
-    inline auto xMotorCoordForDiamondCenterTestRef()                -> qint32&  {return m_x_motor_coord_for_diamond_center_test;}
-    inline auto yMotorCoordForDiamondCenterTestRef()                -> qint32&  {return m_y_motor_coord_for_diamond_center_test;}
-    inline auto focalLengthMotorCoordForDiamondCenterTestRef()      -> auto&    {return m_focal_length_motor_coord_for_diamond_center_test;}
-    inline auto focalLengthMotorCoordMappingRef()                   -> auto&    {return m_focal_length_motor_coord_mapping;}
-    inline auto DbCoordMappingRef()                                 -> auto&    {return m_Db_coord_mapping;}
+    inline auto crcVeryficationRef( )                               -> quint32&     {return m_crc_veryfication;}
+    inline auto deviceIDRef( )                                      -> quint32&     {return m_device_ID;}
+    inline auto centerFixationLampDARef()                           -> quint16&     {return m_center_fixation_lamp_DA;}
+    inline auto bigDiamondfixationLampDARef()                       -> quint16&     {return m_big_diamond_fixation_lamp_DA;}
+    inline auto smallDiamondFixationLampDARef()                     -> quint16&     {return m_small_diamond_fixation_lamp_DA;}
+    inline auto yellowBackgroundLampDARef()                         -> quint16&     {return m_yellow_background_lamp_DA;}
+    inline auto whiteBackgroundLampDARef()                          -> quint16*     {return m_white_background_lamp_DA;}
+    inline auto centerInfraredLampDARef()                           -> quint16&     {return m_center_fixation_lamp_DA;}
+    inline auto borderInfraredLampDARef()                           -> quint16&     {return m_border_infrared_lamp_DA;}
+    inline auto eyeglassFrameLampDARef()                            -> quint16&     {return m_eyeglass_frame_lamp_DA;}
+    inline auto environmentAlarmLightDARef()                        -> quint16*     {return m_environment_light_alarm_DA;}
+    inline auto switchColorMotorCoordRef()                          -> int*         {return m_switch_color_motor_coord;}
+    inline auto switchLightSpotMotorCoordRef()                      -> int*         {return m_switch_light_spot_coord;}
+    inline auto focusCoordForSpotAndColorChangeRef()                -> qint32&      {return m_focus_coord_for_sport_and_color_change;}
+    inline auto mainTableCenterXCorrectionRef()                     -> qint32&      {return m_main_table_center_x_correction;}
+    inline auto mainTableCenterYCorrectionRef()                     -> qint32&      {return m_main_table_center_y_correction;}
+    inline auto secondaryTableCenterXCorrectionRef()                -> qint32&      {return m_secondary_table_center_x_correction;}
+    inline auto secondaryTableCenterYCorrectionRef()                -> qint32&      {return m_secondary_table_center_y_correction;}
+    inline auto maximunProjectionLightADPresetRef()                 -> qint32&      {return m_maximun_projection_light_AD_preset;}
+    inline auto xMotorCoordForLightCorrectionRef()                  -> qint32&      {return m_x_motor_coord_for_light_correction;}
+    inline auto yMotorCoordForLightCorrectionRef()                  -> qint32&      {return m_y_motor_coord_for_light_correction;}
+    inline auto focalLengthMotorCoordForLightCorrectionRef()        -> qint32&      {return m_focal_length_motor_coord_for_light_correction;}
+    inline auto xMotorCoordForDiamondCenterTestRef()                -> qint32&      {return m_x_motor_coord_for_diamond_center_test;}
+    inline auto yMotorCoordForDiamondCenterTestRef()                -> qint32&      {return m_y_motor_coord_for_diamond_center_test;}
+    inline auto focalLengthMotorCoordForDiamondCenterTestRef()      -> int*         {return m_focal_length_motor_coord_for_diamond_center_test;}
+    inline auto focalLengthMotorCoordMappingRef()                   -> int(*)[7]    {return m_focal_length_motor_coord_mapping;}
+    inline auto DbCoordMappingRef()                                 -> int(*)[2]    {return m_Db_coord_mapping;}
 };
 
 ConfigPriv :: ~ConfigPriv ( ) { }
@@ -280,7 +280,7 @@ quint16&       Config :: smallDiamondFixationLampDARef()
 quint16&       Config :: yellowBackgroundLampDARef()
 { return  T_PrivPtr( m_obj )->yellowBackgroundLampDARef() ; }
 
-auto&          Config :: whiteBackgroundLampDARef()
+quint16*          Config :: whiteBackgroundLampDARef()
 { return  T_PrivPtr( m_obj )->whiteBackgroundLampDARef() ; }
 
 quint16&       Config :: centerInfraredLampDARef()
@@ -292,13 +292,13 @@ quint16&       Config :: borderInfraredLampDARef()
 quint16&       Config :: eyeglassFrameLampDARef()
 { return  T_PrivPtr( m_obj )->eyeglassFrameLampDARef(); }
 
-auto&          Config :: environmentAlarmLightDARef()
+quint16*          Config :: environmentAlarmLightDARef()
 { return T_PrivPtr( m_obj )->environmentAlarmLightDARef(); }
 
-auto&          Config :: switchColorMotorCoordRef()
+int*          Config :: switchColorMotorCoordRef()
 { return  T_PrivPtr( m_obj )->switchColorMotorCoordRef(); }
 
-auto&          Config :: switchLightSpotMotorCoordRef()
+int*          Config :: switchLightSpotMotorCoordRef()
 { return  T_PrivPtr( m_obj )->switchLightSpotMotorCoordRef(); }
 
 qint32&       Config :: focusCoordForSpotAndColorChangeRef()
@@ -325,13 +325,13 @@ qint32&       Config :: xMotorCoordForLightCorrectionRef()
 qint32&       Config :: yMotorCoordForLightCorrectionRef()
 { return T_PrivPtr( m_obj )->yMotorCoordForLightCorrectionRef(); }
 
-auto&       Config :: focalLengthMotorCoordForDiamondCenterTestRef()
+int*       Config :: focalLengthMotorCoordForDiamondCenterTestRef()
 { return T_PrivPtr( m_obj )->focalLengthMotorCoordForDiamondCenterTestRef(); }
 
-auto&       Config :: focalLengthMotorCoordMappingRef()
+int(*       Config :: focalLengthMotorCoordMappingRef())[7]
 { return T_PrivPtr( m_obj )->focalLengthMotorCoordMappingRef(); }
 
-auto&       Config :: DbCoordMappingRef()
+int(*       Config :: DbCoordMappingRef())[2]
 { return T_PrivPtr( m_obj )->DbCoordMappingRef(); }
 // ============================================================================
 // make all profile as json object

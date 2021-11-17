@@ -57,13 +57,13 @@ public:
     quint16 &bigDiamondfixationLampDARef();
     quint16 &smallDiamondFixationLampDARef();
     quint16 &yellowBackgroundLampDARef();
-    auto &whiteBackgroundLampDARef();
+    quint16* whiteBackgroundLampDARef();
     quint16 &centerInfraredLampDARef();
     quint16 &borderInfraredLampDARef();
     quint16 &eyeglassFrameLampDARef();
-    auto &environmentAlarmLightDARef();
-    auto &switchColorMotorCoordRef();
-    auto &switchLightSpotMotorCoordRef();
+    quint16* environmentAlarmLightDARef();
+    int* switchColorMotorCoordRef();
+    int* switchLightSpotMotorCoordRef();
     qint32 &focusCoordForSpotAndColorChangeRef();
     qint32 &mainTableCenterXCorrection();
     qint32 &mainTableCenterYCorrection();
@@ -72,9 +72,9 @@ public:
     qint32 &maximunProjectionLightADPresetRef();
     qint32 &xMotorCoordForLightCorrectionRef();
     qint32 &yMotorCoordForLightCorrectionRef();
-    auto &focalLengthMotorCoordForDiamondCenterTestRef();
-    auto &focalLengthMotorCoordMappingRef();
-    auto &DbCoordMappingRef();
+    int* focalLengthMotorCoordForDiamondCenterTestRef();
+    int(*focalLengthMotorCoordMappingRef())[7];
+    int(*DbCoordMappingRef())[2];
 private:
     void *m_obj;
 };
