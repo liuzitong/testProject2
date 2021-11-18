@@ -90,7 +90,7 @@ public:
 
     void openShutter(quint16 durationTime,qint32 coord_shutter);
 
-    void  moveChinMotors( quint8* sps, qint32* value,MoveMethod method);
+    void  moveChinMotors( quint8* sps, qint32* value,MoveMethod method=MoveMethod::Abosolute);
 
     /*!
      * \brief move spec. Motor
@@ -105,7 +105,7 @@ public:
      *        while 'acc_flga' is 1, 'sps' should be [ 0, 800 ]
      *
      */
-    void  move5Motors( quint8* sps, qint32* value,MoveMethod method);
+    void  move5Motors( quint8* sps, qint32* value,MoveMethod method=MoveMethod::Abosolute);
 
 
     /*!

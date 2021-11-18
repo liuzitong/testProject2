@@ -9,6 +9,8 @@
 #include <QImage>
 #include <QPainter>
 #include <math.h>
+#include <QTime>
+
 
 #pragma execution_character_set("utf-8")
 // 不能删
@@ -54,6 +56,7 @@ void MainWindow::init()
     connect(m_devCtl,&UsbDev::DevCtl::updateInfo,this,&MainWindow::showDevInfo);
     connect(m_devCtl,&UsbDev::DevCtl::newStatusData,this,&MainWindow::refreshStatus);
     connect(m_devCtl,&UsbDev::DevCtl::newFrameData,this,&MainWindow::refreshVideo);
+
     on_comboBox_color_currentIndexChanged(1);
     on_comboBox_spotSize_currentIndexChanged(1);
 }
@@ -78,18 +81,15 @@ int MainWindow::interpolation(int value[], QPoint loc)
     return ret;
 }
 
-int MainWindow::getFocusMotorPosByDist(int focalDist)
+int MainWindow::getFocusMotorPosByDist(int focalDist,int spotSlot)
 {
-    int i = m_config.deviceIDRef();
-    auto map = m_config.focalLengthMotorCoordMappingRef();
-    int indexDist=ui->spinBox_spotSlot->value();
-    int indexSpot= floor(focalDist/10)-8;
-    int pos1=map[indexDist][indexSpot];
-    int pos2=map[indexDist+1][indexSpot];
+    auto map = m_config.focalLengthMotorCoordMapping();
+    int indexDist= floor(focalDist/10)-8;
+    int pos1=map[indexDist][spotSlot];
+    int pos2=map[indexDist+1][spotSlot];
     int focalMotorPos=pos1+(pos2-pos1)*(focalDist%10)/10;
     return focalMotorPos;
 }
-
 
 
 MainWindow::~MainWindow()
@@ -262,7 +262,7 @@ void MainWindow::on_pushButton_testStart_clicked()
         {
             quint8 db=ui->spinBox_settingDb->text().toInt();
             quint16 durationTime=ui->lineEdit_durationTime->text().toInt();
-            qint32 pos=ui->lineEdit_shutterPos->text().toInt();
+            quint32 shutterPos=ui->lineEdit_shutterPos->text().toInt();
             int spotSlot=ui->spinBox_spotSlot->value();
             int colorSlot=ui->spinBox_colorSlot->value();
             int coordX=ui->lineEdit_coordX->text().toInt();
@@ -276,14 +276,16 @@ void MainWindow::on_pushButton_testStart_clicked()
                 focalDist=ui->lineEdit_settingFocal->text().toInt();
             }
             else{
-                focalDist=dot.focalDistance;ui->lineEdit_settingFocal->setText(QString(focalDist));
+                focalDist=dot.focalDistance;
+                ui->lineEdit_settingFocal->setText(QString(focalDist));
             }
-            staticCastTest(coordX,coordY,focalDist,spotSlot,colorSlot,db,sps);
+            staticCastTest(dot.motorXPos,dot.motorYPos,focalDist,spotSlot,colorSlot,db,sps,durationTime,shutterPos);
             break;
         }
         case 1:
         {
 
+            moveCastTest();
             break;
         }
     }
@@ -362,34 +364,41 @@ void MainWindow::on_checkBox_autoCalcFocalDist_stateChanged(int arg1)
 void MainWindow::on_checkBox_useConfigPos_stateChanged(int arg1)
 {
     ui->lineEdit_shutterPos->setEnabled(!(arg1==Qt::CheckState::Checked));
+    if(arg1==Qt::CheckState::Checked)
+        ui->lineEdit_shutterPos->setText(QString::number(m_config.shutterOpenPos()));
 }
+
+void MainWindow::on_comboBox_testFucntion_currentIndexChanged(int index)
+{
+
+    ui->groupBox_staticCastPos->setEnabled(index==0);
+    ui->lineEdit_durationTime->setEnabled(index==0);
+    ui->groupBox_moveCastPos->setEnabled(index==1);
+    ui->checkBox_autoCalcFocalDist->setEnabled(index==0);
+    if(index==1)
+    {
+        ui->checkBox_autoCalcFocalDist->setChecked(true);
+
+    }
+}
+
 
 
 void MainWindow::on_pushButton_relativeMoveChin_clicked()
-{
-    moveChinMotors(UsbDev::DevCtl::MoveMethod::Relative);
-}
+{ moveChinMotors(UsbDev::DevCtl::MoveMethod::Relative); }
 
 void MainWindow::on_pushButton_absoluteMoveChin_clicked()
-{
-    moveChinMotors(UsbDev::DevCtl::MoveMethod::Abosolute);
-}
+{ moveChinMotors(UsbDev::DevCtl::MoveMethod::Abosolute); }
 
 
 void MainWindow::showDevInfo(QString str)
-{
-    ui->textBrowser_infoText->append(str);
-}
+{ ui->textBrowser_infoText->append(str);}
 
 void MainWindow::on_pushButton_relativeMove5Motors_clicked()
-{
-    move5Motors(UsbDev::DevCtl::MoveMethod::Relative);
-}
+{move5Motors(UsbDev::DevCtl::MoveMethod::Relative);}
 
 void MainWindow::on_pushButton_absoluteMove5Motors_clicked()
-{
-    move5Motors(UsbDev::DevCtl::MoveMethod::Abosolute);
-}
+{move5Motors(UsbDev::DevCtl::MoveMethod::Abosolute);}
 
 void MainWindow::on_pushButton_resetCheckedMotors_clicked()
 {
@@ -496,23 +505,71 @@ bool MainWindow::getXYMotorPosAndFocalDistFromCoord(DotInfo& dotInfo)
     return true;
 }
 
-void MainWindow::staticCastTest(int coordX, int coordY, int coordFocal, int focalDist, int spotSlot, int colorSlot, int sps)
+void MainWindow::staticCastTest(int motorXPos,int motorYPos,int focalDist,int spotSlot ,int colorSlot,int db,int sps,int durationTime,int shutterPos)
 {
+    while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_X)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Y)||
+          m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Color)||
+          m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Light_Spot)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Shutter))
+    {QCoreApplication::processEvents();}
+
+    //移动焦距电机到调节位置
     quint8 spsArr[5]={0};
-    qint32 coordArr[5]={0};
+    qint32 posArr[5]={0};
     if(!m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus))
     {
         spsArr[2]=sps;
-
+        posArr[2]=m_config.focusCoordForSpotAndColorChange();
+        m_devCtl->move5Motors(spsArr,posArr);
     }
 
-    if(!m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_X)&&!m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_X))
+    //调整颜色和光斑
+    QTime time;
+    time.start();
+    memset(spsArr,0,sizeof(spsArr));
+    memset(posArr,0,sizeof(posArr));
+    spsArr[3]=sps;spsArr[4]=sps;
+    posArr[3]=m_config.switchColorMotorCoord()[colorSlot];
+    posArr[4]=m_config.switchColorMotorCoord()[spotSlot];
 
-    coordArr[0]=coordX;
-    coordArr[1]=coordY;
+    while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus)||(time.elapsed()<10))
+    {QCoreApplication::processEvents();}
 
-//    m_devCtl->move5Motors(spsArr,({1,1,1,1,1}),UsbDev::DevCtl::MoveMethod::Abosolute);
+    m_devCtl->move5Motors(spsArr,posArr);
 
+    //调整焦距
+    time.restart();
+    memset(spsArr,0,sizeof(spsArr));
+    memset(posArr,0,sizeof(posArr));
+    spsArr[2]=sps;
+    posArr[2]=getFocusMotorPosByDist(focalDist,spotSlot);
+    while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Color)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Light_Spot)||(time.elapsed()<10))
+    {QCoreApplication::processEvents();}
+    m_devCtl->move5Motors(spsArr,posArr);
+
+    //调整DB同时移动到指定位置
+    time.restart();
+    memset(spsArr,0,sizeof(spsArr));
+    memset(posArr,0,sizeof(posArr));
+    spsArr[0]=spsArr[1]=spsArr[3]=spsArr[4]=sps;
+    posArr[0]=motorXPos;
+    posArr[1]=motorYPos;
+    posArr[3]=m_config.DbCoordMapping()[db][0];
+    posArr[4]=m_config.DbCoordMapping()[db][1];
+    while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus)||(time.elapsed()<10))
+    {QCoreApplication::processEvents();}
+    m_devCtl->move5Motors(spsArr,posArr);
+
+    //打开快门
+    time.restart();
+    ui->checkBox_useConfigPos->isChecked()?shutterPos=ui->lineEdit_shutterPos->text().toInt():shutterPos=m_config.shutterOpenPos();
+    while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_X)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Y)||
+          m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Color)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Light_Spot)||(time.elapsed()<10))
+    {QCoreApplication::processEvents();}
+    m_devCtl->openShutter(durationTime,shutterPos);
+}
+
+void MainWindow::moveCastTest()
+{
 
 }
 

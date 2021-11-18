@@ -50,31 +50,32 @@ public:
 
 //   //! to json object
 //   QJsonObject  toJsonObject( ) const;
-    quint32 &crcVeryficationRef();
+    quint32 crcVeryfication();
 
-    quint32 &deviceIDRef();
-    quint16 &centerFixationLampDARef();
-    quint16 &bigDiamondfixationLampDARef();
-    quint16 &smallDiamondFixationLampDARef();
-    quint16 &yellowBackgroundLampDARef();
-    quint16* whiteBackgroundLampDARef();
-    quint16 &centerInfraredLampDARef();
-    quint16 &borderInfraredLampDARef();
-    quint16 &eyeglassFrameLampDARef();
-    quint16* environmentAlarmLightDARef();
-    int* switchColorMotorCoordRef();
-    int* switchLightSpotMotorCoordRef();
-    qint32 &focusCoordForSpotAndColorChangeRef();
-    qint32 &mainTableCenterXCorrection();
-    qint32 &mainTableCenterYCorrection();
-    qint32 &secondaryTableCenterXCorrection();
-    qint32 &secondaryTableCenterYCorrection();
-    qint32 &maximunProjectionLightADPresetRef();
-    qint32 &xMotorCoordForLightCorrectionRef();
-    qint32 &yMotorCoordForLightCorrectionRef();
-    int* focalLengthMotorCoordForDiamondCenterTestRef();
-    int(*focalLengthMotorCoordMappingRef())[7];
-    int(*DbCoordMappingRef())[2];
+    quint32 deviceID();
+    quint16 centerFixationLampDA();
+    quint16 bigDiamondfixationLampDA();
+    quint16 smallDiamondFixationLampDA();
+    quint16 yellowBackgroundLampDA();
+    quint16* whiteBackgroundLampDA();
+    quint16 centerInfraredLampDA();
+    quint16 borderInfraredLampDA();
+    quint16 eyeglassFrameLampDA();
+    quint16* environmentAlarmLightDA();
+    int* switchColorMotorCoord();
+    int* switchLightSpotMotorCoord();
+    qint32 focusCoordForSpotAndColorChange();
+    qint32 shutterOpenPos();
+    qint32 mainTableCenterXCorrection();
+    qint32 mainTableCenterYCorrection();
+    qint32 secondaryTableCenterXCorrection();
+    qint32 secondaryTableCenterYCorrection();
+    qint32 maximunProjectionLightADPreset();
+    qint32 xMotorCoordForLightCorrection();
+    qint32 yMotorCoordForLightCorrection();
+    int* focalLengthMotorCoordForDiamondCenterTest();
+    int(*focalLengthMotorCoordMapping())[7];
+    int(*DbCoordMapping())[2];
 private:
     void *m_obj;
 };

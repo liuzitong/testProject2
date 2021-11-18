@@ -41,6 +41,7 @@ private:
     qint32                              m_switch_color_motor_coord[6],
                                         m_switch_light_spot_coord[8],
                                         m_focus_coord_for_sport_and_color_change,
+                                        m_shutter_open_pos,
                                         m_main_table_center_x_correction,
                                         m_main_table_center_y_correction,
                                         m_secondary_table_center_x_correction,
@@ -73,6 +74,7 @@ public :
     inline auto switchColorMotorCoordRef()                          -> int*         {return m_switch_color_motor_coord;}
     inline auto switchLightSpotMotorCoordRef()                      -> int*         {return m_switch_light_spot_coord;}
     inline auto focusCoordForSpotAndColorChangeRef()                -> qint32&      {return m_focus_coord_for_sport_and_color_change;}
+    inline auto shutterOpenPosRef()                                 -> qint32&      {return m_shutter_open_pos;}
     inline auto mainTableCenterXCorrectionRef()                     -> qint32&      {return m_main_table_center_x_correction;}
     inline auto mainTableCenterYCorrectionRef()                     -> qint32&      {return m_main_table_center_y_correction;}
     inline auto secondaryTableCenterXCorrectionRef()                -> qint32&      {return m_secondary_table_center_x_correction;}
@@ -109,6 +111,7 @@ ConfigPriv :: ConfigPriv ( )
     memset(m_switch_color_motor_coord,0,sizeof (m_switch_color_motor_coord));
     memset(m_switch_light_spot_coord,0,sizeof (m_switch_light_spot_coord));
     m_focus_coord_for_sport_and_color_change                      = 0;
+    m_shutter_open_pos                                            = 0;
     m_main_table_center_x_correction                              = 0;
     m_main_table_center_y_correction                              = 0;
     m_secondary_table_center_x_correction                         = 0;
@@ -143,6 +146,7 @@ ConfigPriv :: ConfigPriv ( const ConfigPriv &o )
     memcpy(m_switch_color_motor_coord,o.m_switch_color_motor_coord,sizeof (m_switch_color_motor_coord));
     memcpy(m_switch_light_spot_coord,o.m_switch_light_spot_coord,sizeof (m_switch_light_spot_coord));
     m_focus_coord_for_sport_and_color_change                      =o.m_focus_coord_for_sport_and_color_change;
+    m_shutter_open_pos                                            =o.m_shutter_open_pos                      ;
     m_main_table_center_x_correction                              =o.m_main_table_center_x_correction        ;
     m_main_table_center_y_correction                              =o.m_main_table_center_y_correction        ;
     m_secondary_table_center_x_correction                         =o.m_secondary_table_center_x_correction   ;
@@ -239,19 +243,20 @@ Config :: Config ( const QByteArray &ba )
     memcpy(priv->switchColorMotorCoordRef(),&buff[32],sizeof(priv->switchColorMotorCoordRef()));
     memcpy(priv->switchLightSpotMotorCoordRef(),&buff[56],sizeof(priv->switchLightSpotMotorCoordRef()));
     priv->focusCoordForSpotAndColorChangeRef()=gReadData_Le_I32(&buff[88]);
-    priv->mainTableCenterXCorrectionRef()=gReadData_Le_I32(&buff[92]);
-    priv->mainTableCenterYCorrectionRef()=gReadData_Le_I32(&buff[96]);
-    priv->secondaryTableCenterXCorrectionRef()=gReadData_Le_I32(&buff[100]);
-    priv->secondaryTableCenterYCorrectionRef()=gReadData_Le_I32(&buff[104]);
-    priv->maximunProjectionLightADPresetRef()=gReadData_Le_I32(&buff[108]);
-    priv->xMotorCoordForLightCorrectionRef()=gReadData_Le_I32(&buff[112]);
-    priv->yMotorCoordForLightCorrectionRef()=gReadData_Le_I32(&buff[116]);
-    priv->focalLengthMotorCoordForLightCorrectionRef()=gReadData_Le_I32(&buff[120]);
-    priv->xMotorCoordForDiamondCenterTestRef()=gReadData_Le_I32(&buff[124]);
-    priv->yMotorCoordForDiamondCenterTestRef()=gReadData_Le_I32(&buff[128]);
-    memcpy( priv->focalLengthMotorCoordForDiamondCenterTestRef(),&buff[132],sizeof(priv->focalLengthMotorCoordForDiamondCenterTestRef()));
-    memcpy( priv->focalLengthMotorCoordMappingRef(),&buff[160],sizeof(priv->focalLengthMotorCoordMappingRef()));
-    memcpy (priv->DbCoordMappingRef(),&buff[860],sizeof (priv->DbCoordMappingRef()));
+    priv->shutterOpenPosRef()=gReadData_Le_I32(&buff[92]);
+    priv->mainTableCenterXCorrectionRef()=gReadData_Le_I32(&buff[96]);
+    priv->mainTableCenterYCorrectionRef()=gReadData_Le_I32(&buff[100]);
+    priv->secondaryTableCenterXCorrectionRef()=gReadData_Le_I32(&buff[104]);
+    priv->secondaryTableCenterYCorrectionRef()=gReadData_Le_I32(&buff[108]);
+    priv->maximunProjectionLightADPresetRef()=gReadData_Le_I32(&buff[112]);
+    priv->xMotorCoordForLightCorrectionRef()=gReadData_Le_I32(&buff[116]);
+    priv->yMotorCoordForLightCorrectionRef()=gReadData_Le_I32(&buff[120]);
+    priv->focalLengthMotorCoordForLightCorrectionRef()=gReadData_Le_I32(&buff[124]);
+    priv->xMotorCoordForDiamondCenterTestRef()=gReadData_Le_I32(&buff[128]);
+    priv->yMotorCoordForDiamondCenterTestRef()=gReadData_Le_I32(&buff[132]);
+    memcpy( priv->focalLengthMotorCoordForDiamondCenterTestRef(),&buff[136],sizeof(priv->focalLengthMotorCoordForDiamondCenterTestRef()));
+    memcpy( priv->focalLengthMotorCoordMappingRef(),&buff[164],sizeof(priv->focalLengthMotorCoordMappingRef()));
+    memcpy (priv->DbCoordMappingRef(),&buff[864],sizeof (priv->DbCoordMappingRef()));
 
     m_obj = d;
 }
@@ -262,77 +267,80 @@ Config :: Config ( const QByteArray &ba )
 
 bool       Config :: isEmpty() const { return ( m_obj == nullptr ); }
 
-quint32&       Config :: crcVeryficationRef()
-{ return T_PrivPtr( m_obj )->crcVeryficationRef(); }
+quint32       Config :: crcVeryfication()
+{ return m_obj!=nullptr?T_PrivPtr( m_obj )->crcVeryficationRef():0; }
 
-quint32&       Config :: deviceIDRef()
-{ return T_PrivPtr( m_obj )->deviceIDRef(); }
+quint32       Config :: deviceID()
+{ return m_obj!=nullptr?T_PrivPtr( m_obj )->deviceIDRef():0; }
 
-quint16&       Config :: centerFixationLampDARef()
-{ return  T_PrivPtr( m_obj )->centerFixationLampDARef(); }
+quint16       Config :: centerFixationLampDA()
+{ return  m_obj!=nullptr?T_PrivPtr( m_obj )->centerFixationLampDARef():0; }
 
-quint16&       Config :: bigDiamondfixationLampDARef()
-{ return T_PrivPtr( m_obj )->bigDiamondfixationLampDARef(); }
+quint16       Config :: bigDiamondfixationLampDA()
+{ return m_obj!=nullptr?T_PrivPtr( m_obj )->bigDiamondfixationLampDARef():0; }
 
-quint16&       Config :: smallDiamondFixationLampDARef()
-{ return T_PrivPtr( m_obj )->smallDiamondFixationLampDARef() ; }
+quint16       Config :: smallDiamondFixationLampDA()
+{ return m_obj!=nullptr?T_PrivPtr( m_obj )->smallDiamondFixationLampDARef() :0; }
 
-quint16&       Config :: yellowBackgroundLampDARef()
-{ return  T_PrivPtr( m_obj )->yellowBackgroundLampDARef() ; }
+quint16       Config :: yellowBackgroundLampDA()
+{ return  m_obj!=nullptr?T_PrivPtr( m_obj )->yellowBackgroundLampDARef() :0; }
 
-quint16*          Config :: whiteBackgroundLampDARef()
-{ return  T_PrivPtr( m_obj )->whiteBackgroundLampDARef() ; }
+quint16*          Config :: whiteBackgroundLampDA()
+{ return  m_obj!=nullptr?T_PrivPtr( m_obj )->whiteBackgroundLampDARef() :0; }
 
-quint16&       Config :: centerInfraredLampDARef()
-{ return  T_PrivPtr( m_obj )->centerInfraredLampDARef(); }
+quint16       Config :: centerInfraredLampDA()
+{ return  m_obj!=nullptr?T_PrivPtr( m_obj )->centerInfraredLampDARef():0; }
 
-quint16&       Config :: borderInfraredLampDARef()
-{ return T_PrivPtr( m_obj )->borderInfraredLampDARef(); }
+quint16       Config :: borderInfraredLampDA()
+{ return m_obj!=nullptr?T_PrivPtr( m_obj )->borderInfraredLampDARef():0; }
 
-quint16&       Config :: eyeglassFrameLampDARef()
-{ return  T_PrivPtr( m_obj )->eyeglassFrameLampDARef(); }
+quint16       Config :: eyeglassFrameLampDA()
+{ return  m_obj!=nullptr?T_PrivPtr( m_obj )->eyeglassFrameLampDARef():0; }
 
-quint16*          Config :: environmentAlarmLightDARef()
-{ return T_PrivPtr( m_obj )->environmentAlarmLightDARef(); }
+quint16*          Config :: environmentAlarmLightDA()
+{ return m_obj!=nullptr?T_PrivPtr( m_obj )->environmentAlarmLightDARef():0; }
 
-int*          Config :: switchColorMotorCoordRef()
-{ return  T_PrivPtr( m_obj )->switchColorMotorCoordRef(); }
+int*          Config :: switchColorMotorCoord()
+{ return  m_obj!=nullptr?T_PrivPtr( m_obj )->switchColorMotorCoordRef():0; }
 
-int*          Config :: switchLightSpotMotorCoordRef()
-{ return  T_PrivPtr( m_obj )->switchLightSpotMotorCoordRef(); }
+int*          Config :: switchLightSpotMotorCoord()
+{ return  m_obj!=nullptr?T_PrivPtr( m_obj )->switchLightSpotMotorCoordRef():0; }
 
-qint32&       Config :: focusCoordForSpotAndColorChangeRef()
-{ return T_PrivPtr( m_obj )->focusCoordForSpotAndColorChangeRef(); }
+qint32       Config :: focusCoordForSpotAndColorChange()
+{ return m_obj!=nullptr?T_PrivPtr( m_obj )->focusCoordForSpotAndColorChangeRef():0; }
 
-qint32&       Config :: mainTableCenterXCorrection()
-{ return T_PrivPtr( m_obj )->mainTableCenterXCorrectionRef(); }
+qint32       Config :: shutterOpenPos()
+{ return m_obj!=nullptr?T_PrivPtr( m_obj )->shutterOpenPosRef():0; }
 
-qint32&       Config :: mainTableCenterYCorrection()
-{ return T_PrivPtr( m_obj )->mainTableCenterYCorrectionRef(); }
+qint32       Config :: mainTableCenterXCorrection()
+{ return m_obj!=nullptr?T_PrivPtr( m_obj )->mainTableCenterXCorrectionRef():0; }
 
-qint32&       Config :: secondaryTableCenterXCorrection()
-{ return T_PrivPtr( m_obj )->secondaryTableCenterXCorrectionRef() ; }
+qint32       Config :: mainTableCenterYCorrection()
+{ return m_obj!=nullptr?T_PrivPtr( m_obj )->mainTableCenterYCorrectionRef():0; }
 
-qint32&       Config :: secondaryTableCenterYCorrection()
-{ return T_PrivPtr( m_obj )->secondaryTableCenterYCorrectionRef(); }
+qint32       Config :: secondaryTableCenterXCorrection()
+{ return m_obj!=nullptr?T_PrivPtr( m_obj )->secondaryTableCenterXCorrectionRef() :0; }
 
-qint32&       Config :: maximunProjectionLightADPresetRef()
-{ return T_PrivPtr( m_obj )->maximunProjectionLightADPresetRef(); }
+qint32       Config :: secondaryTableCenterYCorrection()
+{ return m_obj!=nullptr?T_PrivPtr( m_obj )->secondaryTableCenterYCorrectionRef():0; }
 
-qint32&       Config :: xMotorCoordForLightCorrectionRef()
-{ return T_PrivPtr( m_obj )->xMotorCoordForLightCorrectionRef(); }
+qint32       Config :: maximunProjectionLightADPreset()
+{ return m_obj!=nullptr?T_PrivPtr( m_obj )->maximunProjectionLightADPresetRef():0; }
 
-qint32&       Config :: yMotorCoordForLightCorrectionRef()
-{ return T_PrivPtr( m_obj )->yMotorCoordForLightCorrectionRef(); }
+qint32       Config :: xMotorCoordForLightCorrection()
+{ return m_obj!=nullptr?T_PrivPtr( m_obj )->xMotorCoordForLightCorrectionRef():0; }
 
-int*       Config :: focalLengthMotorCoordForDiamondCenterTestRef()
-{ return T_PrivPtr( m_obj )->focalLengthMotorCoordForDiamondCenterTestRef(); }
+qint32       Config :: yMotorCoordForLightCorrection()
+{ return m_obj!=nullptr?T_PrivPtr( m_obj )->yMotorCoordForLightCorrectionRef():0; }
 
-int(*       Config :: focalLengthMotorCoordMappingRef())[7]
-{ return T_PrivPtr( m_obj )->focalLengthMotorCoordMappingRef(); }
+int*       Config :: focalLengthMotorCoordForDiamondCenterTest()
+{ return m_obj!=nullptr?T_PrivPtr( m_obj )->focalLengthMotorCoordForDiamondCenterTestRef():0; }
 
-int(*       Config :: DbCoordMappingRef())[2]
-{ return T_PrivPtr( m_obj )->DbCoordMappingRef(); }
+int(*       Config :: focalLengthMotorCoordMapping())[7]
+{ return m_obj!=nullptr?T_PrivPtr( m_obj )->focalLengthMotorCoordMappingRef():0; }
+
+int(*       Config :: DbCoordMapping())[2]
+{ return m_obj!=nullptr?T_PrivPtr( m_obj )->DbCoordMappingRef():0; }
 // ============================================================================
 // make all profile as json object
 // ============================================================================

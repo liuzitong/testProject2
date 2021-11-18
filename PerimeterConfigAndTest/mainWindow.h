@@ -29,7 +29,6 @@ public:
     QString PID,VID;
 
 private slots:
-
     void showDevInfo(QString);
     void refreshStatus();
     void refreshVideo();
@@ -84,15 +83,19 @@ private slots:
 
     void on_checkBox_useConfigPos_stateChanged(int arg1);
 
+    void on_comboBox_testFucntion_currentIndexChanged(int index);
+
+
 private:
     void moveChinMotors(UsbDev::DevCtl::MoveMethod);
     void move5Motors(UsbDev::DevCtl::MoveMethod);
     bool getXYMotorPosAndFocalDistFromCoord(DotInfo& dotInfo);
-    void staticCastTest(int coordX,int coordY,int coordFocal,int focalDist,int spotSlot ,int colorSlot,int sps);
+    void staticCastTest(int motorXPost,int motorYPos,int focalDist,int spotSlot ,int colorSlot,int db,int sps,int durationTime,int shutterPos);
+    void moveCastTest();
     void init();
     void uninit();
     int interpolation(int value[4],QPoint loc);
-    int getFocusMotorPosByDist(int focalDist);
+    int getFocusMotorPosByDist(int focalDist,int spotSlot);
     Ui::MainWindow *ui;
     UsbDev::DevCtl *m_devCtl=NULL;
     UsbDev::Config m_config;
@@ -102,6 +105,7 @@ private:
     QTimer* m_timer=NULL;
     LocalConfig m_localConfig;
     SlotPosModel* m_slotPosModel=NULL;
+
 };
 
 #endif // MAINWINDOW_H
