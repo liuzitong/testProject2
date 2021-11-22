@@ -76,6 +76,8 @@ public:
     int* focalLengthMotorCoordForDiamondCenterTest();
     int(*focalLengthMotorCoordMapping())[7];
     int(*DbCoordMapping())[2];
+    int* stepTime();
+    int stepLength();
 private:
     void *m_obj;
 };

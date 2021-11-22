@@ -54,7 +54,9 @@ private:
                                         m_y_motor_coord_for_diamond_center_test,
                                         m_focal_length_motor_coord_for_diamond_center_test[7],                  //7光斑
                                         m_focal_length_motor_coord_mapping[25][7],                              //25距离,7光斑
-                                        m_Db_coord_mapping[52][2];                                              //0~51DB,颜色电机,光斑电机
+                                        m_Db_coord_mapping[52][2],                                              //0~51DB,颜色电机,光斑电机
+                                        m_step_time[7],
+                                        m_step_length;
 
 public :
     ConfigPriv ( );
@@ -88,6 +90,8 @@ public :
     inline auto focalLengthMotorCoordForDiamondCenterTestRef()      -> int*         {return m_focal_length_motor_coord_for_diamond_center_test;}
     inline auto focalLengthMotorCoordMappingRef()                   -> int(*)[7]    {return m_focal_length_motor_coord_mapping;}
     inline auto DbCoordMappingRef()                                 -> int(*)[2]    {return m_Db_coord_mapping;}
+    inline auto stepTimeRef()                                       -> int*         {return m_step_time;}
+    inline auto stepLength()                                        -> int          {return m_step_length;}
 };
 
 ConfigPriv :: ~ConfigPriv ( ) { }
@@ -341,6 +345,12 @@ int(*       Config :: focalLengthMotorCoordMapping())[7]
 
 int(*       Config :: DbCoordMapping())[2]
 { return m_obj!=nullptr?T_PrivPtr( m_obj )->DbCoordMappingRef():0; }
+
+int *Config::stepTime()
+{return m_obj!=nullptr?T_PrivPtr( m_obj )->stepTimeRef():0; }
+
+int Config::stepLength()
+{return m_obj!=nullptr?T_PrivPtr( m_obj )->stepLength():0; }
 // ============================================================================
 // make all profile as json object
 // ============================================================================

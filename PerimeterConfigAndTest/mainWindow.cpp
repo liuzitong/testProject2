@@ -10,6 +10,10 @@
 #include <QPainter>
 #include <math.h>
 #include <QTime>
+#include <thread>
+#include <future>
+#include <array>
+#include <QSharedPointer>
 
 
 #pragma execution_character_set("utf-8")
@@ -267,25 +271,34 @@ void MainWindow::on_pushButton_testStart_clicked()
             int colorSlot=ui->spinBox_colorSlot->value();
             int coordX=ui->lineEdit_coordX->text().toInt();
             int coordY=ui->lineEdit_coordY->text().toInt();
-            int sps=ui->spinBox_speedLightMove->text().toInt();
+            int sps=ui->spinBox_speedLightDot->text().toInt();
             DotInfo dot;dot.coordX=coordX;dot.coordY=coordY;
             if(!getXYMotorPosAndFocalDistFromCoord(dot)) return;
-            quint8 focalDist;
             if(!ui->checkBox_autoCalcFocalDist->isChecked())
             {
-                focalDist=ui->lineEdit_settingFocal->text().toInt();
+                dot.focalDistance=ui->lineEdit_settingFocal->text().toInt();
             }
             else{
-                focalDist=dot.focalDistance;
-                ui->lineEdit_settingFocal->setText(QString(focalDist));
+                ui->lineEdit_settingFocal->setText(QString(dot.focalDistance));
             }
-            staticCastTest(dot.motorXPos,dot.motorYPos,focalDist,spotSlot,colorSlot,db,sps,durationTime,shutterPos);
+            staticCastTest(dot,spotSlot,colorSlot,db,sps,durationTime,shutterPos);
             break;
         }
         case 1:
         {
-
-            moveCastTest();
+            DotInfo dotBegin,dotEnd;
+            dotBegin.coordX=ui->lineEdit_beginCoordX->text().toInt();
+            dotBegin.coordY=ui->lineEdit_beginCoordY->text().toInt();
+            dotEnd.coordX=ui->lineEdit_endCoordX->text().toInt();
+            dotEnd.coordY=ui->lineEdit_endCoordY->text().toInt();
+            getXYMotorPosAndFocalDistFromCoord(dotBegin);
+            getXYMotorPosAndFocalDistFromCoord(dotEnd);
+            quint8 db=ui->spinBox_settingDb->text().toInt();
+            int sps=ui->spinBox_speedLightMove->text().toInt();
+            int stepCount=ui->lineEdit_stepCount->text().toInt();
+            int spotSlot=ui->spinBox_spotSlot->value();
+            int colorSlot=ui->spinBox_colorSlot->value();
+            moveCastTest(dotBegin,dotEnd,spotSlot,colorSlot,stepCount,db,sps);
             break;
         }
     }
@@ -378,7 +391,6 @@ void MainWindow::on_comboBox_testFucntion_currentIndexChanged(int index)
     if(index==1)
     {
         ui->checkBox_autoCalcFocalDist->setChecked(true);
-
     }
 }
 
@@ -465,33 +477,38 @@ void MainWindow::move5Motors(UsbDev::DevCtl::MoveMethod method)
 
 bool MainWindow::getXYMotorPosAndFocalDistFromCoord(DotInfo& dotInfo)
 {
+    static bool isMainDotInfoTable=true;
     int x1=floor(dotInfo.coordX/6.0f)*6;int x2=ceil(dotInfo.coordX/6.0f)*6;
     int y1=floor(dotInfo.coordY/6.0f)*6;int y2=ceil(dotInfo.coordY/6.0f)*6;
     QList<DotInfo> list2;
     DotInfo fourDots[4];
     int count = 0;
-    for(auto& v:m_localConfig.m_dotInfoList)
+    for(auto& v:(isMainDotInfoTable?m_localConfig.m_dotInfoList:m_localConfig.m_secondaryDotInfoList))
     {
         if((v.coordX==x1)&&(v.coordY==y1)) {fourDots[0]=v;count++;}
         if((v.coordX==x2)&&(v.coordY==y1)) {fourDots[0]=v;count++;}
         if((v.coordX==x1)&&(v.coordY==y2)) {fourDots[0]=v;count++;}
         if((v.coordX==x2)&&(v.coordY==y2)) {fourDots[0]=v;count++;}
     }
-    if(count != 4)
+    if(count != 4)          //找不到就切换到表
     {
         count=0;
-        for(auto& v:m_localConfig.m_secondaryDotInfoList)
+        for(auto& v:(isMainDotInfoTable?m_localConfig.m_secondaryDotInfoList:m_localConfig.m_dotInfoList))
         {
             if((v.coordX==x1)&&(v.coordY==y1)) {fourDots[0]=v;count++;}
             if((v.coordX==x2)&&(v.coordY==y1)) {fourDots[0]=v;count++;}
             if((v.coordX==x1)&&(v.coordY==y2)) {fourDots[0]=v;count++;}
             if((v.coordX==x2)&&(v.coordY==y2)) {fourDots[0]=v;count++;}
         }
-    }
-    if(count!=4)
-    {
-        showDevInfo("point is out of range!");
-        return false;
+        if(count==4)
+        {
+             isMainDotInfoTable=!isMainDotInfoTable;    //记录当前表
+        }
+        else
+        {
+            showDevInfo("point is out of range!");
+            return false;
+        }
     }
 
     QPoint loc(dotInfo.coordX-fourDots[0].coordX,dotInfo.coordY-fourDots[0].coordY);
@@ -505,8 +522,9 @@ bool MainWindow::getXYMotorPosAndFocalDistFromCoord(DotInfo& dotInfo)
     return true;
 }
 
-void MainWindow::staticCastTest(int motorXPos,int motorYPos,int focalDist,int spotSlot ,int colorSlot,int db,int sps,int durationTime,int shutterPos)
+void MainWindow::staticCastTest(DotInfo dot,int spotSlot ,int colorSlot,int db,int sps,int durationTime,int shutterPos)
 {
+
     while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_X)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Y)||
           m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Color)||
           m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Light_Spot)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Shutter))
@@ -541,7 +559,7 @@ void MainWindow::staticCastTest(int motorXPos,int motorYPos,int focalDist,int sp
     memset(spsArr,0,sizeof(spsArr));
     memset(posArr,0,sizeof(posArr));
     spsArr[2]=sps;
-    posArr[2]=getFocusMotorPosByDist(focalDist,spotSlot);
+    posArr[2]=getFocusMotorPosByDist(dot.focalDistance,spotSlot);
     while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Color)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Light_Spot)||(time.elapsed()<10))
     {QCoreApplication::processEvents();}
     m_devCtl->move5Motors(spsArr,posArr);
@@ -551,8 +569,8 @@ void MainWindow::staticCastTest(int motorXPos,int motorYPos,int focalDist,int sp
     memset(spsArr,0,sizeof(spsArr));
     memset(posArr,0,sizeof(posArr));
     spsArr[0]=spsArr[1]=spsArr[3]=spsArr[4]=sps;
-    posArr[0]=motorXPos;
-    posArr[1]=motorYPos;
+    posArr[0]=dot.motorXPos;
+    posArr[1]=dot.motorYPos;
     posArr[3]=m_config.DbCoordMapping()[db][0];
     posArr[4]=m_config.DbCoordMapping()[db][1];
     while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus)||(time.elapsed()<10))
@@ -568,8 +586,116 @@ void MainWindow::staticCastTest(int motorXPos,int motorYPos,int focalDist,int sp
     m_devCtl->openShutter(durationTime,shutterPos);
 }
 
-void MainWindow::moveCastTest()
+void MainWindow::moveCastTest(DotInfo dotBegin,DotInfo dotEnd,int spotSlot ,int colorSlot,int stepAngle,int db,int sps)
 {
+    while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_X)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Y)||
+          m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Color)||
+          m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Light_Spot)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Shutter))
+    {QCoreApplication::processEvents();}
+
+    //移动焦距电机到调节位置
+    quint8 spsArr[5]={0};
+    qint32 posArr[5]={0};
+    if(!m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus))
+    {
+        spsArr[2]=sps;
+        posArr[2]=m_config.focusCoordForSpotAndColorChange();
+        m_devCtl->move5Motors(spsArr,posArr);
+    }
+
+    //调整颜色和光斑
+    QTime time;
+    time.start();
+    memset(spsArr,0,sizeof(spsArr));
+    memset(posArr,0,sizeof(posArr));
+    spsArr[3]=sps;spsArr[4]=sps;
+    posArr[3]=m_config.switchColorMotorCoord()[colorSlot];
+    posArr[4]=m_config.switchColorMotorCoord()[spotSlot];
+
+    while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus)||(time.elapsed()<10))
+    {QCoreApplication::processEvents();}
+    m_devCtl->move5Motors(spsArr,posArr);
+
+    //调整焦距
+    time.restart();
+    memset(spsArr,0,sizeof(spsArr));
+    memset(posArr,0,sizeof(posArr));
+    spsArr[2]=sps;
+    posArr[2]=getFocusMotorPosByDist(dotBegin.focalDistance,spotSlot);
+    while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Color)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Light_Spot)||(time.elapsed()<10))
+    {QCoreApplication::processEvents();}
+    m_devCtl->move5Motors(spsArr,posArr);
+
+    //调整DB同时移动到指定位置
+    time.restart();
+    memset(spsArr,0,sizeof(spsArr));
+    memset(posArr,0,sizeof(posArr));
+    spsArr[0]=spsArr[1]=spsArr[3]=spsArr[4]=sps;
+    posArr[0]=dotBegin.motorXPos;
+    posArr[1]=dotBegin.motorYPos;
+    posArr[3]=m_config.DbCoordMapping()[db][0];
+    posArr[4]=m_config.DbCoordMapping()[db][1];
+    while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus)||(time.elapsed()<10))
+    {QCoreApplication::processEvents();}
+    m_devCtl->move5Motors(spsArr,posArr);
+
+
+    float stepAngleX,stepAngleY;
+    int stepCount;
+    int AngleX=dotBegin.coordX-dotEnd.coordX;
+    int AngleY=dotBegin.coordY-dotEnd.coordY;
+    if(std::abs(AngleX)>std::abs(AngleY))
+    {
+        stepAngleX=stepAngle;
+        stepCount=AngleX/stepAngle;
+        stepAngleY=AngleY/stepCount;
+    }
+
+    else
+    {
+        stepAngleY=stepAngle;
+        stepCount=AngleY/stepAngle;
+        stepAngleX=AngleX/stepCount;
+    }
+
+    DotInfo temp=dotBegin;
+    QSharedPointer<int> dotArr=QSharedPointer<int>(new int[stepCount*3],[](
+            int* x){delete []x;std::cout<<__LINE__<<" deleter worked"<<std::endl;});
+
+//    for(int i=0;i<stepCount;i++)
+//    {
+//        temp.coordX+=stepAngleX;
+//        temp.coordY+=stepAngleY;
+//        getXYMotorPosAndFocalDistFromCoord(temp);
+//        dotArr.data()[i][0]=temp.motorXPos;
+//        dotArr.data()[i][1]=temp.motorYPos;
+//        dotArr.data()[i][2]=getFocusMotorPosByDist(temp.focalDistance,spotSlot);
+//    }
+
+    std::future<void> result = std::async(std::launch::async, [&]()
+    {
+        for(int i=0;i<stepCount;i++)
+        {
+            temp.coordX+=stepAngleX;
+            temp.coordY+=stepAngleY;
+            getXYMotorPosAndFocalDistFromCoord(temp);
+            dotArr.data()[i*3+0]=temp.motorXPos;
+            dotArr.data()[i*3+1]=temp.motorYPos;
+            dotArr.data()[i*3+2]=getFocusMotorPosByDist(temp.focalDistance,spotSlot);
+        }
+    });
+
+    while(!result._Is_ready()){QCoreApplication::processEvents();}
+
+    constexpr int stepPerFrame=(512-8)/4;
+    int totalframe=ceil(stepCount/stepPerFrame);
+    for(int i=1;i<totalframe;i++)
+    {
+        m_devCtl->sendCastMoveData(totalframe,i,512,&dotArr.data()[(512-8)*i]);
+    }
+    int dataLen= (stepCount%stepPerFrame)*12+8;
+    m_devCtl->sendCastMoveData(totalframe,totalframe,dataLen,&dotArr.data()[(512-8)*(totalframe-1)]);
+    m_devCtl->startCastMove(sps,sps,sps,m_config.stepTime()[sps]);
 
 }
 

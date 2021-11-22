@@ -6,6 +6,10 @@
 #include <spdlog/common.h>
 #include <QDebug>
 #include <local_config.h>
+#include <QSharedPointer>
+
+
+
 int main(int argc, char *argv[])
 {
     auto rotating_logger = spdlog::rotating_logger_mt("logger", "logs/perimeterConfig_logger.txt", 1024*1024, 30);
@@ -17,6 +21,5 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
     return a.exec();
-//    config.ShowAndWrite();
 
 }
