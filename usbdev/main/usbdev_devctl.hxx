@@ -10,6 +10,7 @@ namespace UsbDev {
 class Profile;
 class StatusData;
 class FrameData;
+class Config;
 
 
 // ////////////////////////////////////////////////////////////////////////////
@@ -88,7 +89,7 @@ public:
 
     void  setWhiteLamp(quint8 r,quint8 g,quint8 b);
 
-    void openShutter(quint16 durationTime,qint32 coord_shutter);
+    void  openShutter(quint16 durationTime,qint32 coord_shutter);
 
     void  moveChinMotors( quint8* sps, qint32* value,MoveMethod method=MoveMethod::Abosolute);
 
@@ -129,7 +130,7 @@ public:
      * \note  the cfg data is a raw binary stream, but the usb board maybe do not \n
      *   save all data. Maximum data size is 500 bytes.
      */
-    void  saveMotorCfg( MotorId mot, const QByteArray &cfg );
+    void  saveConfig(const Config &cfg );
 
     /*!
      * \brief contol the sample motor
@@ -159,6 +160,14 @@ public:
      * @note while device workstatus is OK, user can take it
      */
     Profile  profile( ) const;
+
+
+
+    /*!
+     * @brief get the current profile of the device
+     * @note while device workstatus is OK, user can take it
+     */
+    Config  config( ) const;
 
     /*!
      * \brief take the pending status data
@@ -193,6 +202,8 @@ public:
      * @brief while the DevCtl loaded profile from hardware, it will be emited.
      */
     Q_SIGNAL  void  newProfile( );
+
+    Q_SIGNAL  void  newConfig( );
 
     Q_SIGNAL  void  updateInfo(QString str);
 

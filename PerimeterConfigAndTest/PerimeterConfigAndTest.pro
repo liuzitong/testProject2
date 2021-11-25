@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network multimediawidgets
+QT       += core gui network multimediawidgets concurrent
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -36,12 +36,12 @@ SOURCES += \
     main.cpp \
     mainWindow.cpp \
     local_config.cpp \
-    slot_step_model.cpp
+    table_model.cpp
 
 HEADERS += \
     mainWindow.h \
     local_config.h \
-    slot_step_model.h
+    table_model.h
 
 FORMS += \
     mainwindow.ui \

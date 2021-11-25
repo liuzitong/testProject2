@@ -43,6 +43,7 @@ LocalConfig::LocalConfig()
     QJsonArray secondaryDotInfoList=rootObj.value("secondaryDotInfoList").toArray();
     QJsonArray spotSizeToSlot=rootObj.value("spotSizeToSlot").toArray();
     QJsonArray colorToSlot=rootObj.value("colorToSlot").toArray();
+    QJsonArray colorPosData=rootObj.value("colorPosData").toArray();
 
     for(auto i:dotInfoList)
     {
@@ -71,6 +72,28 @@ LocalConfig::LocalConfig()
         int slot=obj["Slot"].toInt();
         m_colorToSlot.append({color,slot});
     }
+
+    for(auto i:colorPosData)
+    {
+        QJsonObject obj=i.toObject();
+        auto arr=obj["row"].toArray();
+        for(auto v:arr)
+        {
+            if(v.toVariant().type()==QVariant::Type::String)
+            {
+                qDebug()<<v.toVariant().toString();
+            }
+            else
+            {
+                qDebug()<<QString::number(v.toVariant().toInt());
+            }
+//            if(v.toVariant().type()==QMetaType::QString)
+//            qDebug()<<()?v.toString():QString(v.toInt());
+        }
+
+    }
+
+
 }
 
 

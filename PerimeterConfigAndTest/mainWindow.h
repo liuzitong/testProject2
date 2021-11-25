@@ -12,7 +12,7 @@
 #include <QJsonObject>
 #include <Qpair>
 #include <local_config.h>
-#include <slot_step_model.h>
+#include <table_model.h>
 
 
 namespace Ui {
@@ -33,7 +33,8 @@ private slots:
     void refreshStatus();
     void refreshVideo();
     void refreshConnectionStatus(int);
-    void on_actionchooseDevice_triggered();
+    void updateProfile();
+    void updateConfig();
 
     void on_pushButton_relativeMoveChin_clicked();
 
@@ -85,6 +86,9 @@ private slots:
 
     void on_comboBox_testFucntion_currentIndexChanged(int index);
 
+    void on_action_saveConfig_triggered();
+
+    void on_action_chooseDevice_triggered();
 
 private:
     void moveChinMotors(UsbDev::DevCtl::MoveMethod);
@@ -104,8 +108,7 @@ private:
     UsbDev::Profile m_profile;
     QTimer* m_timer=NULL;
     LocalConfig m_localConfig;
-    SlotPosModel* m_slotPosModel=NULL;
-
+    TableModel* m_slotPosModel=NULL;
 };
 
 #endif // MAINWINDOW_H

@@ -19,6 +19,7 @@
 #include "usbdev/main/usbdev_profile.hxx"
 #include "usbdev/main/usbdev_framedata.hxx"
 #include "usbdev/main/usbdev_statusdata.hxx"
+#include "usbdev/main/usbdev_config.hxx"
 #include <spdlog/sinks/rotating_file_sink.h>
 #include <memory>
 
@@ -72,6 +73,7 @@ class USBDEV_HIDDEN DevCtl_Worker : public QObject {
     Q_OBJECT
 private:
     Profile m_profile;
+    Config m_config;
     SciPack::NwkUsbObj2 *m_usb_dev;
     QElapsedTimer m_elapse_tmr;
     quint32 m_trg_cntr; quint32 m_vid_pid, m_cfg_id; bool m_is_video_on;
@@ -98,14 +100,17 @@ public :
     Q_INVOKABLE void  forceReadProfile( void *p ) { Profile *pf = reinterpret_cast<Profile*>(p); *pf = m_profile; }
     Q_INVOKABLE int   forceReadWorkStatus( ) { return m_wks; }  // since 0.2.1  try force check workstatus
     Q_INVOKABLE bool  cmd_ReadProfile( bool req_emit = true );
+    Q_INVOKABLE bool  cmd_ReadConfig( bool req_emit = true );
     Q_INVOKABLE bool  cmd_ReadStatusData( );
     Q_INVOKABLE bool  cmd_ReadFrameData ( );
     Q_INVOKABLE bool  cmd_TurnOnVideo ( );
     Q_INVOKABLE bool  cmd_TurnOffVideo( );
+
     Q_INVOKABLE bool  cmd_SaveMotorCfg( int mot, const QByteArray &ba );
     Q_INVOKABLE bool  cmd_GeneralCmd( QByteArray ba  ,QString funcName,quint32 dataLen);
 
     Q_SIGNAL void  workStatusChanged( int );
+    Q_SIGNAL void  newConfig(const UsbDev::Config &);
     Q_SIGNAL void  newProfile   ( const UsbDev::Profile &    );
     Q_SIGNAL void  newFrameData ( const UsbDev::FrameData &  );
     Q_SIGNAL void  newStatusData( const UsbDev::StatusData & );
@@ -155,6 +160,7 @@ void   DevCtl_Worker :: init( bool req_emit )
             m_wks = DevCtl::WorkStatus_S_OK;
             if ( req_emit ) { emit this->workStatusChanged( DevCtl::WorkStatus_S_OK ); }
             this->cmd_ReadProfile( req_emit );
+            this->cmd_ReadConfig (req_emit);
         } else {
             m_wks = DevCtl::WorkStatus_E_UnExpected;
             if ( req_emit ) { emit this->workStatusChanged( DevCtl::WorkStatus_E_UnExpected ); }
@@ -237,6 +243,32 @@ bool   DevCtl_Worker :: cmd_ReadProfile( bool req_emit )
 
     return ret;
 }
+
+// 读取程度设定有误需要修改
+// ============================================================================
+bool   DevCtl_Worker :: cmd_ReadConfig( bool req_emit )
+{
+    if ( ! this->isDeviceWork()) { return false; }
+
+    unsigned char buff[512*3]={0}; bool ret = true;
+    if ( ret ) {
+        buff[0] = 0x5a; buff[1] = 0xf3;
+        ret = this->cmdComm_bulkOutSync( buff, sizeof( buff ) );
+        if ( ! ret ) { spdlog::warn("send read config command failed."); }
+    }
+    if ( ret ) {
+        ret = this->cmdComm_bulkInSync( buff, sizeof( buff ));
+        if ( ! ret ) { spdlog::warn("recv. config data failed."); }
+    }
+    if ( ret ) {
+        Config config( QByteArray::fromRawData( reinterpret_cast<const char*>(buff), sizeof(buff)));
+        if ( ! config.isEmpty()) { if ( req_emit ){ emit this->newConfig(config); }}
+        m_config = config;
+    }
+
+    return ret;
+}
+
 
 // ============================================================================
 // cmd: read the status data from device ok
@@ -459,6 +491,7 @@ private:
     QThread  *m_t_worker; DevCtl_Worker *m_wkr;  // worker thread and worker
     QThread  *m_t_tmr;    QTimer *m_trg_tmr;     // timer thread and timer
     Profile   m_profile;
+    Config    m_config;
     DevCtl_StatusDataQueue  m_status_data_queue;
     DevCtl_FrameDataQueue   m_frame_data_queue;
     quintptr  m_status_data_emit_cntr, m_frame_data_emit_cntr;
@@ -487,6 +520,7 @@ protected:
     Q_SLOT void  wkr_onNewFrameData ( const UsbDev::FrameData & );
     Q_SLOT void  wkr_onNewStatusData( const UsbDev::StatusData & );
     Q_SLOT void  wkr_onNewProfile   ( const UsbDev::Profile & );
+    Q_SLOT void  wkr_onNewConfig   ( const UsbDev::Config & );
     Q_SLOT void  wkr_onVideoStatusChanged( bool );
 
 
@@ -499,6 +533,7 @@ public:
     inline auto  vidPid() const -> quint32  { return m_vid_pid; }
     inline auto  cfgId () const -> quint32  { return m_cfg_id;  }
     inline auto  profile()      -> Profile& { return m_profile; }
+    inline auto  config()       -> Config& { return m_config; }
     inline auto  wkrPtr()       -> DevCtl_Worker* { return m_wkr; }
     inline auto  takeNextPendingFrameData( UsbDev::FrameData &fd ) -> bool
     {
@@ -526,6 +561,7 @@ public:
     Q_SIGNAL void  newStatusData( );
     Q_SIGNAL void  newFrameData( );
     Q_SIGNAL void  newProfile( );
+    Q_SIGNAL void  newConfig( );
     Q_SIGNAL void  updateInfo(QString );
 };
 
@@ -607,6 +643,7 @@ void  DevCtlPriv :: ensureWorker( bool sw )
         );
         QObject::connect( m_wkr, SIGNAL(workStatusChanged(int)), this, SLOT(wkr_onWorkStatusChanged(int)));
         QObject::connect( m_wkr, SIGNAL(newProfile( const UsbDev::Profile&)), this, SLOT(wkr_onNewProfile(const UsbDev::Profile&)));
+        QObject::connect( m_wkr, SIGNAL(newConfig(const UsbDev::Config&)), this, SLOT(wkr_onNewConfig(const UsbDev::Config&)));
         QObject::connect( m_wkr, SIGNAL(newStatusData( const UsbDev::StatusData&)), this, SLOT(wkr_onNewStatusData(const UsbDev::StatusData&)));
         QObject::connect( m_wkr, SIGNAL(newFrameData (const UsbDev::FrameData&)), this, SLOT(wkr_onNewFrameData(const UsbDev::FrameData&)));
         QObject::connect( m_wkr, SIGNAL(videoStatusChanged(bool)), this, SLOT(wkr_onVideoStatusChanged(bool)));
@@ -696,6 +733,15 @@ void  DevCtlPriv :: wkr_onNewProfile( const UsbDev::Profile &pf )
     emit this->newProfile();
 }
 
+// ============================================================================
+// slot: handle the new profile
+// ============================================================================
+void  DevCtlPriv :: wkr_onNewConfig( const UsbDev::Config &cfg )
+{
+    m_config = cfg;
+    emit this->newConfig();
+}
+
 // ////////////////////////////////////////////////////////////////////////////
 // wrap API
 // ////////////////////////////////////////////////////////////////////////////
@@ -712,6 +758,7 @@ static DevCtlPriv *  gCreateDevCtlPriv( DevCtl *dev, quint32 vid_pid, quint32 cf
     // ------------------------------------------------------------------------
     QObject::connect( priv, SIGNAL(newFrameData()),  dev, SIGNAL(newFrameData())  );
     QObject::connect( priv, SIGNAL(newProfile()),    dev, SIGNAL(newProfile())    );
+    QObject::connect( priv, SIGNAL(newConfig()),     dev, SIGNAL(newConfig())    );
     QObject::connect( priv, SIGNAL(newStatusData()), dev, SIGNAL(newStatusData()) );
     QObject::connect( priv, SIGNAL(workStatusChanged(int)), dev, SIGNAL(workStatusChanged(int)));
     QObject::connect( priv, SIGNAL(updateInfo(QString)), dev, SIGNAL(updateInfo(QString)));
@@ -780,6 +827,15 @@ void  DevCtl :: reinit ( )
 // ============================================================================
 UsbDev::Profile  DevCtl :: profile() const
 {   return T_PrivPtr( m_obj )->profile(); }
+
+
+// ============================================================================
+// return the config data
+// ============================================================================
+UsbDev::Config  DevCtl :: config() const
+{   return T_PrivPtr( m_obj )->config(); }
+
+
 
 // ============================================================================
 // take the pending status data
@@ -882,15 +938,14 @@ void   DevCtl :: resetMotor( MotorId mot,quint8 speed )
 // ============================================================================
 // save the motor config
 // ============================================================================
-void   DevCtl :: saveMotorCfg( MotorId mot, const QByteArray &cfg )
+void   DevCtl :: saveConfig( const Config& cfg )
 {
-    int mot_id = int( mot );
-    if ( mot_id > 0 && mot_id < 9 ) {
-        QMetaObject::invokeMethod(
-            T_PrivPtr( m_obj )->wkrPtr(), "cmd_SaveMotorCfg", Qt::QueuedConnection,
-            Q_ARG( int, mot_id ), Q_ARG( QByteArray, cfg )
-        );
-    }
+    QByteArray ba(512*3,0);
+    unsigned char* ptr=reinterpret_cast<unsigned char*>(ba.data());
+    QMetaObject::invokeMethod(
+        T_PrivPtr( m_obj )->wkrPtr(), "cmd_GeneralCmd", Qt::QueuedConnection,
+        Q_ARG( QByteArray, ba  ),Q_ARG( QString,QString(__FUNCTION__)),Q_ARG( quint32, 4 )
+    );
 }
 
 // ============================================================================

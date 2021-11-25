@@ -1,4 +1,4 @@
-#ifndef USBVIEWERQT_H
+﻿#ifndef USBVIEWERQT_H
 #define USBVIEWERQT_H
 
 #include <QtWidgets/QMainWindow>

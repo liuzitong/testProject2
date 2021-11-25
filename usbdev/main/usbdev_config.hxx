@@ -13,7 +13,6 @@
 #define USBDEV_CONFIG_HXX
 
 #include "usbdev/common/usbdev_def.h"
-#include "usbdev/main/usbdev_devctl.hxx"
 #include <QString>
 #include <QSize>
 #include <QPair>
@@ -50,34 +49,34 @@ public:
 
 //   //! to json object
 //   QJsonObject  toJsonObject( ) const;
-    quint32 crcVeryfication();
+    quint32& crcVeryficationRef();
 
-    quint32 deviceID();
-    quint16 centerFixationLampDA();
-    quint16 bigDiamondfixationLampDA();
-    quint16 smallDiamondFixationLampDA();
-    quint16 yellowBackgroundLampDA();
-    quint16* whiteBackgroundLampDA();
-    quint16 centerInfraredLampDA();
-    quint16 borderInfraredLampDA();
-    quint16 eyeglassFrameLampDA();
-    quint16* environmentAlarmLightDA();
-    int* switchColorMotorCoord();
-    int* switchLightSpotMotorCoord();
-    qint32 focusCoordForSpotAndColorChange();
-    qint32 shutterOpenPos();
-    qint32 mainTableCenterXCorrection();
-    qint32 mainTableCenterYCorrection();
-    qint32 secondaryTableCenterXCorrection();
-    qint32 secondaryTableCenterYCorrection();
-    qint32 maximunProjectionLightADPreset();
-    qint32 xMotorCoordForLightCorrection();
-    qint32 yMotorCoordForLightCorrection();
-    int* focalLengthMotorCoordForDiamondCenterTest();
-    int(*focalLengthMotorCoordMapping())[7];
-    int(*DbCoordMapping())[2];
-    int* stepTime();
-    int stepLength();
+    quint32& deviceIDRef();
+    quint16& centerFixationLampDARef();
+    quint16& bigDiamondfixationLampDARef();
+    quint16& smallDiamondFixationLampDARef();
+    quint16& yellowBackgroundLampDARef();
+    quint16* whiteBackgroundLampDAPtr();
+    quint16& centerInfraredLampDARef();
+    quint16& borderInfraredLampDARef();
+    quint16& eyeglassFrameLampDARef();
+    quint16* environmentAlarmLightDAPtr();
+    int* switchColorMotorCoordPtr();
+    int* switchLightSpotMotorCoordPtr();
+    qint32& focusCoordForSpotAndColorChangeRef();
+    qint32& shutterOpenPosRef();
+    qint32& mainTableCenterXCorrectionRef();
+    qint32& mainTableCenterYCorrectionRef();
+    qint32& secondaryTableCenterXCorrectionRef();
+    qint32& secondaryTableCenterYCorrectionRef();
+    qint32& maximunProjectionLightADPresetRef();
+    qint32& xMotorCoordForLightCorrectionRef();
+    qint32& yMotorCoordForLightCorrectionRef();
+    int* focalLengthMotorCoordForDiamondCenterTestPtr();
+    int(*focalLengthMotorCoordMappingPtr())[7];
+    int(*DbCoordMappingPtr())[2];
+    int* stepTimePtr();
+    float& stepLengthRef();
 private:
     void *m_obj;
 };

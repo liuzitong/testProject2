@@ -5,6 +5,8 @@
 #include <QList>
 #include <QJsonArray>
 #include <QMap>
+#include <table_model.h>
+
 
 struct DotInfo
 {
@@ -18,12 +20,12 @@ class LocalConfig
 {
 public:
     LocalConfig();
-    QString m_VID;
-    QString m_PID;
-    QList<QPair<QString,int>> m_colorToSlot;
-    QList<QPair<QString,int>> m_spotSizeToSlot;
-    QList<DotInfo> m_dotInfoList;
-    QList<DotInfo> m_secondaryDotInfoList;
+    QString m_VID,m_PID;
+    QList<QPair<QString,int>> m_colorToSlot,m_spotSizeToSlot;
+    QList<DotInfo> m_dotInfoList,m_secondaryDotInfoList;
+//    TableModel *m_colorPosTableModel,*m_spotPosTableModel,*m_DBParamTableModel,*m_distanceSpotPosTable;
+//    TableModel *m_primaryCoordPosTable,*m_scondaryCoordPosTable;
+
     void Write();
 };
 

@@ -55,8 +55,8 @@ private:
                                         m_focal_length_motor_coord_for_diamond_center_test[7],                  //7光斑
                                         m_focal_length_motor_coord_mapping[25][7],                              //25距离,7光斑
                                         m_Db_coord_mapping[52][2],                                              //0~51DB,颜色电机,光斑电机
-                                        m_step_time[7],
-                                        m_step_length;
+                                        m_step_time[7];
+   float                                m_step_length;
 
 public :
     ConfigPriv ( );
@@ -68,13 +68,13 @@ public :
     inline auto bigDiamondfixationLampDARef()                       -> quint16&     {return m_big_diamond_fixation_lamp_DA;}
     inline auto smallDiamondFixationLampDARef()                     -> quint16&     {return m_small_diamond_fixation_lamp_DA;}
     inline auto yellowBackgroundLampDARef()                         -> quint16&     {return m_yellow_background_lamp_DA;}
-    inline auto whiteBackgroundLampDARef()                          -> quint16*     {return m_white_background_lamp_DA;}
+    inline auto whiteBackgroundLampDAPtr()                          -> quint16*     {return m_white_background_lamp_DA;}
     inline auto centerInfraredLampDARef()                           -> quint16&     {return m_center_fixation_lamp_DA;}
     inline auto borderInfraredLampDARef()                           -> quint16&     {return m_border_infrared_lamp_DA;}
     inline auto eyeglassFrameLampDARef()                            -> quint16&     {return m_eyeglass_frame_lamp_DA;}
-    inline auto environmentAlarmLightDARef()                        -> quint16*     {return m_environment_light_alarm_DA;}
-    inline auto switchColorMotorCoordRef()                          -> int*         {return m_switch_color_motor_coord;}
-    inline auto switchLightSpotMotorCoordRef()                      -> int*         {return m_switch_light_spot_coord;}
+    inline auto environmentAlarmLightDAPtr()                        -> quint16*     {return m_environment_light_alarm_DA;}
+    inline auto switchColorMotorCoordPtr()                          -> int*         {return m_switch_color_motor_coord;}
+    inline auto switchLightSpotMotorCoordPtr()                      -> int*         {return m_switch_light_spot_coord;}
     inline auto focusCoordForSpotAndColorChangeRef()                -> qint32&      {return m_focus_coord_for_sport_and_color_change;}
     inline auto shutterOpenPosRef()                                 -> qint32&      {return m_shutter_open_pos;}
     inline auto mainTableCenterXCorrectionRef()                     -> qint32&      {return m_main_table_center_x_correction;}
@@ -87,11 +87,11 @@ public :
     inline auto focalLengthMotorCoordForLightCorrectionRef()        -> qint32&      {return m_focal_length_motor_coord_for_light_correction;}
     inline auto xMotorCoordForDiamondCenterTestRef()                -> qint32&      {return m_x_motor_coord_for_diamond_center_test;}
     inline auto yMotorCoordForDiamondCenterTestRef()                -> qint32&      {return m_y_motor_coord_for_diamond_center_test;}
-    inline auto focalLengthMotorCoordForDiamondCenterTestRef()      -> int*         {return m_focal_length_motor_coord_for_diamond_center_test;}
-    inline auto focalLengthMotorCoordMappingRef()                   -> int(*)[7]    {return m_focal_length_motor_coord_mapping;}
-    inline auto DbCoordMappingRef()                                 -> int(*)[2]    {return m_Db_coord_mapping;}
-    inline auto stepTimeRef()                                       -> int*         {return m_step_time;}
-    inline auto stepLength()                                        -> int          {return m_step_length;}
+    inline auto focalLengthMotorCoordForDiamondCenterTestPtr()      -> int*         {return m_focal_length_motor_coord_for_diamond_center_test;}
+    inline auto focalLengthMotorCoordMappingPtr()                   -> int(*)[7]    {return m_focal_length_motor_coord_mapping;}
+    inline auto DbCoordMappingPtr()                                 -> int(*)[2]    {return m_Db_coord_mapping;}
+    inline auto stepTimePtr()                                       -> int*         {return m_step_time;}
+    inline auto stepLengthRef()                                     -> float&       {return m_step_length;}
 };
 
 ConfigPriv :: ~ConfigPriv ( ) { }
@@ -239,13 +239,13 @@ Config :: Config ( const QByteArray &ba )
     priv->bigDiamondfixationLampDARef()=gReadData_Le_I16(&buff[10]);
     priv->smallDiamondFixationLampDARef()=gReadData_Le_I16(&buff[12]);
     priv->yellowBackgroundLampDARef()=gReadData_Le_I16(&buff[14]);
-    memcpy(priv->whiteBackgroundLampDARef(),&buff[16],sizeof (priv->whiteBackgroundLampDARef()));
+    memcpy(priv->whiteBackgroundLampDAPtr(),&buff[16],6);
     priv->centerInfraredLampDARef()=gReadData_Le_I16(&buff[22]);
     priv->borderInfraredLampDARef()=gReadData_Le_I16(&buff[24]);
     priv->eyeglassFrameLampDARef()=gReadData_Le_I16(&buff[26]);
-    memcpy(priv->environmentAlarmLightDARef(),&buff[28],sizeof(priv->environmentAlarmLightDARef()));
-    memcpy(priv->switchColorMotorCoordRef(),&buff[32],sizeof(priv->switchColorMotorCoordRef()));
-    memcpy(priv->switchLightSpotMotorCoordRef(),&buff[56],sizeof(priv->switchLightSpotMotorCoordRef()));
+    memcpy(priv->environmentAlarmLightDAPtr(),&buff[28],4);
+    memcpy(priv->switchColorMotorCoordPtr(),&buff[32],24);
+    memcpy(priv->switchLightSpotMotorCoordPtr(),&buff[56],32);
     priv->focusCoordForSpotAndColorChangeRef()=gReadData_Le_I32(&buff[88]);
     priv->shutterOpenPosRef()=gReadData_Le_I32(&buff[92]);
     priv->mainTableCenterXCorrectionRef()=gReadData_Le_I32(&buff[96]);
@@ -258,10 +258,10 @@ Config :: Config ( const QByteArray &ba )
     priv->focalLengthMotorCoordForLightCorrectionRef()=gReadData_Le_I32(&buff[124]);
     priv->xMotorCoordForDiamondCenterTestRef()=gReadData_Le_I32(&buff[128]);
     priv->yMotorCoordForDiamondCenterTestRef()=gReadData_Le_I32(&buff[132]);
-    memcpy( priv->focalLengthMotorCoordForDiamondCenterTestRef(),&buff[136],sizeof(priv->focalLengthMotorCoordForDiamondCenterTestRef()));
-    memcpy( priv->focalLengthMotorCoordMappingRef(),&buff[164],sizeof(priv->focalLengthMotorCoordMappingRef()));
-    memcpy (priv->DbCoordMappingRef(),&buff[864],sizeof (priv->DbCoordMappingRef()));
-
+    memcpy( priv->focalLengthMotorCoordForDiamondCenterTestPtr(),&buff[136],28);
+    memcpy( priv->focalLengthMotorCoordMappingPtr(),&buff[164],700);
+    memcpy (priv->DbCoordMappingPtr(),&buff[864],416);
+    memcpy(priv->stepTimePtr(),&buff[1280],28);
     m_obj = d;
 }
 
@@ -271,86 +271,86 @@ Config :: Config ( const QByteArray &ba )
 
 bool       Config :: isEmpty() const { return ( m_obj == nullptr ); }
 
-quint32       Config :: crcVeryfication()
-{ return m_obj!=nullptr?T_PrivPtr( m_obj )->crcVeryficationRef():0; }
+quint32&       Config :: crcVeryficationRef()
+{ return T_PrivPtr( m_obj )->crcVeryficationRef(); }
 
-quint32       Config :: deviceID()
-{ return m_obj!=nullptr?T_PrivPtr( m_obj )->deviceIDRef():0; }
+quint32&       Config :: deviceIDRef()
+{ return T_PrivPtr( m_obj )->deviceIDRef(); }
 
-quint16       Config :: centerFixationLampDA()
-{ return  m_obj!=nullptr?T_PrivPtr( m_obj )->centerFixationLampDARef():0; }
+quint16&       Config :: centerFixationLampDARef()
+{ return  T_PrivPtr( m_obj )->centerFixationLampDARef(); }
 
-quint16       Config :: bigDiamondfixationLampDA()
-{ return m_obj!=nullptr?T_PrivPtr( m_obj )->bigDiamondfixationLampDARef():0; }
+quint16&       Config :: bigDiamondfixationLampDARef()
+{ return T_PrivPtr( m_obj )->bigDiamondfixationLampDARef(); }
 
-quint16       Config :: smallDiamondFixationLampDA()
-{ return m_obj!=nullptr?T_PrivPtr( m_obj )->smallDiamondFixationLampDARef() :0; }
+quint16&       Config :: smallDiamondFixationLampDARef()
+{ return T_PrivPtr( m_obj )->smallDiamondFixationLampDARef(); }
 
-quint16       Config :: yellowBackgroundLampDA()
-{ return  m_obj!=nullptr?T_PrivPtr( m_obj )->yellowBackgroundLampDARef() :0; }
+quint16&       Config :: yellowBackgroundLampDARef()
+{ return  T_PrivPtr( m_obj )->yellowBackgroundLampDARef(); }
 
-quint16*          Config :: whiteBackgroundLampDA()
-{ return  m_obj!=nullptr?T_PrivPtr( m_obj )->whiteBackgroundLampDARef() :0; }
+quint16*          Config :: whiteBackgroundLampDAPtr()
+{ return T_PrivPtr( m_obj )->whiteBackgroundLampDAPtr(); }
 
-quint16       Config :: centerInfraredLampDA()
-{ return  m_obj!=nullptr?T_PrivPtr( m_obj )->centerInfraredLampDARef():0; }
+quint16&       Config :: centerInfraredLampDARef()
+{ return  T_PrivPtr( m_obj )->centerInfraredLampDARef(); }
 
-quint16       Config :: borderInfraredLampDA()
-{ return m_obj!=nullptr?T_PrivPtr( m_obj )->borderInfraredLampDARef():0; }
+quint16&       Config :: borderInfraredLampDARef()
+{ return T_PrivPtr( m_obj )->borderInfraredLampDARef(); }
 
-quint16       Config :: eyeglassFrameLampDA()
-{ return  m_obj!=nullptr?T_PrivPtr( m_obj )->eyeglassFrameLampDARef():0; }
+quint16&       Config :: eyeglassFrameLampDARef()
+{ return  T_PrivPtr( m_obj )->eyeglassFrameLampDARef(); }
 
-quint16*          Config :: environmentAlarmLightDA()
-{ return m_obj!=nullptr?T_PrivPtr( m_obj )->environmentAlarmLightDARef():0; }
+quint16*          Config :: environmentAlarmLightDAPtr()
+{ return T_PrivPtr( m_obj )->environmentAlarmLightDAPtr(); }
 
-int*          Config :: switchColorMotorCoord()
-{ return  m_obj!=nullptr?T_PrivPtr( m_obj )->switchColorMotorCoordRef():0; }
+int*          Config :: switchColorMotorCoordPtr()
+{ return  T_PrivPtr( m_obj )->switchColorMotorCoordPtr(); }
 
-int*          Config :: switchLightSpotMotorCoord()
-{ return  m_obj!=nullptr?T_PrivPtr( m_obj )->switchLightSpotMotorCoordRef():0; }
+int*          Config :: switchLightSpotMotorCoordPtr()
+{ return  T_PrivPtr( m_obj )->switchLightSpotMotorCoordPtr(); }
 
-qint32       Config :: focusCoordForSpotAndColorChange()
-{ return m_obj!=nullptr?T_PrivPtr( m_obj )->focusCoordForSpotAndColorChangeRef():0; }
+qint32&       Config :: focusCoordForSpotAndColorChangeRef()
+{ return T_PrivPtr( m_obj )->focusCoordForSpotAndColorChangeRef(); }
 
-qint32       Config :: shutterOpenPos()
-{ return m_obj!=nullptr?T_PrivPtr( m_obj )->shutterOpenPosRef():0; }
+qint32&       Config :: shutterOpenPosRef()
+{ return T_PrivPtr( m_obj )->shutterOpenPosRef(); }
 
-qint32       Config :: mainTableCenterXCorrection()
-{ return m_obj!=nullptr?T_PrivPtr( m_obj )->mainTableCenterXCorrectionRef():0; }
+qint32&       Config :: mainTableCenterXCorrectionRef()
+{ return T_PrivPtr( m_obj )->mainTableCenterXCorrectionRef(); }
 
-qint32       Config :: mainTableCenterYCorrection()
-{ return m_obj!=nullptr?T_PrivPtr( m_obj )->mainTableCenterYCorrectionRef():0; }
+qint32&       Config :: mainTableCenterYCorrectionRef()
+{ return T_PrivPtr( m_obj )->mainTableCenterYCorrectionRef(); }
 
-qint32       Config :: secondaryTableCenterXCorrection()
-{ return m_obj!=nullptr?T_PrivPtr( m_obj )->secondaryTableCenterXCorrectionRef() :0; }
+qint32&       Config :: secondaryTableCenterXCorrectionRef()
+{ return T_PrivPtr( m_obj )->secondaryTableCenterXCorrectionRef(); }
 
-qint32       Config :: secondaryTableCenterYCorrection()
-{ return m_obj!=nullptr?T_PrivPtr( m_obj )->secondaryTableCenterYCorrectionRef():0; }
+qint32&       Config :: secondaryTableCenterYCorrectionRef()
+{ return T_PrivPtr( m_obj )->secondaryTableCenterYCorrectionRef(); }
 
-qint32       Config :: maximunProjectionLightADPreset()
-{ return m_obj!=nullptr?T_PrivPtr( m_obj )->maximunProjectionLightADPresetRef():0; }
+qint32&       Config :: maximunProjectionLightADPresetRef()
+{ return T_PrivPtr( m_obj )->maximunProjectionLightADPresetRef(); }
 
-qint32       Config :: xMotorCoordForLightCorrection()
-{ return m_obj!=nullptr?T_PrivPtr( m_obj )->xMotorCoordForLightCorrectionRef():0; }
+qint32&       Config :: xMotorCoordForLightCorrectionRef()
+{ return T_PrivPtr( m_obj )->xMotorCoordForLightCorrectionRef(); }
 
-qint32       Config :: yMotorCoordForLightCorrection()
-{ return m_obj!=nullptr?T_PrivPtr( m_obj )->yMotorCoordForLightCorrectionRef():0; }
+qint32&       Config :: yMotorCoordForLightCorrectionRef()
+{ return T_PrivPtr( m_obj )->yMotorCoordForLightCorrectionRef(); }
 
-int*       Config :: focalLengthMotorCoordForDiamondCenterTest()
-{ return m_obj!=nullptr?T_PrivPtr( m_obj )->focalLengthMotorCoordForDiamondCenterTestRef():0; }
+int*       Config :: focalLengthMotorCoordForDiamondCenterTestPtr()
+{ return T_PrivPtr( m_obj )->focalLengthMotorCoordForDiamondCenterTestPtr(); }
 
-int(*       Config :: focalLengthMotorCoordMapping())[7]
-{ return m_obj!=nullptr?T_PrivPtr( m_obj )->focalLengthMotorCoordMappingRef():0; }
+int(*       Config :: focalLengthMotorCoordMappingPtr())[7]
+{ return T_PrivPtr( m_obj )->focalLengthMotorCoordMappingPtr(); }
 
-int(*       Config :: DbCoordMapping())[2]
-{ return m_obj!=nullptr?T_PrivPtr( m_obj )->DbCoordMappingRef():0; }
+int(*       Config :: DbCoordMappingPtr())[2]
+{ return T_PrivPtr( m_obj )->DbCoordMappingPtr(); }
 
-int *Config::stepTime()
-{return m_obj!=nullptr?T_PrivPtr( m_obj )->stepTimeRef():0; }
+int *Config::stepTimePtr()
+{return T_PrivPtr( m_obj )->stepTimePtr(); }
 
-int Config::stepLength()
-{return m_obj!=nullptr?T_PrivPtr( m_obj )->stepLength():0; }
+float& Config::stepLengthRef()
+{return T_PrivPtr( m_obj )->stepLengthRef(); }
 // ============================================================================
 // make all profile as json object
 // ============================================================================
