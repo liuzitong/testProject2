@@ -1,11 +1,12 @@
-﻿#include "local_config.h"
+﻿#include "local_data.h"
 #include <QDebug>
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <iostream>
+#include <QFile>
 
-LocalConfig::LocalConfig()
+LocalData::LocalData()
 {
     QFile loadFile("config.json");
 
@@ -27,23 +28,23 @@ LocalConfig::LocalConfig()
         return;
     }
 
-    QJsonObject rootObj = jsonDoc.object();
+    m_rootObj = jsonDoc.object();
 
-    QStringList keys = rootObj.keys();
+    QStringList keys = m_rootObj.keys();
     for(int i = 0; i < keys.size(); i++)
     {
         qDebug() << "key" << i << " is:" << keys.at(i);
     }
 
 
-    m_PID = rootObj.value("PID").toString();
-    m_VID = rootObj.value("VID").toString();
+    m_PID = m_rootObj.value("PID").toString();
+    m_VID = m_rootObj.value("VID").toString();
 
-    QJsonArray dotInfoList=rootObj.value("dotInfoList").toArray();
-    QJsonArray secondaryDotInfoList=rootObj.value("secondaryDotInfoList").toArray();
-    QJsonArray spotSizeToSlot=rootObj.value("spotSizeToSlot").toArray();
-    QJsonArray colorToSlot=rootObj.value("colorToSlot").toArray();
-    QJsonArray colorPosData=rootObj.value("colorPosData").toArray();
+    QJsonArray dotInfoList=m_rootObj.value("dotInfoList").toArray();
+    QJsonArray secondaryDotInfoList=m_rootObj.value("secondaryDotInfoList").toArray();
+    QJsonArray spotSizeToSlot=m_rootObj.value("spotSizeToSlot").toArray();
+    QJsonArray colorToSlot=m_rootObj.value("colorToSlot").toArray();
+
 
     for(auto i:dotInfoList)
     {
@@ -72,33 +73,56 @@ LocalConfig::LocalConfig()
         int slot=obj["Slot"].toInt();
         m_colorToSlot.append({color,slot});
     }
-
-    for(auto i:colorPosData)
-    {
-        QJsonObject obj=i.toObject();
-        auto arr=obj["row"].toArray();
-        for(auto v:arr)
-        {
-            if(v.toVariant().type()==QVariant::Type::String)
-            {
-                qDebug()<<v.toVariant().toString();
-            }
-            else
-            {
-                qDebug()<<QString::number(v.toVariant().toInt());
-            }
-//            if(v.toVariant().type()==QMetaType::QString)
-//            qDebug()<<()?v.toString():QString(v.toInt());
-        }
-
-    }
-
-
+//    LoadTableModel();
 }
 
+//void LocalData::LoadTableModel()
+//{
+//    m_colorPosTableModel = QSharedPointer<TableModel>(new TableModel());
+//    QJsonObject colorPosModel=m_rootObj.value("colorPosModel").toObject();
+////    QJsonObject info=colorPosModel["info"].toObject();
+////    int row=info["rowCount"].toInt();
+////    int column=info["columnCount"].toInt();
+////    m_colorPosTableModel.data()->m_row=row;
+////    m_colorPosTableModel.data()->m_column=column;
+//    QJsonArray headers=colorPosModel["headers"].toArray();
+//    for(auto i:headers)
+//    {
+//        m_colorPosTableModel.data()->m_hozHeader<<i.toString();
+//        qDebug()<<i.toString();
+//    }
+
+//    QJsonArray data=colorPosModel["data"].toArray();
+//    int rowCount=data.count();
+//    int columnCount=data[0].toObject()["row"].toArray().count();
+//    qDebug()<<rowCount<<" "<<columnCount;
+//    m_colorPosTableModel.data()->m_modelData=QSharedPointer<QVariant>(new QVariant[rowCount*columnCount],[](QVariant* ptr){delete []ptr;});
+//    m_colorPosTableModel.data()->m_row=rowCount;
+//    m_colorPosTableModel.data()->m_column=columnCount;
+//    for(int row=0;row<rowCount;row++)
+//    {
+//        QJsonObject obj=data[row].toObject();
+//        auto jsArr=obj["row"].toArray();
+//        for(int column=0;column<columnCount;column++)
+//        {
+//            auto v=jsArr[column];
+//            if(v.toVariant().type()==QVariant::Type::String)
+//            {
+//                qDebug()<<v.toVariant().toString();
+//            }
+//            else
+//            {
+//                qDebug()<<QString::number(v.toVariant().toInt());
+//            }
+//            qDebug()<<row*columnCount+column;
+//            m_colorPosTableModel.data()->m_modelData.data()[row*columnCount+column]=jsArr[column].toVariant();
+//        }
+//    }
+//}
 
 
-void LocalConfig::Write()
+
+void LocalData::Write()
 {
     QJsonObject obj;
     obj.insert("VID",m_VID);

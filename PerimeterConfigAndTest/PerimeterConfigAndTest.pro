@@ -35,13 +35,13 @@ CONFIG(debug, debug|release) {
 SOURCES += \
     main.cpp \
     mainWindow.cpp \
-    local_config.cpp \
-    table_model.cpp
+    table_model.cpp \
+    local_data.cpp
 
 HEADERS += \
     mainWindow.h \
-    local_config.h \
-    table_model.h
+    table_model.h \
+    local_data.h
 
 FORMS += \
     mainwindow.ui \

@@ -11,7 +11,7 @@
 #include <QTimer>
 #include <QJsonObject>
 #include <Qpair>
-#include <local_config.h>
+#include <local_data.h>
 #include <table_model.h>
 
 
@@ -29,6 +29,7 @@ public:
     QString PID,VID;
 
 private slots:
+    void saveConfig();
     void showDevInfo(QString);
     void refreshStatus();
     void refreshVideo();
@@ -107,8 +108,7 @@ private:
     UsbDev::FrameData m_frameData;
     UsbDev::Profile m_profile;
     QTimer* m_timer=NULL;
-    LocalConfig m_localConfig;
-    TableModel* m_slotPosModel=NULL;
+    LocalData m_localData;
 };
 
 #endif // MAINWINDOW_H

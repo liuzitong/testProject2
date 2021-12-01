@@ -1,6 +1,11 @@
 ﻿#include "table_model.h"
 #include <QDebug>
 
+TableModel::~TableModel()
+{
+
+}
+
 int TableModel::rowCount(const QModelIndex &parent) const
 {
     return m_row;
@@ -20,6 +25,7 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
        {
            return m_modelData[index.row()*m_column+index.column()];
        }
+
        return QVariant();
 
 }
@@ -31,8 +37,6 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
         emit dataChanged(index, index, QVector<int>() << role);
         if(m_func!=nullptr)
         { QString s=m_func(index.row(),index.column());qDebug()<<s;}
-
-
         return true;
     }
     return false;

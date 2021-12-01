@@ -42,7 +42,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -3969,6 +3969,11 @@
               <string>新建列</string>
              </property>
             </column>
+            <item row="0" column="0">
+             <property name="text">
+              <string>房贷首付</string>
+             </property>
+            </item>
            </widget>
           </item>
           <item>

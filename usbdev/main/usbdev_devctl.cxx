@@ -252,7 +252,7 @@ bool   DevCtl_Worker :: cmd_ReadConfig( bool req_emit )
 
     unsigned char buff[512*3]={0}; bool ret = true;
     if ( ret ) {
-        buff[0] = 0x5a; buff[1] = 0xf3;
+        buff[0] = 0x5a; buff[1] = 0xf1;
         ret = this->cmdComm_bulkOutSync( buff, sizeof( buff ) );
         if ( ! ret ) { spdlog::warn("send read config command failed."); }
     }

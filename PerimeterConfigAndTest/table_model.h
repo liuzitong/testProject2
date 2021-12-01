@@ -4,6 +4,7 @@
 #include <spdlog/spdlog.h>
 #include <QJsonDocument>
 #include <functional>
+#include <QSharedPointer>
 
 
 
@@ -14,8 +15,8 @@ class TableModel:public QAbstractTableModel
 public:
     TableModel(QVariant* data,int row,int column,QList<QString> hozHeader,QList<QString> vertHeader,std::function<QString(int,int)> func=nullptr,QObject* parent=nullptr)
         :m_modelData(data),m_row(row),m_column(column),m_hozHeader(hozHeader),m_vertHeader(vertHeader),m_func(func){};
-    TableModel();
-    ~TableModel()=default;
+    TableModel()=default;
+    ~TableModel();
 
 public:
     virtual int rowCount(const QModelIndex &parent) const override;
@@ -27,7 +28,7 @@ public:
     virtual Qt::ItemFlags flags(const QModelIndex &index) const override;
     void printData();
 
-    QVariant *m_modelData;
+    QVariant* m_modelData;
     int m_row,m_column;
     QList<QString> m_hozHeader;
     QList<QString> m_vertHeader;

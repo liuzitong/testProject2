@@ -187,7 +187,7 @@ static qint16  gReadData_Le_I16( const unsigned char *buff )
 //  ctor ( empty )
 // ============================================================================
 Config :: Config ( )
-{ gRegInQt(); m_obj = nullptr; }
+{ gRegInQt(); m_obj = nullptr;/*ConfigPriv::buildIfNull( & m_obj );*/ }
 
 // ============================================================================
 //  ctor ( copy  )

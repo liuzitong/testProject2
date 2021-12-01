@@ -5,7 +5,7 @@
 #include <spdlog/sinks/rotating_file_sink.h>
 #include <spdlog/common.h>
 #include <QDebug>
-#include <local_config.h>
+#include <local_data.h>
 #include <QSharedPointer>
 
 

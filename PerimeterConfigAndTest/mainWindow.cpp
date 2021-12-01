@@ -43,8 +43,8 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowFlags(windowFlags()&~Qt::WindowMaximizeButtonHint);                    // 禁止最大化按钮
     setFixedSize(this->width(),this->height());                                     // 禁止拖动窗口大小
 //    QSettings *configIni = new QSettings("para.ini", QSettings::IniFormat);
-    VID=m_localConfig.m_VID;
-    PID=m_localConfig.m_PID;
+    VID=m_localData.m_VID;
+    PID=m_localData.m_PID;
     m_timer=new QTimer();
     connect(m_timer,&QTimer::timeout,[&](){ui->label_connectionStatus->setText("连接断开");});
     init();
@@ -53,16 +53,36 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::init()
 {
-    int column=2,row=3;
-    QVariant* modelData=new QVariant[row*column];
-    for(int i=0;i<row*column;i++)
-        modelData[i]=i;
-    QList<QString>  hozHeader,vertHeader;
-    hozHeader<<"颜色"<<"bb";
-    m_slotPosModel=new TableModel(modelData,row,column,hozHeader,vertHeader,[&](int a,int b)->QString{qDebug()<<a;qDebug()<<b;qDebug()<<PID;return "hahaahah";}
-    );
-    ui->tableView_->setModel(m_slotPosModel);
+//    int column=2,row=3;
+//    QVariant* modelData=new QVariant[row*column];
+//    for(int i=0;i<row*column;i++)
+//        modelData[i]=i;
+//    QList<QString>  hozHeader,vertHeader;
+//    hozHeader<<"颜色"<<"bb";
+
+//    m_config.switchColorMotorCoordPtr()[0]=2;
+
+
+    TableModel* colorPosTableModel=new TableModel();
+    colorPosTableModel->m_column=2;
+    colorPosTableModel->m_row=7;
+    colorPosTableModel->m_hozHeader<<"颜色"<<"步数";
+    colorPosTableModel->m_modelData=new QVariant[14];
+    auto data=colorPosTableModel->m_modelData;
+    data[0]="ssss";data[1]=232312;
+    data[2]="bbb";data[3]=233332;
+    ui->tableView_->setModel(colorPosTableModel);
     ui->tableView_->horizontalHeader()->setEnabled(false);
+
+    TableModel* dbPosTableModel=new TableModel();
+    dbPosTableModel->m_column=3;
+    dbPosTableModel->m_row=51;
+    dbPosTableModel->m_hozHeader<<"颜色"<<"步数";
+    dbPosTableModel->m_modelData=new QVariant[14];
+
+
+
+
     quint32 vid_pid=VID.toInt(nullptr,16)<<16|PID.toInt(nullptr,16);
     m_devCtl=UsbDev::DevCtl::createInstance(vid_pid);
     ui->label_VID->setText(VID);
@@ -71,8 +91,8 @@ void MainWindow::init()
     connect(m_devCtl,&UsbDev::DevCtl::updateInfo,this,&MainWindow::showDevInfo);
     connect(m_devCtl,&UsbDev::DevCtl::newStatusData,this,&MainWindow::refreshStatus);
     connect(m_devCtl,&UsbDev::DevCtl::newFrameData,this,&MainWindow::refreshVideo);
-    connect(m_devCtl,&UsbDev::DevCtl::newProfile,[&](){});
-    connect(m_devCtl,&UsbDev::DevCtl::newConfig,[&](){});
+    connect(m_devCtl,&UsbDev::DevCtl::newProfile,this,&MainWindow::updateProfile);
+    connect(m_devCtl,&UsbDev::DevCtl::newConfig,this,&MainWindow::updateConfig);
 
 //    while(m_devCtl->profile().isEmpty()){QCoreApplication::processEvents();}
 //    while(m_devCtl->config().isEmpty()){QCoreApplication::processEvents();}
@@ -135,10 +155,8 @@ void MainWindow::refreshStatus()
     ui->label_stateShutter->setText(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId::MotorId_Shutter)?"忙":"闲");
     ui->label_stateChinHoz->setText(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId::MotorId_Chin_Hoz)?"忙":"闲");
     ui->label_stateChinVert->setText(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId::MotorId_Chin_Vert)?"忙":"闲");
-
     ui->label_answerState->setText(m_statusData.answerpadStatus()?"按下":"松开");
     ui->label_eyeglassStatus->setText(m_statusData.eyeglassStatus()?"升起":"放下");
-
     ui->label_castLightDA->setText(QString(m_statusData.castLightDA()));
     ui->label_environmentDA->setText(QString(m_statusData.envLightDA()));
 }
@@ -188,7 +206,10 @@ void MainWindow::updateProfile()
     ui->label_chinHozMotorRange->setText(QString("%d-%d").arg(profile.motorRange(x::MotorId_Chin_Hoz).first).arg(profile.motorRange(x::MotorId_Chin_Hoz).second));
     ui->label_chinVertMotorRange->setText(QString("%d-%d").arg(profile.motorRange(x::MotorId_Chin_Vert).first).arg(profile.motorRange(x::MotorId_Chin_Vert).second));
 }
+void MainWindow::saveConfig()
+{
 
+}
 //TODO
 void MainWindow::updateConfig()
 {
@@ -333,7 +354,7 @@ void MainWindow::on_comboBox_spotSize_currentIndexChanged(int)
 {
    spdlog::info("comboBox called");
    QString text=ui->comboBox_spotSize->currentText();
-   for(auto &v:m_localConfig.m_spotSizeToSlot)
+   for(auto &v:m_localData.m_spotSizeToSlot)
    {
        qDebug()<<v.first;
        qDebug()<<v.second;
@@ -345,7 +366,7 @@ void MainWindow::on_comboBox_spotSize_currentIndexChanged(int)
 void MainWindow::on_spinBox_spotSlot_valueChanged(int arg1)
 {
     spdlog::info("spinBox called");
-    for(auto &v:m_localConfig.m_spotSizeToSlot)
+    for(auto &v:m_localData.m_spotSizeToSlot)
     {
 
         qDebug()<<v.first;
@@ -363,7 +384,7 @@ void MainWindow::on_comboBox_color_currentIndexChanged(int)
     spdlog::info("comboBox called");
     QString text=ui->comboBox_color->currentText();
     spdlog::info(text.toStdString());
-    for(auto &v:m_localConfig.m_colorToSlot)
+    for(auto &v:m_localData.m_colorToSlot)
     {
         spdlog::info(v.first.toStdString());
         if(v.first==text)
@@ -377,7 +398,7 @@ void MainWindow::on_comboBox_color_currentIndexChanged(int)
 void MainWindow::on_spinBox_colorSlot_valueChanged(int arg1)
 {
     spdlog::info("spinBox called");
-    for(auto &v:m_localConfig.m_colorToSlot)
+    for(auto &v:m_localData.m_colorToSlot)
     {
          if(v.second==arg1)
          {
@@ -528,7 +549,7 @@ bool MainWindow::getXYMotorPosAndFocalDistFromCoord(DotInfo& dotInfo)
     int y1=floor(dotInfo.coordY/6.0f)*6;int y2=ceil(dotInfo.coordY/6.0f)*6;
     DotInfo fourDots[4];
     int count = 0;
-    for(auto& v:(isMainDotInfoTable?m_localConfig.m_dotInfoList:m_localConfig.m_secondaryDotInfoList))
+    for(auto& v:(isMainDotInfoTable?m_localData.m_dotInfoList:m_localData.m_secondaryDotInfoList))
     {
         if((v.coordX==x1)&&(v.coordY==y1)) {fourDots[0]=v;count++;}
         if((v.coordX==x2)&&(v.coordY==y1)) {fourDots[0]=v;count++;}
@@ -538,7 +559,7 @@ bool MainWindow::getXYMotorPosAndFocalDistFromCoord(DotInfo& dotInfo)
     if(count != 4)          //找不到就切换到表
     {
         count=0;
-        for(auto& v:(isMainDotInfoTable?m_localConfig.m_secondaryDotInfoList:m_localConfig.m_dotInfoList))
+        for(auto& v:(isMainDotInfoTable?m_localData.m_secondaryDotInfoList:m_localData.m_dotInfoList))
         {
             if((v.coordX==x1)&&(v.coordY==y1)) {fourDots[0]=v;count++;}
             if((v.coordX==x2)&&(v.coordY==y1)) {fourDots[0]=v;count++;}
