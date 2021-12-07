@@ -36,17 +36,28 @@ SOURCES += \
     main.cpp \
     mainWindow.cpp \
     table_model.cpp \
-    local_data.cpp
+    local_data.cpp \
+    RbTableHeaderView.cpp \
+    motor_pos_table.cpp \
+    generic_table.cpp
 
 HEADERS += \
     mainWindow.h \
     table_model.h \
-    local_data.h
+    local_data.h \
+    RbTableHeaderView.h \
+    motor_pos_table.h \
+    generic_table.h
 
 FORMS += \
     mainwindow.ui \
 
 INCLUDEPATH +=$$PWD/../include
+CONFIG( debug, debug|release ) {
+    LIBS += User32.lib
+} else {
+    LIBS += User32.lib
+}
 include($$PWD/../usbdev-build/usbdev/usbdev.pri )
 include($$PWD/UsbViewer/UsbViewerQt.pri)
 

@@ -46,17 +46,17 @@ LocalData::LocalData()
     QJsonArray colorToSlot=m_rootObj.value("colorToSlot").toArray();
 
 
-    for(auto i:dotInfoList)
-    {
-        QJsonObject obj=i.toObject();
-        m_dotInfoList.append({obj["coordx"].toInt(),obj["coordy"].toInt(),obj["focalDistance"].toInt(),obj["motorXPos"].toInt(),obj["motorYPos"].toInt()});
-    }
+//    for(auto i:dotInfoList)
+//    {
+//        QJsonObject obj=i.toObject();
+//        m_dotInfoList.append({obj["coordx"].toInt(),obj["coordy"].toInt(),obj["focalDistance"].toInt(),obj["motorXPos"].toInt(),obj["motorYPos"].toInt()});
+//    }
 
-    for(auto i:secondaryDotInfoList)
-    {
-        QJsonObject obj=i.toObject();
-        m_secondaryDotInfoList.append({obj["coordx"].toInt(),obj["coordy"].toInt(),obj["focalDistance"].toInt(),obj["motorXPos"].toInt(),obj["motorYPos"].toInt()});
-    }
+//    for(auto i:secondaryDotInfoList)
+//    {
+//        QJsonObject obj=i.toObject();
+//        m_secondaryDotInfoList.append({obj["coordx"].toInt(),obj["coordy"].toInt(),obj["focalDistance"].toInt(),obj["motorXPos"].toInt(),obj["motorYPos"].toInt()});
+//    }
 
     for(auto i:spotSizeToSlot)
     {
@@ -75,6 +75,10 @@ LocalData::LocalData()
     }
 //    LoadTableModel();
 }
+
+
+
+
 
 //void LocalData::LoadTableModel()
 //{

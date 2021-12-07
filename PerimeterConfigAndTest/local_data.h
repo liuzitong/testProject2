@@ -17,10 +17,8 @@ struct DotInfo
 //        :coordX(_coordX),coordY(_coordY),motorXPos(_motorXPos),motorYPos(_motorYPos),focalDistance(_focalDistance){}
     qint32 coordX,coordY,motorXPos,motorYPos,focalDistance;
 };
-//struct localConfig
-//{
 
-//};
+
 
 class LocalData
 {
@@ -31,14 +29,12 @@ public:
     QJsonObject m_rootObj;
     QList<QPair<QString,int>> m_colorToSlot,m_spotSizeToSlot;
     QList<DotInfo> m_dotInfoList,m_secondaryDotInfoList;
-//    QSharedPointer<TableModel> m_colorPosTableModel;
-//    QSharedPointer<TableModel> m_spotPosTableModel;
-//    QSharedPointer<TableModel> m_DBParamTableModel;
-//    QSharedPointer<TableModel> m_distanceSpotPosTable;
-//    QSharedPointer<TableModel> m_primaryCoordPosTable;
-//    QSharedPointer<TableModel> m_scondaryCoordPosTable;
 
-//    void LoadTableModel();
+//    struct mainMotorPosTable
+//    {
+//        DotInfo dotinfo[];
+//    };
+
 
 
 

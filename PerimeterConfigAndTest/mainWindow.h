@@ -91,6 +91,8 @@ private slots:
 
     void on_action_chooseDevice_triggered();
 
+    void on_tabWidget_currentChanged(int index);
+
 private:
     void moveChinMotors(UsbDev::DevCtl::MoveMethod);
     void move5Motors(UsbDev::DevCtl::MoveMethod);
@@ -109,6 +111,7 @@ private:
     UsbDev::Profile m_profile;
     QTimer* m_timer=NULL;
     LocalData m_localData;
+    int m_width,m_height;
 };
 
 #endif // MAINWINDOW_H

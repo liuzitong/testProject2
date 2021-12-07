@@ -187,7 +187,7 @@ static qint16  gReadData_Le_I16( const unsigned char *buff )
 //  ctor ( empty )
 // ============================================================================
 Config :: Config ( )
-{ gRegInQt(); m_obj = nullptr;/*ConfigPriv::buildIfNull( & m_obj );*/ }
+{ gRegInQt(); m_obj = nullptr; }
 
 // ============================================================================
 //  ctor ( copy  )
@@ -340,6 +340,7 @@ qint32&       Config :: yMotorCoordForLightCorrectionRef()
 int*       Config :: focalLengthMotorCoordForDiamondCenterTestPtr()
 { return T_PrivPtr( m_obj )->focalLengthMotorCoordForDiamondCenterTestPtr(); }
 
+
 int(*       Config :: focalLengthMotorCoordMappingPtr())[7]
 { return T_PrivPtr( m_obj )->focalLengthMotorCoordMappingPtr(); }
 
@@ -351,6 +352,10 @@ int *Config::stepTimePtr()
 
 float& Config::stepLengthRef()
 {return T_PrivPtr( m_obj )->stepLengthRef(); }
+
+
+//void* Config::GetData()
+//{ return  (void*)&(T_PrivPtr( m_obj )->crcVeryficationRef()); }
 // ============================================================================
 // make all profile as json object
 // ============================================================================

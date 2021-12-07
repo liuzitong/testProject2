@@ -13,10 +13,10 @@ class TableModel:public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    TableModel(QVariant* data,int row,int column,QList<QString> hozHeader,QList<QString> vertHeader,std::function<QString(int,int)> func=nullptr,QObject* parent=nullptr)
+    TableModel(int* data,int row,int column,QList<QString> hozHeader,QList<QString> vertHeader,std::function<QString(int,int)> func=nullptr,QObject* parent=nullptr)
         :m_modelData(data),m_row(row),m_column(column),m_hozHeader(hozHeader),m_vertHeader(vertHeader),m_func(func){};
     TableModel()=default;
-    ~TableModel();
+    ~TableModel()=default;
 
 public:
     virtual int rowCount(const QModelIndex &parent) const override;
@@ -28,8 +28,8 @@ public:
     virtual Qt::ItemFlags flags(const QModelIndex &index) const override;
     void printData();
 
-    QVariant* m_modelData;
-    int m_row,m_column;
+    int* m_modelData=nullptr;
+    int m_row=0,m_column=0;
     QList<QString> m_hozHeader;
     QList<QString> m_vertHeader;
 public:

@@ -16,7 +16,11 @@
 #include <QtConcurrent>
 #include <array>
 #include <QSharedPointer>
-
+#include <QStylePainter>
+#include "RbTableHeaderView.h"
+#include <QDesktopWidget>
+#include <QtGui>
+#include "windows.h"
 
 #pragma execution_character_set("utf-8")
 // 不能删
@@ -27,6 +31,8 @@ static QString buffToQStr(const char* buff,size_t length)
     QByteArray byteArray= QByteArray::fromRawData(buff,length);
     for(int i = 0; i< byteArray.length(); i++){
        QString str1 = QString("%1").arg(i,2,10, QLatin1Char('0'));
+
+
        uchar temp=static_cast<uchar>(byteArray[i]);
        QString str2 = QString("%1").arg(temp,2,16, QLatin1Char('0'));
        str.append(QString("%1:%2 ").arg(str1).arg(str2));
@@ -38,10 +44,12 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    if(logger!=NULL) logger = spdlog::rotating_logger_mt("logger", "logs/perimeterConfig.txt", 1024*1024, 30);
     ui->setupUi(this);
-    setWindowFlags(windowFlags()&~Qt::WindowMaximizeButtonHint);                    // 禁止最大化按钮
-    setFixedSize(this->width(),this->height());                                     // 禁止拖动窗口大小
+    if(logger!=NULL) logger = spdlog::rotating_logger_mt("logger", "logs/perimeterConfig.txt", 1024*1024, 30);
+//    setWindowFlags(windowFlags()&~Qt::WindowMaximizeButtonHint);                    // 禁止最大化按钮
+    setWindowFlag(Qt::WindowMaximizeButtonHint,false);
+    m_width=width();m_height=height();
+    setFixedSize(m_width,m_height);                                  // 禁止拖动窗口大小
 //    QSettings *configIni = new QSettings("para.ini", QSettings::IniFormat);
     VID=m_localData.m_VID;
     PID=m_localData.m_PID;
@@ -53,35 +61,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::init()
 {
-//    int column=2,row=3;
-//    QVariant* modelData=new QVariant[row*column];
-//    for(int i=0;i<row*column;i++)
-//        modelData[i]=i;
-//    QList<QString>  hozHeader,vertHeader;
-//    hozHeader<<"颜色"<<"bb";
-
-//    m_config.switchColorMotorCoordPtr()[0]=2;
-
-
     TableModel* colorPosTableModel=new TableModel();
-    colorPosTableModel->m_column=2;
+    colorPosTableModel->m_column=1;
     colorPosTableModel->m_row=7;
-    colorPosTableModel->m_hozHeader<<"颜色"<<"步数";
-    colorPosTableModel->m_modelData=new QVariant[14];
-    auto data=colorPosTableModel->m_modelData;
-    data[0]="ssss";data[1]=232312;
-    data[2]="bbb";data[3]=233332;
-    ui->tableView_->setModel(colorPosTableModel);
-    ui->tableView_->horizontalHeader()->setEnabled(false);
-
-    TableModel* dbPosTableModel=new TableModel();
-    dbPosTableModel->m_column=3;
-    dbPosTableModel->m_row=51;
-    dbPosTableModel->m_hozHeader<<"颜色"<<"步数";
-    dbPosTableModel->m_modelData=new QVariant[14];
-
-
-
+    colorPosTableModel->m_hozHeader<<"步数";
+    colorPosTableModel->m_vertHeader<<"黄"<<"绿"<<"紫色"<<"4";
+//    colorPosTableModel->m_modelData=QSharedPointer<QVariant>(new QVariant[14],[](QVariant*ptr){delete[]ptr;});
+    colorPosTableModel->m_modelData=new int[7]{0};
+    colorPosTableModel->m_modelData[0]=33;
+    ui->tableView_colorSlotPos->setModel(colorPosTableModel);
+    ui->tableView_colorSlotPos->setCornerName("颜色");
+    ui->tableView_colorSlotPos->verticalHeader()->setVisible(true);
 
     quint32 vid_pid=VID.toInt(nullptr,16)<<16|PID.toInt(nullptr,16);
     m_devCtl=UsbDev::DevCtl::createInstance(vid_pid);
@@ -98,7 +88,10 @@ void MainWindow::init()
 //    while(m_devCtl->config().isEmpty()){QCoreApplication::processEvents();}
     on_comboBox_color_currentIndexChanged(1);
     on_comboBox_spotSize_currentIndexChanged(1);
+
 }
+
+
 
 void MainWindow::uninit()
 {
@@ -188,7 +181,7 @@ void MainWindow::refreshConnectionStatus(int status)
     case UsbDev::DevCtl::WorkStatus::WorkStatus_S_Disconnected:ui->label_connectionStatus->setText("连接断开");break;
     case UsbDev::DevCtl::WorkStatus::WorkStatus_S_OK:ui->label_connectionStatus->setText("连接正常");break;
     }
-    m_timer->start();
+    m_timer->start(1000);
 }
 
 //TODO
@@ -208,7 +201,6 @@ void MainWindow::updateProfile()
 }
 void MainWindow::saveConfig()
 {
-
 }
 //TODO
 void MainWindow::updateConfig()
@@ -422,9 +414,10 @@ void MainWindow::on_checkBox_autoCalcFocalDist_stateChanged(int arg1)
 
 void MainWindow::on_checkBox_useConfigPos_stateChanged(int arg1)
 {
-//    ui->lineEdit_shutterPos->setEnabled(!(arg1==Qt::CheckState::Checked));
-//    if(arg1==Qt::CheckState::Checked)
-//        ui->lineEdit_shutterPos->setText(QString::number(m_config.shutterOpenPos()));
+    if(m_config.isEmpty()) return;
+    ui->lineEdit_shutterPos->setEnabled(!(arg1==Qt::CheckState::Checked));
+    if(arg1==Qt::CheckState::Checked)
+        ui->lineEdit_shutterPos->setText(QString::number(m_config.shutterOpenPosRef()));
 }
 
 void MainWindow::on_comboBox_testFucntion_currentIndexChanged(int index)
@@ -447,6 +440,7 @@ void MainWindow::on_action_saveConfig_triggered()
 
 void MainWindow::on_action_chooseDevice_triggered()
 {
+
     auto* dialog=new UsbViewerQt(this);
     dialog->setModal(true);
     if(dialog->exec()==QDialog::Accepted)
@@ -459,6 +453,24 @@ void MainWindow::on_action_chooseDevice_triggered()
         uninit();
     }
     init();
+}
+
+void MainWindow::on_tabWidget_currentChanged(int index)
+{
+    QDesktopWidget *desktop = QApplication::desktop();
+
+    if(index==2||index==3)
+    {
+        int width = GetSystemMetrics(SM_CXFULLSCREEN);
+        int height = GetSystemMetrics(SM_CYFULLSCREEN);
+        setMinimumSize(0, 0);
+        setMaximumSize(width,height);
+//       this->showMaximized();
+    }
+    else{
+        showNormal();
+        setFixedSize(m_width,m_height);
+    }
 }
 
 

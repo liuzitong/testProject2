@@ -1,10 +1,10 @@
 ﻿#include "table_model.h"
+#include <QAbstractButton>
 #include <QDebug>
+#include <QEvent>
+#include <QStyleOptionHeader>
+#include <qstylepainter.h>
 
-TableModel::~TableModel()
-{
-
-}
 
 int TableModel::rowCount(const QModelIndex &parent) const
 {
@@ -19,15 +19,18 @@ int TableModel::columnCount(const QModelIndex &parent) const
 
 QVariant TableModel::data(const QModelIndex &index, int role) const
 {
+    if(m_modelData==nullptr)
+    {
+        qDebug()<<__FILE__<<__LINE__<<"nodata";
+        return 0;
+    }
     if(!index.isValid())
            return QVariant();
-       if(role == Qt::DisplayRole || role == Qt::EditRole)
-       {
-           return m_modelData[index.row()*m_column+index.column()];
-       }
-
-       return QVariant();
-
+    if(role == Qt::DisplayRole || role == Qt::EditRole)
+    {
+       return m_modelData[index.row()*m_column+index.column()];
+    }
+    return QVariant();
 }
 
 bool TableModel::setData(const QModelIndex &index, const QVariant &value, int role)
@@ -47,9 +50,21 @@ QVariant TableModel::headerData(int section, Qt::Orientation orientation, int ro
    if(role == Qt::DisplayRole)
    {
        if( orientation == Qt::Horizontal)
+       {
+           if(section>m_vertHeader.count()-1)
+           {
+               return section;
+           }
            return m_hozHeader[section];
+       }
        else if(orientation==Qt::Vertical)
+       {
+           if(section>m_vertHeader.count()-1)
+           {
+               return section;
+           }
            return m_vertHeader[section];
+       }
    }
 
    return QAbstractTableModel::headerData(section,orientation,role);

@@ -77,6 +77,7 @@ public:
     int(*DbCoordMappingPtr())[2];
     int* stepTimePtr();
     float& stepLengthRef();
+//    void* GetData();
 private:
     void *m_obj;
 };
