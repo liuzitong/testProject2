@@ -5,11 +5,11 @@
 #include <qapplication.h>
 #include <qstylepainter.h>
 #include <QHeaderView>
+#include <QPushButton>
 
 GenericTable::GenericTable(QWidget *parent):QTableView(parent)
 {
-//    horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    verticalHeader()->setMinimumWidth(80);
+    horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
 void GenericTable::setCornerName(QString cornerName)
@@ -19,12 +19,14 @@ void GenericTable::setCornerName(QString cornerName)
     {
         btn->setText(cornerName);
         btn->installEventFilter(this);
-        QStyleOptionHeader opt;
-        opt.text = btn->text();
-        QSize s = (btn->style()->sizeFromContents(QStyle::CT_HeaderSection, &opt, QSize(), btn).
-                   expandedTo(QApplication::globalStrut()));
-        if (s.isValid())
-            verticalHeader()->setMinimumWidth(s.width()*1.5);
+//        QStyleOptionHeader opt;
+//        opt.text = btn->text();
+//        btn->setStyleSheet(R"(QAbstractButton::section{text-align:center})");
+
+//        QSize s = (btn->style()->sizeFromContents(QStyle::CT_HeaderSection, &opt, QSize(), btn).
+//                   expandedTo(QApplication::globalStrut()));
+//        if (s.isValid())
+        verticalHeader()->setMinimumWidth(60);
     }
 
 }

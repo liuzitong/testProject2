@@ -21,14 +21,16 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
 {
     if(m_modelData==nullptr)
     {
-        qDebug()<<__FILE__<<__LINE__<<"nodata";
-        return 0;
+//        qDebug()<<__FILE__<<__LINE__<<"nodata";
+        return " ";
     }
     if(!index.isValid())
            return QVariant();
     if(role == Qt::DisplayRole || role == Qt::EditRole)
     {
-       return m_modelData[index.row()*m_column+index.column()];
+       int data=m_modelData[index.row()*m_column+index.column()];
+       if(data==0) return "";
+       return data;
     }
     return QVariant();
 }
@@ -36,7 +38,10 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
 bool TableModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (index.isValid() && role == Qt::EditRole) {
-        m_modelData[index.row()*m_column+index.column()]=value.toInt();
+        bool ok;
+        int temp=value.toInt(&ok);
+        if(!ok) temp=0;
+        m_modelData[index.row()*m_column+index.column()]=temp;
         emit dataChanged(index, index, QVector<int>() << role);
         if(m_func!=nullptr)
         { QString s=m_func(index.row(),index.column());qDebug()<<s;}

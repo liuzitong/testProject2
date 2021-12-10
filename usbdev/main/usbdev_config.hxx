@@ -50,7 +50,6 @@ public:
 //   //! to json object
 //   QJsonObject  toJsonObject( ) const;
     quint32& crcVeryficationRef();
-
     quint32& deviceIDRef();
     quint16& centerFixationLampDARef();
     quint16& bigDiamondfixationLampDARef();
@@ -77,9 +76,11 @@ public:
     int(*DbCoordMappingPtr())[2];
     int* stepTimePtr();
     float& stepLengthRef();
+    void* dataPtr();
+    int dataLen();
 //    void* GetData();
 private:
-    void *m_obj;
+    void *m_obj=nullptr;
 };
 
 

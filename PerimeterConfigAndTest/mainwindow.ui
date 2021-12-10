@@ -3875,7 +3875,7 @@
             <number>9</number>
            </property>
            <item>
-            <widget class="QTableView" name="tableView_2">
+            <widget class="GenericTable" name="tableView_2">
              <property name="minimumSize">
               <size>
                <width>180</width>
@@ -3951,10 +3951,10 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_15">
            <item>
-            <widget class="QTableView" name="tableView_3">
+            <widget class="GenericTable" name="tableView_focalPosTable">
              <property name="minimumSize">
               <size>
-               <width>480</width>
+               <width>482</width>
                <height>0</height>
               </size>
              </property>
@@ -4003,7 +4003,7 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_20">
            <item>
-            <widget class="QTableView" name="tableView_5">
+            <widget class="GenericTable" name="tableView_5">
              <property name="minimumSize">
               <size>
                <width>120</width>
@@ -4112,7 +4112,7 @@
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_13">
              <item>
-              <widget class="QTableView" name="tableView_1">
+              <widget class="GenericTable" name="tableView_spotSlotPos">
                <property name="minimumSize">
                 <size>
                  <width>120</width>
@@ -4256,6 +4256,11 @@
    </attribute>
    <addaction name="action_chooseDevice"/>
    <addaction name="action_saveConfig"/>
+   <addaction name="action_readConfigFromLoacal"/>
+   <addaction name="action_updateConfigToLower"/>
+   <addaction name="action_downloadConfig"/>
+   <addaction name="action_readLocalMotorPosTable"/>
+   <addaction name="action_saveMotorPosTable"/>
   </widget>
   <action name="action_chooseDevice">
    <property name="text">
@@ -4265,6 +4270,49 @@
   <action name="action_saveConfig">
    <property name="text">
     <string>保存设置</string>
+   </property>
+   <property name="toolTip">
+    <string>保存配置文件到本地</string>
+   </property>
+  </action>
+  <action name="action_readConfigFromLoacal">
+   <property name="text">
+    <string>读取配置</string>
+   </property>
+   <property name="toolTip">
+    <string>读取本地配置文件</string>
+   </property>
+  </action>
+  <action name="action_updateConfigToLower">
+   <property name="text">
+    <string>上传配置</string>
+   </property>
+   <property name="toolTip">
+    <string>上传配置文件到下位机</string>
+   </property>
+  </action>
+  <action name="action_downloadConfig">
+   <property name="text">
+    <string>下载配置</string>
+   </property>
+   <property name="toolTip">
+    <string>从下位机下载配置文件</string>
+   </property>
+  </action>
+  <action name="action_readLocalMotorPosTable">
+   <property name="text">
+    <string>读取电机位置</string>
+   </property>
+   <property name="toolTip">
+    <string>从本地文件读取电机位置表</string>
+   </property>
+  </action>
+  <action name="action_saveMotorPosTable">
+   <property name="text">
+    <string>存储电机位置</string>
+   </property>
+   <property name="toolTip">
+    <string>存储电机位置信息表到本地</string>
    </property>
   </action>
  </widget>

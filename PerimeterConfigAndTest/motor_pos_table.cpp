@@ -66,19 +66,19 @@ MotorPosTable::MotorPosTable(QWidget *parent):QTableView(parent)
 
 void MotorPosTable::setData(int *data)
 {
+    delete[] m_tableModel->m_modelData;
     m_tableModel->m_modelData=data;
-
 }
 
 
 void MotorPosTable::initTable()
 {
-    auto motordata=new int[columnCount*(rowCount*3)];
+    auto motordata=new int[columnCount*(rowCount*3)]{0};
 
-    for(int i=0;i<columnCount*(rowCount*3);i++)
-    {
-        motordata[i]=i;
-    }
+//    for(int i=0;i<columnCount*(rowCount*3);i++)
+//    {
+//        motordata[i]=0;
+//    }
     m_tableModel=new TableModel();
     m_tableModel->m_column=columnCount;
     m_tableModel->m_row=rowCount*3;

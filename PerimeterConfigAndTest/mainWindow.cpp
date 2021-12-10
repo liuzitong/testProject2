@@ -20,7 +20,9 @@
 #include "RbTableHeaderView.h"
 #include <QDesktopWidget>
 #include <QtGui>
+#include <QFileDialog>
 #include "windows.h"
+#include <QDir>
 
 #pragma execution_character_set("utf-8")
 // 不能删
@@ -61,18 +63,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::init()
 {
-    TableModel* colorPosTableModel=new TableModel();
-    colorPosTableModel->m_column=1;
-    colorPosTableModel->m_row=7;
-    colorPosTableModel->m_hozHeader<<"步数";
-    colorPosTableModel->m_vertHeader<<"黄"<<"绿"<<"紫色"<<"4";
-//    colorPosTableModel->m_modelData=QSharedPointer<QVariant>(new QVariant[14],[](QVariant*ptr){delete[]ptr;});
-    colorPosTableModel->m_modelData=new int[7]{0};
-    colorPosTableModel->m_modelData[0]=33;
-    ui->tableView_colorSlotPos->setModel(colorPosTableModel);
-    ui->tableView_colorSlotPos->setCornerName("颜色");
-    ui->tableView_colorSlotPos->verticalHeader()->setVisible(true);
-
+    initTable();
     quint32 vid_pid=VID.toInt(nullptr,16)<<16|PID.toInt(nullptr,16);
     m_devCtl=UsbDev::DevCtl::createInstance(vid_pid);
     ui->label_VID->setText(VID);
@@ -89,6 +80,45 @@ void MainWindow::init()
     on_comboBox_color_currentIndexChanged(1);
     on_comboBox_spotSize_currentIndexChanged(1);
 
+}
+
+void MainWindow::initTable()
+{
+    m_colorPosTableModel=new TableModel();
+    m_colorPosTableModel->m_column=1;
+    m_colorPosTableModel->m_row=7;
+    m_colorPosTableModel->m_hozHeader<<"步数";
+    m_colorPosTableModel->m_vertHeader<<"全透";
+//    m_config.switchColorMotorCoordPtr()[0]=33;
+    m_colorPosTableModel->m_modelData=m_config.switchColorMotorCoordPtr();
+    ui->tableView_colorSlotPos->setModel(m_colorPosTableModel);
+    ui->tableView_colorSlotPos->setCornerName("颜色");
+    ui->tableView_colorSlotPos->verticalHeader()->setVisible(true);
+
+
+    m_spotPosTableModel=new TableModel();
+    m_spotPosTableModel->m_column=1;
+    m_spotPosTableModel->m_row=8;
+    m_spotPosTableModel->m_hozHeader<<"步数";
+    m_spotPosTableModel->m_vertHeader<<"全透";
+    m_spotPosTableModel->m_modelData=m_config.switchLightSpotMotorCoordPtr();
+    ui->tableView_spotSlotPos->setModel(m_spotPosTableModel);
+    ui->tableView_spotSlotPos->setCornerName("光斑");
+    ui->tableView_spotSlotPos->verticalHeader()->setVisible(true);
+
+
+    m_dbColorSpotPosTableModel=new TableModel();
+    m_dbColorSpotPosTableModel->m_column=7;
+    m_dbColorSpotPosTableModel->m_row=25;
+    m_dbColorSpotPosTableModel->m_hozHeader<<"光斑1"<<"光斑2"<<"光斑3"<<"光斑4"<<"光斑5"<<"光斑6"<<"光斑7";
+    for(int i=80;i<=320;i+=10)
+    {
+        m_dbColorSpotPosTableModel->m_vertHeader<<QString::number(i);
+    }
+    m_dbColorSpotPosTableModel->m_modelData=(int*)m_config.focalLengthMotorCoordMappingPtr();
+    ui->tableView_focalPosTable->setModel(m_dbColorSpotPosTableModel);
+    ui->tableView_focalPosTable->setCornerName("距离");
+    ui->tableView_focalPosTable->verticalHeader()->setVisible(true);
 }
 
 
@@ -199,9 +229,9 @@ void MainWindow::updateProfile()
     ui->label_chinHozMotorRange->setText(QString("%d-%d").arg(profile.motorRange(x::MotorId_Chin_Hoz).first).arg(profile.motorRange(x::MotorId_Chin_Hoz).second));
     ui->label_chinVertMotorRange->setText(QString("%d-%d").arg(profile.motorRange(x::MotorId_Chin_Vert).first).arg(profile.motorRange(x::MotorId_Chin_Vert).second));
 }
-void MainWindow::saveConfig()
-{
-}
+//void MainWindow::saveConfig()
+//{
+//}
 //TODO
 void MainWindow::updateConfig()
 {
@@ -433,10 +463,6 @@ void MainWindow::on_comboBox_testFucntion_currentIndexChanged(int index)
     }
 }
 
-void MainWindow::on_action_saveConfig_triggered()
-{
-
-}
 
 void MainWindow::on_action_chooseDevice_triggered()
 {
@@ -471,6 +497,100 @@ void MainWindow::on_tabWidget_currentChanged(int index)
         showNormal();
         setFixedSize(m_width,m_height);
     }
+}
+
+void MainWindow::on_action_readLocalMotorPosTable_triggered()
+{
+    QString filePath=QFileDialog::getOpenFileName(this,"打开文件",QDir::currentPath(),tr("data (*.dat)"));
+    qDebug()<<filePath;
+    QFile file(filePath);
+    if(file.exists())
+    {
+        if(file.open(QIODevice::ReadOnly))
+        {
+            QByteArray data=file.readAll();
+            if(data.length()!=MotorPosTable::columnCount*MotorPosTable::rowCount*3*2*sizeof(int))
+            {
+                qDebug()<<"length wrong:"<<data.length();
+                return;
+            }
+            int* dataPtr=(int*)data.data();
+            int* mainTableData=ui->tableView_mainMotorPosTable->m_tableModel->m_modelData;
+            int* secondaryTableData=ui->tableView_secondaryPosTable->m_tableModel->m_modelData;
+            memcpy(mainTableData,dataPtr,MotorPosTable::columnCount*MotorPosTable::rowCount*3*sizeof(int));
+            memcpy(secondaryTableData,dataPtr+MotorPosTable::columnCount*MotorPosTable::rowCount*3,MotorPosTable::columnCount*MotorPosTable::rowCount*3*sizeof(int));
+            ui->tableView_mainMotorPosTable->update();
+            ui->tableView_secondaryPosTable->update();
+        }
+        file.flush();
+        file.close();
+    }
+}
+
+void MainWindow::on_action_saveMotorPosTable_triggered()
+{
+    QString filePath = QFileDialog::getSaveFileName(this,"打开文件",QDir::currentPath(),tr("data (*.dat)"));
+    qDebug()<<filePath;
+    QFile file(filePath);
+    if(file.open(QIODevice::WriteOnly))
+    {
+        int* dataPtr=new int[MotorPosTable::columnCount*MotorPosTable::rowCount*3*2];
+        int* mainTableData=ui->tableView_mainMotorPosTable->m_tableModel->m_modelData;
+        int* secondaryTableData=ui->tableView_secondaryPosTable->m_tableModel->m_modelData;
+        memcpy(dataPtr,mainTableData,MotorPosTable::columnCount*MotorPosTable::rowCount*3*sizeof(int));
+        memcpy(dataPtr+MotorPosTable::columnCount*MotorPosTable::rowCount*3,secondaryTableData,MotorPosTable::columnCount*MotorPosTable::rowCount*3*sizeof(int));
+        file.write((char*)dataPtr,MotorPosTable::columnCount*MotorPosTable::rowCount*3*2*sizeof(int));
+        file.flush();
+        file.close();
+    }
+}
+
+
+void MainWindow::on_action_saveConfig_triggered()
+{
+    QString filePath = QFileDialog::getSaveFileName(this,"打开文件",QDir::currentPath(),tr("data (*.dat)"));
+    qDebug()<<filePath;
+    QFile file(filePath);
+    qDebug()<<m_config.dataLen();
+    qDebug()<<m_config.switchColorMotorCoordPtr()[0];
+    if(file.open(QIODevice::WriteOnly))
+    {
+        file.write((char*)m_config.dataPtr(),m_config.dataLen());
+    }
+}
+
+
+void MainWindow::on_action_readConfigFromLoacal_triggered()
+{
+    QString filePath=QFileDialog::getOpenFileName(this,"打开文件",QDir::currentPath(),tr("data (*.dat)"));
+    qDebug()<<filePath;
+    QFile file(filePath);
+    if(file.exists())
+    {
+        if(file.open(QIODevice::ReadOnly))
+        {
+            QByteArray data=file.readAll();
+            if(data.length()!=m_config.dataLen())
+            {
+                qDebug()<<"length wrong:"<<data.length();
+                return;
+            }
+            memcpy(m_config.dataPtr(),data,m_config.dataLen());
+            ui->tableView_colorSlotPos->update();
+        }
+        file.flush();
+        file.close();
+    }
+}
+
+void MainWindow::on_action_updateConfigToLower_triggered()
+{
+
+}
+
+void MainWindow::on_action_downloadConfig_triggered()
+{
+
 }
 
 

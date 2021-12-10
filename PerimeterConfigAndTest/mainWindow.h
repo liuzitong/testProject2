@@ -28,14 +28,16 @@ public:
     ~MainWindow();
     QString PID,VID;
 
+    void initTable();
+    void updateConfig();
 private slots:
-    void saveConfig();
+//    void saveConfig();
     void showDevInfo(QString);
     void refreshStatus();
     void refreshVideo();
     void refreshConnectionStatus(int);
     void updateProfile();
-    void updateConfig();
+//    void updateConfig();
 
     void on_pushButton_relativeMoveChin_clicked();
 
@@ -87,11 +89,21 @@ private slots:
 
     void on_comboBox_testFucntion_currentIndexChanged(int index);
 
-    void on_action_saveConfig_triggered();
-
     void on_action_chooseDevice_triggered();
 
     void on_tabWidget_currentChanged(int index);
+
+    void on_action_readLocalMotorPosTable_triggered();
+
+    void on_action_saveMotorPosTable_triggered();
+
+    void on_action_saveConfig_triggered();
+
+    void on_action_readConfigFromLoacal_triggered();
+
+    void on_action_updateConfigToLower_triggered();
+
+    void on_action_downloadConfig_triggered();
 
 private:
     void moveChinMotors(UsbDev::DevCtl::MoveMethod);
@@ -104,6 +116,7 @@ private:
     int interpolation(int value[4],QPoint loc);
     int getFocusMotorPosByDist(int focalDist,int spotSlot);
     Ui::MainWindow *ui;
+    TableModel *m_colorPosTableModel,*m_spotPosTableModel,*m_dbColorSpotPosTableModel,*m_spotDistFocalPosModel;
     UsbDev::DevCtl *m_devCtl=NULL;
     UsbDev::Config m_config;
     UsbDev::StatusData m_statusData;

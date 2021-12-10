@@ -187,7 +187,12 @@ static qint16  gReadData_Le_I16( const unsigned char *buff )
 //  ctor ( empty )
 // ============================================================================
 Config :: Config ( )
-{ gRegInQt(); m_obj = nullptr; }
+{
+    gRegInQt();
+    ConfigPriv::buildIfNull( & m_obj );
+    memset(dataPtr(),0,dataLen());
+    printf("%p",m_obj);
+}
 
 // ============================================================================
 //  ctor ( copy  )
@@ -340,7 +345,6 @@ qint32&       Config :: yMotorCoordForLightCorrectionRef()
 int*       Config :: focalLengthMotorCoordForDiamondCenterTestPtr()
 { return T_PrivPtr( m_obj )->focalLengthMotorCoordForDiamondCenterTestPtr(); }
 
-
 int(*       Config :: focalLengthMotorCoordMappingPtr())[7]
 { return T_PrivPtr( m_obj )->focalLengthMotorCoordMappingPtr(); }
 
@@ -352,6 +356,18 @@ int *Config::stepTimePtr()
 
 float& Config::stepLengthRef()
 {return T_PrivPtr( m_obj )->stepLengthRef(); }
+
+void *Config::dataPtr()
+{return (void*)&(T_PrivPtr( m_obj )->crcVeryficationRef());}
+
+int Config::dataLen()
+{
+    quint8* begin=(quint8*)&(T_PrivPtr( m_obj )->crcVeryficationRef());
+    quint8* end=(quint8*)&(T_PrivPtr( m_obj )->stepLengthRef());
+    int len=end-begin+sizeof(T_PrivPtr( m_obj )->stepLengthRef());
+    return len;
+}
+
 
 
 //void* Config::GetData()
