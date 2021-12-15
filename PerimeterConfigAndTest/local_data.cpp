@@ -8,7 +8,7 @@
 
 LocalData::LocalData()
 {
-    QFile loadFile("config.json");
+    QFile loadFile(R"(data/config.json)");
 
     if(!loadFile.open(QIODevice::ReadOnly))
     {
@@ -162,3 +162,12 @@ void LocalData::Write()
 }
 
 
+
+LocalTableData::LocalTableData()
+{
+    m_data=new int[400*400]{0};
+    m_mainPosTableData=singleTableData(31*3,31,m_data);
+    m_secondaryPosTableData=singleTableData(31*3,31,m_data+31*3*31);
+    m_dbAngleDampingTableData=singleTableData(46,1,m_data+31*3*31*2);
+    m_xyDistTableData=singleTableData(25,2,m_data+31*3*31*2+46);
+}

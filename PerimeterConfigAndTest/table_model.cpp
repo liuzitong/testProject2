@@ -19,15 +19,14 @@ int TableModel::columnCount(const QModelIndex &parent) const
 
 QVariant TableModel::data(const QModelIndex &index, int role) const
 {
-    if(m_modelData==nullptr)
-    {
-//        qDebug()<<__FILE__<<__LINE__<<"nodata";
-        return " ";
-    }
     if(!index.isValid())
            return QVariant();
     if(role == Qt::DisplayRole || role == Qt::EditRole)
     {
+       if(m_modelData==nullptr)
+       {
+           return "";
+       }
        int data=m_modelData[index.row()*m_column+index.column()];
        if(data==0) return "";
        return data;
@@ -37,6 +36,10 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
 
 bool TableModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
+    if(m_modelData==nullptr)
+    {
+        return false;
+    }
     if (index.isValid() && role == Qt::EditRole) {
         bool ok;
         int temp=value.toInt(&ok);
@@ -44,7 +47,7 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
         m_modelData[index.row()*m_column+index.column()]=temp;
         emit dataChanged(index, index, QVector<int>() << role);
         if(m_func!=nullptr)
-        { QString s=m_func(index.row(),index.column());qDebug()<<s;}
+        { QString s=m_func(index.row(),index.column());}
         return true;
     }
     return false;
@@ -56,7 +59,7 @@ QVariant TableModel::headerData(int section, Qt::Orientation orientation, int ro
    {
        if( orientation == Qt::Horizontal)
        {
-           if(section>m_vertHeader.count()-1)
+           if(section>m_hozHeader.count()-1)
            {
                return section;
            }

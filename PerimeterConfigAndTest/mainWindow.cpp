@@ -80,6 +80,7 @@ void MainWindow::init()
     on_comboBox_color_currentIndexChanged(1);
     on_comboBox_spotSize_currentIndexChanged(1);
 
+
 }
 
 void MainWindow::initTable()
@@ -90,7 +91,7 @@ void MainWindow::initTable()
     m_colorPosTableModel->m_hozHeader<<"步数";
     m_colorPosTableModel->m_vertHeader<<"全透";
 //    m_config.switchColorMotorCoordPtr()[0]=33;
-    m_colorPosTableModel->m_modelData=m_config.switchColorMotorCoordPtr();
+    m_colorPosTableModel->m_modelData=m_config.switchColorMotorPosPtr();
     ui->tableView_colorSlotPos->setModel(m_colorPosTableModel);
     ui->tableView_colorSlotPos->setCornerName("颜色");
     ui->tableView_colorSlotPos->verticalHeader()->setVisible(true);
@@ -101,24 +102,63 @@ void MainWindow::initTable()
     m_spotPosTableModel->m_row=8;
     m_spotPosTableModel->m_hozHeader<<"步数";
     m_spotPosTableModel->m_vertHeader<<"全透";
-    m_spotPosTableModel->m_modelData=m_config.switchLightSpotMotorCoordPtr();
+    m_spotPosTableModel->m_modelData=m_config.switchLightSpotMotorPosPtr();
     ui->tableView_spotSlotPos->setModel(m_spotPosTableModel);
     ui->tableView_spotSlotPos->setCornerName("光斑");
     ui->tableView_spotSlotPos->verticalHeader()->setVisible(true);
 
+    auto tableData=m_localData.m_localTableData.m_xyDistTableData;
+    m_xyDistTableModel=new TableModel();
+    m_xyDistTableModel->m_column=tableData.m_column;
+    m_xyDistTableModel->m_row=tableData.m_row;
+    m_xyDistTableModel->m_hozHeader<<"X"<<"Y";
+    m_xyDistTableModel->m_modelData=tableData.m_data;
+    ui->tableView_XYDistTable->setModel(m_xyDistTableModel);
+    ui->tableView_XYDistTable->verticalHeader()->setVisible(false);
 
-    m_dbColorSpotPosTableModel=new TableModel();
-    m_dbColorSpotPosTableModel->m_column=7;
-    m_dbColorSpotPosTableModel->m_row=25;
-    m_dbColorSpotPosTableModel->m_hozHeader<<"光斑1"<<"光斑2"<<"光斑3"<<"光斑4"<<"光斑5"<<"光斑6"<<"光斑7";
-    for(int i=80;i<=320;i+=10)
-    {
-        m_dbColorSpotPosTableModel->m_vertHeader<<QString::number(i);
-    }
-    m_dbColorSpotPosTableModel->m_modelData=(int*)m_config.focalLengthMotorCoordMappingPtr();
-    ui->tableView_focalPosTable->setModel(m_dbColorSpotPosTableModel);
+    m_spotDistFocalPosModel=new TableModel();
+    m_spotDistFocalPosModel->m_column=7;
+    m_spotDistFocalPosModel->m_row=25;
+    m_spotDistFocalPosModel->m_hozHeader<<"光斑1"<<"光斑2"<<"光斑3"<<"光斑4"<<"光斑5"<<"光斑6"<<"光斑7";
+    for(int i=80;i<=320;i+=10){m_spotDistFocalPosModel->m_vertHeader<<QString::number(i);}
+    m_spotDistFocalPosModel->m_modelData=(int*)m_config.focalLengthMotorPosMappingPtr();
+    ui->tableView_focalPosTable->setModel(m_spotDistFocalPosModel);
     ui->tableView_focalPosTable->setCornerName("距离");
     ui->tableView_focalPosTable->verticalHeader()->setVisible(true);
+
+    m_dbColorSpotPosTableModel=new TableModel();
+    m_dbColorSpotPosTableModel->m_column=2;
+    m_dbColorSpotPosTableModel->m_row=52;
+    m_dbColorSpotPosTableModel->m_hozHeader<<"颜色步"<<"尺寸步";
+    for(int i=0;i<=51;i++){m_dbColorSpotPosTableModel->m_vertHeader<<QString::number(i);}
+    m_dbColorSpotPosTableModel->m_modelData=(int*)m_config.DbPosMappingPtr();
+    ui->tableView_dbColorSpotPosTable->setModel(m_dbColorSpotPosTableModel);
+    ui->tableView_dbColorSpotPosTable->setCornerName("DB");
+    ui->tableView_dbColorSpotPosTable->verticalHeader()->setVisible(true);
+
+    m_speedStepTimeTableModel=new TableModel();
+    m_speedStepTimeTableModel->m_column=1;
+    m_speedStepTimeTableModel->m_row=7;
+    m_speedStepTimeTableModel->m_hozHeader<<"时间";
+    for(int i=0;i<=7;i++){m_speedStepTimeTableModel->m_vertHeader<<QString::number(i);}
+    m_speedStepTimeTableModel->m_modelData=m_config.stepTimePtr();
+    ui->tableView_speedStepTimeTable->setModel(m_speedStepTimeTableModel);
+    ui->tableView_speedStepTimeTable->setCornerName("速度");
+    ui->tableView_speedStepTimeTable->verticalHeader()->setVisible(true);
+
+    tableData=m_localData.m_localTableData.m_dbAngleDampingTableData;
+    m_dbAngleDampingTableModel=new TableModel();
+    m_dbAngleDampingTableModel->m_column=tableData.m_column;
+    m_dbAngleDampingTableModel->m_row=tableData.m_row;
+    m_dbAngleDampingTableModel->m_hozHeader<<"DB衰减";
+    for(int i=0;i<=90;i+=2){m_dbAngleDampingTableModel->m_vertHeader<<QString::number(i);}
+    m_dbAngleDampingTableModel->m_modelData=tableData.m_data;
+    ui->tableView_dbAngleDampingTable->setModel(m_dbAngleDampingTableModel);
+    ui->tableView_dbAngleDampingTable->setCornerName("离心度");
+    ui->tableView_dbAngleDampingTable->verticalHeader()->setVisible(true);
+
+    ui->tableView_mainMotorPosTable->setData(m_localData.m_localTableData.m_mainPosTableData.m_data);
+    ui->tableView_mainMotorPosTable->setData(m_localData.m_localTableData.m_secondaryPosTableData.m_data);
 }
 
 
@@ -147,7 +187,7 @@ int MainWindow::interpolation(int value[], QPoint loc)
 int MainWindow::getFocusMotorPosByDist(int focalDist,int spotSlot)
 {
     if(m_config.isEmpty()) {return 0;}
-    auto map = m_config.focalLengthMotorCoordMappingPtr();
+    auto map = m_config.focalLengthMotorPosMappingPtr();
     int indexDist= floor(focalDist/10)-8;
     int pos1=map[indexDist][spotSlot];
     int pos2=map[indexDist+1][spotSlot];
@@ -155,6 +195,7 @@ int MainWindow::getFocusMotorPosByDist(int focalDist,int spotSlot)
     return focalMotorPos;
     return 0;
 }
+
 
 
 
@@ -499,9 +540,9 @@ void MainWindow::on_tabWidget_currentChanged(int index)
     }
 }
 
-void MainWindow::on_action_readLocalMotorPosTable_triggered()
+void MainWindow::on_action_readLocalData_triggered()
 {
-    QString filePath=QFileDialog::getOpenFileName(this,"打开文件",QDir::currentPath(),tr("data (*.dat)"));
+    QString filePath=QFileDialog::getOpenFileName(this,"打开文件",QDir::currentPath()+R"(/data/)",tr("(*.dat)"));
     qDebug()<<filePath;
     QFile file(filePath);
     if(file.exists())
@@ -518,18 +559,20 @@ void MainWindow::on_action_readLocalMotorPosTable_triggered()
             int* mainTableData=ui->tableView_mainMotorPosTable->m_tableModel->m_modelData;
             int* secondaryTableData=ui->tableView_secondaryPosTable->m_tableModel->m_modelData;
             memcpy(mainTableData,dataPtr,MotorPosTable::columnCount*MotorPosTable::rowCount*3*sizeof(int));
-            memcpy(secondaryTableData,dataPtr+MotorPosTable::columnCount*MotorPosTable::rowCount*3,MotorPosTable::columnCount*MotorPosTable::rowCount*3*sizeof(int));
-            ui->tableView_mainMotorPosTable->update();
-            ui->tableView_secondaryPosTable->update();
+            dataPtr+=MotorPosTable::columnCount*MotorPosTable::rowCount*3*sizeof(int);
+            memcpy(secondaryTableData,dataPtr,MotorPosTable::columnCount*MotorPosTable::rowCount*3*sizeof(int));
+            dataPtr+=MotorPosTable::columnCount*MotorPosTable::rowCount*3*sizeof(int);
+            memcpy(secondaryTableData,dataPtr,MotorPosTable::columnCount*MotorPosTable::rowCount*3*sizeof(int));
+
         }
         file.flush();
         file.close();
     }
 }
 
-void MainWindow::on_action_saveMotorPosTable_triggered()
+void MainWindow::on_action_saveLocalData_triggered()
 {
-    QString filePath = QFileDialog::getSaveFileName(this,"打开文件",QDir::currentPath(),tr("data (*.dat)"));
+    QString filePath = QFileDialog::getSaveFileName(this,"打开文件",QDir::currentPath()+R"(/data/)",tr("(*.dat)"));
     qDebug()<<filePath;
     QFile file(filePath);
     if(file.open(QIODevice::WriteOnly))
@@ -548,21 +591,21 @@ void MainWindow::on_action_saveMotorPosTable_triggered()
 
 void MainWindow::on_action_saveConfig_triggered()
 {
-    QString filePath = QFileDialog::getSaveFileName(this,"打开文件",QDir::currentPath(),tr("data (*.dat)"));
-    qDebug()<<filePath;
+    QString filePath = QFileDialog::getSaveFileName(this,"打开文件",QDir::currentPath()+R"(/data/)",tr("(*.dat)"));
     QFile file(filePath);
-    qDebug()<<m_config.dataLen();
-    qDebug()<<m_config.switchColorMotorCoordPtr()[0];
     if(file.open(QIODevice::WriteOnly))
     {
-        file.write((char*)m_config.dataPtr(),m_config.dataLen());
+        bool ok;
+        m_config.deviceIDRef()=ui->lineEdit_deviceSerialNo->text().toInt(&ok);if(!ok) return;
+//        m_config.
+//        file.write((char*)m_config.dataPtr(),m_config.dataLen());
     }
 }
 
 
 void MainWindow::on_action_readConfigFromLoacal_triggered()
 {
-    QString filePath=QFileDialog::getOpenFileName(this,"打开文件",QDir::currentPath(),tr("data (*.dat)"));
+    QString filePath=QFileDialog::getOpenFileName(this,"打开文件",QDir::currentPath()+R"(/data/)",tr("(*.dat)"));
     qDebug()<<filePath;
     QFile file(filePath);
     if(file.exists())
@@ -576,7 +619,6 @@ void MainWindow::on_action_readConfigFromLoacal_triggered()
                 return;
             }
             memcpy(m_config.dataPtr(),data,m_config.dataLen());
-            ui->tableView_colorSlotPos->update();
         }
         file.flush();
         file.close();
@@ -592,6 +634,42 @@ void MainWindow::on_action_downloadConfig_triggered()
 {
 
 }
+
+//void MainWindow::on_action_SaveDBAngelDamping_triggered()
+//{
+//    QString filePath = QFileDialog::getSaveFileName(this,"打开文件",QDir::currentPath()+R"(/data/)",tr("(*.dat)"));
+//    QFile file(filePath);
+//    if(m_dbAngleDampingTableModel->m_modelData)
+//    {
+//        if(file.open(QIODevice::WriteOnly))
+//        {
+//            file.write((char*)m_dbAngleDampingTableModel->m_modelData,m_dbAngleDampingTableModel->m_column*m_dbAngleDampingTableModel->m_row*sizeof(int));
+//        }
+//    }
+//}
+
+//void MainWindow::on_action_loadDBAngleDamping_triggered()
+//{
+//    QString filePath=QFileDialog::getOpenFileName(this,"打开文件",QDir::currentPath()+R"(/data/)",tr("(*.dat)"));
+//    qDebug()<<filePath;
+//    QFile file(filePath);
+//    if(file.exists())
+//    {
+//        if(file.open(QIODevice::ReadOnly))
+//        {
+//            QByteArray data=file.readAll();
+//            int length=m_dbAngleDampingTableModel->m_column*m_dbAngleDampingTableModel->m_row*sizeof(int);
+//            if(data.length()!=length)
+//            {
+//                qDebug()<<"length wrong:"<<data.length();
+//                return;
+//            }
+//            memcpy(m_dbAngleDampingTableModel->m_modelData,data,length);
+//        }
+//        file.flush();
+//        file.close();
+//    }
+//}
 
 
 
@@ -734,7 +812,7 @@ void MainWindow::staticCastTest(DotInfo dot,int spotSlot ,int colorSlot,int db,i
     if(!m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus))
     {
         spsArr[2]=sps;
-        posArr[2]=m_config.focusCoordForSpotAndColorChangeRef();
+        posArr[2]=m_config.focusPosForSpotAndColorChangeRef();
         m_devCtl->move5Motors(spsArr,posArr);
     }
 
@@ -744,8 +822,8 @@ void MainWindow::staticCastTest(DotInfo dot,int spotSlot ,int colorSlot,int db,i
     memset(spsArr,0,sizeof(spsArr));
     memset(posArr,0,sizeof(posArr));
     spsArr[3]=sps;spsArr[4]=sps;
-    posArr[3]=m_config.switchColorMotorCoordPtr()[colorSlot];
-    posArr[4]=m_config.switchColorMotorCoordPtr()[spotSlot];
+    posArr[3]=m_config.switchColorMotorPosPtr()[colorSlot];
+    posArr[4]=m_config.switchColorMotorPosPtr()[spotSlot];
 
     while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus)||(time.elapsed()<10))
     {QCoreApplication::processEvents();}
@@ -769,8 +847,8 @@ void MainWindow::staticCastTest(DotInfo dot,int spotSlot ,int colorSlot,int db,i
     spsArr[0]=spsArr[1]=spsArr[3]=spsArr[4]=sps;
     posArr[0]=dot.motorXPos;
     posArr[1]=dot.motorYPos;
-    posArr[3]=m_config.DbCoordMappingPtr()[db][0];
-    posArr[4]=m_config.DbCoordMappingPtr()[db][1];
+    posArr[3]=m_config.DbPosMappingPtr()[db][0];
+    posArr[4]=m_config.DbPosMappingPtr()[db][1];
     while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus)||(time.elapsed()<10))
     {QCoreApplication::processEvents();}
     m_devCtl->move5Motors(spsArr,posArr);
@@ -798,7 +876,7 @@ void MainWindow::moveCastTest(DotInfo dotBegin,DotInfo dotEnd,int spotSlot ,int 
     if(!m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus))
     {
         spsArr[2]=sps;
-        posArr[2]=m_config.focusCoordForSpotAndColorChangeRef();
+        posArr[2]=m_config.focusPosForSpotAndColorChangeRef();
         m_devCtl->move5Motors(spsArr,posArr);
     }
 
@@ -808,8 +886,8 @@ void MainWindow::moveCastTest(DotInfo dotBegin,DotInfo dotEnd,int spotSlot ,int 
     memset(spsArr,0,sizeof(spsArr));
     memset(posArr,0,sizeof(posArr));
     spsArr[3]=sps;spsArr[4]=sps;
-    posArr[3]=m_config.switchColorMotorCoordPtr()[colorSlot];
-    posArr[4]=m_config.switchColorMotorCoordPtr()[spotSlot];
+    posArr[3]=m_config.switchColorMotorPosPtr()[colorSlot];
+    posArr[4]=m_config.switchColorMotorPosPtr()[spotSlot];
 
     while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus)||(time.elapsed()<10))
     {QCoreApplication::processEvents();}
@@ -832,8 +910,8 @@ void MainWindow::moveCastTest(DotInfo dotBegin,DotInfo dotEnd,int spotSlot ,int 
     spsArr[0]=spsArr[1]=spsArr[3]=spsArr[4]=sps;
     posArr[0]=dotBegin.motorXPos;
     posArr[1]=dotBegin.motorYPos;
-    posArr[3]=m_config.DbCoordMappingPtr()[db][0];
-    posArr[4]=m_config.DbCoordMappingPtr()[db][1];
+    posArr[3]=m_config.DbPosMappingPtr()[db][0];
+    posArr[4]=m_config.DbPosMappingPtr()[db][1];
     while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus)||(time.elapsed()<10))
     {QCoreApplication::processEvents();}
     m_devCtl->move5Motors(spsArr,posArr);

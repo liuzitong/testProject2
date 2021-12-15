@@ -47,7 +47,7 @@ public:
     //! get all data
     Q_SLOT QList<QPointF>  data() const;
 
-    //! return the lower and upper bound of spec. x coord
+    //! return the lower and upper bound of spec. x pos
     Q_SLOT QPair<QPointF,QPointF>  findBound( const qreal &x, bool &is_found );
 
     //! set data

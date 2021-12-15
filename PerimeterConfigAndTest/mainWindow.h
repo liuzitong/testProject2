@@ -93,9 +93,9 @@ private slots:
 
     void on_tabWidget_currentChanged(int index);
 
-    void on_action_readLocalMotorPosTable_triggered();
+    void on_action_readLocalData_triggered();
 
-    void on_action_saveMotorPosTable_triggered();
+    void on_action_saveLocalData_triggered();
 
     void on_action_saveConfig_triggered();
 
@@ -104,6 +104,7 @@ private slots:
     void on_action_updateConfigToLower_triggered();
 
     void on_action_downloadConfig_triggered();
+
 
 private:
     void moveChinMotors(UsbDev::DevCtl::MoveMethod);
@@ -116,7 +117,13 @@ private:
     int interpolation(int value[4],QPoint loc);
     int getFocusMotorPosByDist(int focalDist,int spotSlot);
     Ui::MainWindow *ui;
-    TableModel *m_colorPosTableModel,*m_spotPosTableModel,*m_dbColorSpotPosTableModel,*m_spotDistFocalPosModel;
+    TableModel *m_colorPosTableModel;           //颜色表
+    TableModel *m_spotPosTableModel;            //光斑表
+    TableModel *m_spotDistFocalPosModel;        //焦距参数表
+    TableModel *m_dbColorSpotPosTableModel;     //DB参数表
+    TableModel *m_speedStepTimeTableModel;      //速度与步数
+    TableModel *m_xyDistTableModel;             //xy桌标对应的距离 本机数据
+    TableModel *m_dbAngleDampingTableModel;     //DB离心度衰减参数表 本机数据
     UsbDev::DevCtl *m_devCtl=NULL;
     UsbDev::Config m_config;
     UsbDev::StatusData m_statusData;

@@ -58,7 +58,7 @@ public:
     //! @note  each element should be a normalized value !
     Q_SLOT void  setData( const SeriesData& );
 
-    //! return the lower and upper bound of spec. x coord
+    //! return the lower and upper bound of spec. x pos
     Q_SLOT QPair<QPointF,QPointF>  findBound( const qreal &x, bool &is_found );
 
 

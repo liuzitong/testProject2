@@ -16,7 +16,7 @@ public:
     void setData(int* data);
     void initTable();
         ~MotorPosTable()=default;
-    bool eventFilter(QObject *o, QEvent *e);
+    bool eventFilter(QObject *o, QEvent *e) override;
 //signals:
 //    void requestPaint();
 public:

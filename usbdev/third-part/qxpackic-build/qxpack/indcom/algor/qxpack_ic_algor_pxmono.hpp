@@ -106,7 +106,7 @@ auto     monoFlipVert(
 //! \param  px_pitch [in]  how many bytes a row
 //! \param  ary      [out] the value array
 //! \param  ary_len  [in]  array size
-//! \note   the pixel Y coord. is the math coord.
+//! \note   the pixel Y pos. is the math pos.
 template <typename T>
 auto     fillWaveAryByMonoMsb ( // MSB order
     const uint8_t *px, size_t px_w, size_t px_h, size_t px_pitch,

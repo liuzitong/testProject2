@@ -70,7 +70,7 @@ public:
      QColor     lineColor()  const;
      QVector2D  lineSizeRange()   const;
 
-     //! @note the viewport is a math coord direction. And the y is the top-left point!
+     //! @note the viewport is a math pos direction. And the y is the top-left point!
      QRectF    viewport() const;
      void      setViewport( const QRectF& );
 

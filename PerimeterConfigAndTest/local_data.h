@@ -1,5 +1,5 @@
-﻿#ifndef LOCAL_CONFIG_H
-#define LOCAL_CONFIG_H
+﻿#ifndef LOCAL_DATA_H
+#define LOCAL_DATA_H
 
 #include <QPair>
 #include <QList>
@@ -18,27 +18,45 @@ struct DotInfo
     qint32 coordX,coordY,motorXPos,motorYPos,focalDistance;
 };
 
+struct singleTableData
+{
+    singleTableData()=default;
+    singleTableData(int row,int column,int* data):m_row(row),m_column(column),m_data(data){};
+    ~singleTableData()=default;
+    int m_row;
+    int m_column;
+    int* m_data;
+};
+
+class LocalTableData
+{
+public:
+    LocalTableData();
+//    ~LocalTableData(){
+//        delete[] m_data;
+//    }
+public:
+    singleTableData m_mainPosTableData;
+    singleTableData m_secondaryPosTableData;
+    singleTableData m_dbAngleDampingTableData;
+    singleTableData m_xyDistTableData;
+    int* m_data;
+    const int dataLen=31*31*3*2+46+52*2;
+};
+
+
 
 
 class LocalData
 {
-
 public:
     LocalData();
     QString m_VID,m_PID;
     QJsonObject m_rootObj;
     QList<QPair<QString,int>> m_colorToSlot,m_spotSizeToSlot;
     QList<DotInfo> m_dotInfoList,m_secondaryDotInfoList;
-
-//    struct mainMotorPosTable
-//    {
-//        DotInfo dotinfo[];
-//    };
-
-
-
-
+    LocalTableData m_localTableData;
     void Write();
 };
 
-#endif // LOCAL_CONFIG_H
+#endif

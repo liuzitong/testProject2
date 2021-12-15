@@ -73,7 +73,7 @@ void MotorPosTable::setData(int *data)
 
 void MotorPosTable::initTable()
 {
-    auto motordata=new int[columnCount*(rowCount*3)]{0};
+//    auto motordata=new int[columnCount*(rowCount*3)]{0};
 
 //    for(int i=0;i<columnCount*(rowCount*3);i++)
 //    {
@@ -82,7 +82,7 @@ void MotorPosTable::initTable()
     m_tableModel=new TableModel();
     m_tableModel->m_column=columnCount;
     m_tableModel->m_row=rowCount*3;
-    m_tableModel->m_modelData=motordata;
+//    m_tableModel->m_modelData=motordata;
     setModel(m_tableModel);
 }
 

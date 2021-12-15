@@ -14,7 +14,7 @@ class TableModel:public QAbstractTableModel
     Q_OBJECT
 public:
     TableModel(int* data,int row,int column,QList<QString> hozHeader,QList<QString> vertHeader,std::function<QString(int,int)> func=nullptr,QObject* parent=nullptr)
-        :m_modelData(data),m_row(row),m_column(column),m_hozHeader(hozHeader),m_vertHeader(vertHeader),m_func(func){};
+        :QAbstractTableModel(parent),m_modelData(data),m_row(row),m_column(column),m_hozHeader(hozHeader),m_vertHeader(vertHeader),m_func(func){};
     TableModel()=default;
     ~TableModel()=default;
 

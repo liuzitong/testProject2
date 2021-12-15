@@ -60,4 +60,5 @@ bool GenericTable::eventFilter(QObject* o, QEvent* e)
             return true; // eat event
         }
     }
+    return false;
 }
