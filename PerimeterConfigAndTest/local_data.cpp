@@ -157,7 +157,6 @@ void LocalData::Write()
     QFile file("config.json");
     file.open(QIODevice::WriteOnly);
     file.write(ba);
-
     file.close();
 }
 
@@ -165,7 +164,7 @@ void LocalData::Write()
 
 LocalTableData::LocalTableData()
 {
-    m_data=new int[400*400]{0};
+    m_data=new int[dataLen]{0};
     m_mainPosTableData=singleTableData(31*3,31,m_data);
     m_secondaryPosTableData=singleTableData(31*3,31,m_data+31*3*31);
     m_dbAngleDampingTableData=singleTableData(46,1,m_data+31*3*31*2);

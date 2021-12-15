@@ -90,7 +90,6 @@ void MainWindow::initTable()
     m_colorPosTableModel->m_row=7;
     m_colorPosTableModel->m_hozHeader<<"步数";
     m_colorPosTableModel->m_vertHeader<<"全透";
-//    m_config.switchColorMotorCoordPtr()[0]=33;
     m_colorPosTableModel->m_modelData=m_config.switchColorMotorPosPtr();
     ui->tableView_colorSlotPos->setModel(m_colorPosTableModel);
     ui->tableView_colorSlotPos->setCornerName("颜色");
@@ -158,7 +157,7 @@ void MainWindow::initTable()
     ui->tableView_dbAngleDampingTable->verticalHeader()->setVisible(true);
 
     ui->tableView_mainMotorPosTable->setData(m_localData.m_localTableData.m_mainPosTableData.m_data);
-    ui->tableView_mainMotorPosTable->setData(m_localData.m_localTableData.m_secondaryPosTableData.m_data);
+    ui->tableView_secondaryPosTable->setData(m_localData.m_localTableData.m_secondaryPosTableData.m_data);
 }
 
 
@@ -270,10 +269,7 @@ void MainWindow::updateProfile()
     ui->label_chinHozMotorRange->setText(QString("%d-%d").arg(profile.motorRange(x::MotorId_Chin_Hoz).first).arg(profile.motorRange(x::MotorId_Chin_Hoz).second));
     ui->label_chinVertMotorRange->setText(QString("%d-%d").arg(profile.motorRange(x::MotorId_Chin_Vert).first).arg(profile.motorRange(x::MotorId_Chin_Vert).second));
 }
-//void MainWindow::saveConfig()
-//{
-//}
-//TODO
+
 void MainWindow::updateConfig()
 {
     showDevInfo("Config Got.");
@@ -549,20 +545,24 @@ void MainWindow::on_action_readLocalData_triggered()
     {
         if(file.open(QIODevice::ReadOnly))
         {
+            char* destPtr=(char*)m_localData.m_localTableData.m_data;
+            int dateLen=m_localData.m_localTableData.dataLen;
             QByteArray data=file.readAll();
-            if(data.length()!=MotorPosTable::columnCount*MotorPosTable::rowCount*3*2*sizeof(int))
+            if(data.length()!=(int)(dateLen*sizeof(int)))
             {
                 qDebug()<<"length wrong:"<<data.length();
                 return;
             }
-            int* dataPtr=(int*)data.data();
-            int* mainTableData=ui->tableView_mainMotorPosTable->m_tableModel->m_modelData;
-            int* secondaryTableData=ui->tableView_secondaryPosTable->m_tableModel->m_modelData;
-            memcpy(mainTableData,dataPtr,MotorPosTable::columnCount*MotorPosTable::rowCount*3*sizeof(int));
-            dataPtr+=MotorPosTable::columnCount*MotorPosTable::rowCount*3*sizeof(int);
-            memcpy(secondaryTableData,dataPtr,MotorPosTable::columnCount*MotorPosTable::rowCount*3*sizeof(int));
-            dataPtr+=MotorPosTable::columnCount*MotorPosTable::rowCount*3*sizeof(int);
-            memcpy(secondaryTableData,dataPtr,MotorPosTable::columnCount*MotorPosTable::rowCount*3*sizeof(int));
+
+            memcpy(destPtr,data.data(),data.length());
+//            int* dataPtr=(int*)data.data();
+//            int* mainTableData=ui->tableView_mainMotorPosTable->m_tableModel->m_modelData;
+//            int* secondaryTableData=ui->tableView_secondaryPosTable->m_tableModel->m_modelData;
+//            memcpy(mainTableData,dataPtr,MotorPosTable::columnCount*MotorPosTable::rowCount*3*sizeof(int));
+//            dataPtr+=MotorPosTable::columnCount*MotorPosTable::rowCount*3*sizeof(int);
+//            memcpy(secondaryTableData,dataPtr,MotorPosTable::columnCount*MotorPosTable::rowCount*3*sizeof(int));
+//            dataPtr+=MotorPosTable::columnCount*MotorPosTable::rowCount*3*sizeof(int);
+//            memcpy(secondaryTableData,dataPtr,MotorPosTable::columnCount*MotorPosTable::rowCount*3*sizeof(int));
 
         }
         file.flush();
@@ -577,12 +577,14 @@ void MainWindow::on_action_saveLocalData_triggered()
     QFile file(filePath);
     if(file.open(QIODevice::WriteOnly))
     {
-        int* dataPtr=new int[MotorPosTable::columnCount*MotorPosTable::rowCount*3*2];
-        int* mainTableData=ui->tableView_mainMotorPosTable->m_tableModel->m_modelData;
-        int* secondaryTableData=ui->tableView_secondaryPosTable->m_tableModel->m_modelData;
-        memcpy(dataPtr,mainTableData,MotorPosTable::columnCount*MotorPosTable::rowCount*3*sizeof(int));
-        memcpy(dataPtr+MotorPosTable::columnCount*MotorPosTable::rowCount*3,secondaryTableData,MotorPosTable::columnCount*MotorPosTable::rowCount*3*sizeof(int));
-        file.write((char*)dataPtr,MotorPosTable::columnCount*MotorPosTable::rowCount*3*2*sizeof(int));
+//        int* dataPtr=new int[MotorPosTable::columnCount*MotorPosTable::rowCount*3*2];
+//        int* mainTableData=ui->tableView_mainMotorPosTable->m_tableModel->m_modelData;
+//        int* secondaryTableData=ui->tableView_secondaryPosTable->m_tableModel->m_modelData;
+//        memcpy(dataPtr,mainTableData,MotorPosTable::columnCount*MotorPosTable::rowCount*3*sizeof(int));
+//        memcpy(dataPtr+MotorPosTable::columnCount*MotorPosTable::rowCount*3,secondaryTableData,MotorPosTable::columnCount*MotorPosTable::rowCount*3*sizeof(int));
+        char* destPtr=(char*)m_localData.m_localTableData.m_data;
+        int dateLen=m_localData.m_localTableData.dataLen;
+        file.write(destPtr,dateLen*sizeof(int));
         file.flush();
         file.close();
     }
@@ -597,8 +599,8 @@ void MainWindow::on_action_saveConfig_triggered()
     {
         bool ok;
         m_config.deviceIDRef()=ui->lineEdit_deviceSerialNo->text().toInt(&ok);if(!ok) return;
-//        m_config.
-//        file.write((char*)m_config.dataPtr(),m_config.dataLen());
+        m_config.centerFixationLampDARef()=ui->lineEdit_centralLightDA->text().toInt(&ok);if(!ok) return;
+        file.write((char*)m_config.dataPtr(),m_config.dataLen());
     }
 }
 

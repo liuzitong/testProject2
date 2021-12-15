@@ -4680,20 +4680,10 @@
   </action>
   <action name="action_saveLocalData">
    <property name="text">
-    <string>存储电机位置</string>
+    <string>存储本地数据</string>
    </property>
    <property name="toolTip">
     <string>存储数据信息表到本地</string>
-   </property>
-  </action>
-  <action name="action_SaveDBAngelDamping">
-   <property name="text">
-    <string>存储DB衰减信息</string>
-   </property>
-  </action>
-  <action name="action_loadDBAngleDamping">
-   <property name="text">
-    <string>读取DB衰减信息</string>
    </property>
   </action>
  </widget>
