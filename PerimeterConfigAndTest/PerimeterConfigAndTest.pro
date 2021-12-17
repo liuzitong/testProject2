@@ -36,19 +36,21 @@ SOURCES += \
     main.cpp \
     mainWindow.cpp \
     table_model.cpp \
-    local_data.cpp \
     motor_pos_table.cpp \
     generic_table.cpp \
-    RbTableHeaderView.cpp
+    RbTableHeaderView.cpp \
+    settings.cpp \
+    models.cpp
 
 
 HEADERS += \
     mainWindow.h \
     table_model.h \
-    local_data.h \
     motor_pos_table.h \
     generic_table.h \
-    RbTableHeaderView.h
+    RbTableHeaderView.h \
+    settings.h \
+    models.h
 
 FORMS += \
     mainwindow.ui \

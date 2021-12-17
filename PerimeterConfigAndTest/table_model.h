@@ -1,9 +1,9 @@
 ﻿#ifndef COLOR_SLOT_MODEL_H
 #define COLOR_SLOT_MODEL_H
 #include <QAbstractTableModel>
-#include <spdlog/spdlog.h>
+//#include <spdlog/spdlog.h>
 #include <QJsonDocument>
-#include <functional>
+//#include <functional>
 #include <QSharedPointer>
 
 

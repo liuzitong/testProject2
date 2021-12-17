@@ -11,7 +11,7 @@
 #include <QTimer>
 #include <QJsonObject>
 #include <Qpair>
-#include <local_data.h>
+#include <settings.h>
 #include <table_model.h>
 
 
@@ -28,8 +28,6 @@ public:
     ~MainWindow();
     QString PID,VID;
 
-    void initTable();
-    void updateConfig();
 private slots:
 //    void saveConfig();
     void showDevInfo(QString);
@@ -99,7 +97,7 @@ private slots:
 
     void on_action_saveConfig_triggered();
 
-    void on_action_readConfigFromLoacal_triggered();
+    void on_action_readConfigFromLocal_triggered();
 
     void on_action_updateConfigToLower_triggered();
 
@@ -107,6 +105,9 @@ private slots:
 
 
 private:
+    void initData();
+    void initTable();
+    void updateConfig();
     void moveChinMotors(UsbDev::DevCtl::MoveMethod);
     void move5Motors(UsbDev::DevCtl::MoveMethod);
     bool getXYMotorPosAndFocalDistFromCoord(DotInfo& dotInfo);
@@ -116,22 +117,27 @@ private:
     void uninit();
     int interpolation(int value[4],QPoint loc);
     int getFocusMotorPosByDist(int focalDist,int spotSlot);
+    void refreshConfigUI();
+    void refreshConfigDataByUI();
     Ui::MainWindow *ui;
-    TableModel *m_colorPosTableModel;           //颜色表
-    TableModel *m_spotPosTableModel;            //光斑表
-    TableModel *m_spotDistFocalPosModel;        //焦距参数表
-    TableModel *m_dbColorSpotPosTableModel;     //DB参数表
-    TableModel *m_speedStepTimeTableModel;      //速度与步数
-    TableModel *m_xyDistTableModel;             //xy桌标对应的距离 本机数据
-    TableModel *m_dbAngleDampingTableModel;     //DB离心度衰减参数表 本机数据
+    TableModel *m_colorPosTableModel;                       //颜色表
+    TableModel *m_spotPosTableModel;                        //光斑表
+    TableModel *m_spotDistFocalPosModel;                    //焦距参数表
+    TableModel *m_dbColorSpotPosTableModel;                 //DB参数表
+    TableModel *m_speedStepTimeTableModel;                  //速度与步数
+    TableModel *m_diamondCenterSpotFocalPosTableModel;      //菱形中心点时测试时, 焦距电机所需走动的步数 7个光斑
+    TableModel *m_xyDistTableModel;                         //xy桌标对应的距离 本机数据
+    TableModel *m_dbAngleDampingTableModel;                 //DB离心度衰减参数表 本机数据
     UsbDev::DevCtl *m_devCtl=NULL;
     UsbDev::Config m_config;
     UsbDev::StatusData m_statusData;
     UsbDev::FrameData m_frameData;
     UsbDev::Profile m_profile;
     QTimer* m_timer=NULL;
-    LocalData m_localData;
+    Settings m_settings;
     int m_width,m_height;
+    void readLocalData(QString filePath);
+    void readLocalConfig(QString filePath);
 };
 
 #endif // MAINWINDOW_H

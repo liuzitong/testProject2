@@ -5,10 +5,11 @@
 #include <spdlog/sinks/rotating_file_sink.h>
 #include <spdlog/common.h>
 #include <QDebug>
-#include <local_data.h>
+#include <settings.h>
 #include <QSharedPointer>
 #include <QStyleFactory>
 #include <QThread>
+
 
 
 

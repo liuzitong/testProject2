@@ -19,7 +19,7 @@
 #include <QByteArray>
 #include <QMetaType>
 #include <QJsonObject>
-
+//#include <spdlog/spdlog.h>
 namespace UsbDev {
 
 // ////////////////////////////////////////////////////////////////////////////
@@ -60,17 +60,21 @@ public:
     quint16& borderInfraredLampDARef();
     quint16& eyeglassFrameLampDARef();
     quint16* environmentAlarmLightDAPtr();
+    quint16* pupilGreyThresholdDAPtr();
     int* switchColorMotorPosPtr();
     int* switchLightSpotMotorPosPtr();
     qint32& focusPosForSpotAndColorChangeRef();
     qint32& shutterOpenPosRef();
-    qint32& mainTableCenterXCorrectionRef();
-    qint32& mainTableCenterYCorrectionRef();
-    qint32& secondaryTableCenterXCorrectionRef();
-    qint32& secondaryTableCenterYCorrectionRef();
+    qint32& mainTableCenterXRef();
+    qint32& mainTableCenterYRef();
+    qint32& secondaryTableCenterXRef();
+    qint32& secondaryTableCenterYRef();
     qint32& maximunProjectionLightADPresetRef();
+    qint32& focalLengthMotorPosForLightCorrectionRef();
     qint32& xMotorPosForLightCorrectionRef();
     qint32& yMotorPosForLightCorrectionRef();
+    int& xMotorPosForDiamondCenterTestRef();
+    int& yMotorPosForDiamondCenterTestRef();
     int* focalLengthMotorPosForDiamondCenterTestPtr();
     int(*focalLengthMotorPosMappingPtr())[7];
     int(*DbPosMappingPtr())[2];
@@ -79,7 +83,7 @@ public:
     float& stepLengthRef();
     void* dataPtr();
     int dataLen();
-//    void* GetData();
+    //    void* GetData();
 private:
     void *m_obj=nullptr;
 };

@@ -5,6 +5,7 @@ TEMPLATE = lib
 CONFIG += qt c++11 skip_target_version_ext
 CONFIG -= app_bundle
 QT *= gui
+QT += core
 
 
 DEFINES *= QT_MESSAGELOGCONTEXT

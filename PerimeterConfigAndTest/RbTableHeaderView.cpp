@@ -46,7 +46,7 @@ RbTableHeaderItem::~RbTableHeaderItem()
 RbTableHeaderItem* RbTableHeaderItem::insertChild(int row, int col)
 {
 	RbTableHeaderItem* newChild = new RbTableHeaderItem(row,col,this);
-   child_items.insert(QPair<int,int>(row,col),newChild);
+    child_items.insert(QPair<int,int>(row,col),newChild);
 	return newChild;
 }
 
