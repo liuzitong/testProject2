@@ -29,7 +29,7 @@ class USBDEV_HIDDEN ConfigPriv : public PImplPrivTemp<ConfigPriv > {
 private:
     quint32                             m_crc_veryfication,
                                         m_device_ID;
-    quint16                             m_center_fixation_lamp_DA,
+    qint16                              m_center_fixation_lamp_DA,
                                         m_big_diamond_fixation_lamp_DA[4],
                                         m_small_diamond_fixation_lamp_DA[4],
                                         m_yellow_background_lamp_DA,
@@ -65,16 +65,16 @@ public :
     virtual ~ConfigPriv( ) Q_DECL_OVERRIDE;
     inline auto crcVeryficationRef( )                               -> quint32&     {return m_crc_veryfication;}
     inline auto deviceIDRef( )                                      -> quint32&     {return m_device_ID;}
-    inline auto centerFixationLampDARef()                           -> quint16&     {return m_center_fixation_lamp_DA;}
-    inline auto bigDiamondfixationLampDAPtr()                       -> quint16*     {return m_big_diamond_fixation_lamp_DA;}
-    inline auto smallDiamondFixationLampDAPtr()                     -> quint16*     {return m_small_diamond_fixation_lamp_DA;}
-    inline auto yellowBackgroundLampDARef()                         -> quint16&     {return m_yellow_background_lamp_DA;}
-    inline auto whiteBackgroundLampDAPtr()                          -> quint16*     {return m_white_background_lamp_DA;}
-    inline auto centerInfraredLampDARef()                           -> quint16&     {return m_center_fixation_lamp_DA;}
-    inline auto borderInfraredLampDARef()                           -> quint16&     {return m_border_infrared_lamp_DA;}
-    inline auto eyeglassFrameLampDARef()                            -> quint16&     {return m_eyeglass_frame_lamp_DA;}
-    inline auto environmentAlarmLightDAPtr()                        -> quint16*     {return m_environment_light_alarm_DA;}
-    inline auto pupilGreyThresholdDAPtr()                           -> quint16*     {return m_pupil_grey_threshold_DA;}
+    inline auto centerFixationLampDARef()                           -> qint16&     {return m_center_fixation_lamp_DA;}
+    inline auto bigDiamondfixationLampDAPtr()                       -> qint16*     {return m_big_diamond_fixation_lamp_DA;}
+    inline auto smallDiamondFixationLampDAPtr()                     -> qint16*     {return m_small_diamond_fixation_lamp_DA;}
+    inline auto yellowBackgroundLampDARef()                         -> qint16&     {return m_yellow_background_lamp_DA;}
+    inline auto whiteBackgroundLampDAPtr()                          -> qint16*     {return m_white_background_lamp_DA;}
+    inline auto centerInfraredLampDARef()                           -> qint16&     {return m_center_fixation_lamp_DA;}
+    inline auto borderInfraredLampDARef()                           -> qint16&     {return m_border_infrared_lamp_DA;}
+    inline auto eyeglassFrameLampDARef()                            -> qint16&     {return m_eyeglass_frame_lamp_DA;}
+    inline auto environmentAlarmLightDAPtr()                        -> qint16*     {return m_environment_light_alarm_DA;}
+    inline auto pupilGreyThresholdDAPtr()                           -> qint16*     {return m_pupil_grey_threshold_DA;}
     inline auto switchColorMotorPosPtr()                            -> int*         {return m_switch_color_motor_Pos;}
     inline auto switchLightSpotMotorPosPtr()                        -> int*         {return m_switch_light_spot_Pos;}
     inline auto focusPosForSpotAndColorChangeRef()                  -> qint32&      {return m_focus_Pos_for_sport_and_color_change;}
@@ -198,7 +198,7 @@ Config :: Config ( )
 {
     gRegInQt();
     ConfigPriv::buildIfNull( & m_obj );
-    memset(dataPtr(),0,dataLen());
+    memset(dataPtr(),-1,dataLen());
     printf("%p",m_obj);
 }
 
@@ -292,34 +292,34 @@ quint32&       Config :: crcVeryficationRef()
 quint32&       Config :: deviceIDRef()
 { return T_PrivPtr( m_obj )->deviceIDRef(); }
 
-quint16&       Config :: centerFixationLampDARef()
+qint16&       Config :: centerFixationLampDARef()
 { return  T_PrivPtr( m_obj )->centerFixationLampDARef(); }
 
-quint16*       Config :: bigDiamondfixationLampDAPtr()
+qint16*       Config :: bigDiamondfixationLampDAPtr()
 { return T_PrivPtr( m_obj )->bigDiamondfixationLampDAPtr(); }
 
-quint16*       Config :: smallDiamondFixationLampDAPtr()
+qint16*       Config :: smallDiamondFixationLampDAPtr()
 { return T_PrivPtr( m_obj )->smallDiamondFixationLampDAPtr(); }
 
-quint16&       Config :: yellowBackgroundLampDARef()
+qint16&       Config :: yellowBackgroundLampDARef()
 { return  T_PrivPtr( m_obj )->yellowBackgroundLampDARef(); }
 
-quint16*          Config :: whiteBackgroundLampDAPtr()
+qint16*          Config :: whiteBackgroundLampDAPtr()
 { return T_PrivPtr( m_obj )->whiteBackgroundLampDAPtr(); }
 
-quint16&       Config :: centerInfraredLampDARef()
+qint16&       Config :: centerInfraredLampDARef()
 { return  T_PrivPtr( m_obj )->centerInfraredLampDARef(); }
 
-quint16&       Config :: borderInfraredLampDARef()
+qint16&       Config :: borderInfraredLampDARef()
 { return T_PrivPtr( m_obj )->borderInfraredLampDARef(); }
 
-quint16&       Config :: eyeglassFrameLampDARef()
+qint16&       Config :: eyeglassFrameLampDARef()
 { return  T_PrivPtr( m_obj )->eyeglassFrameLampDARef(); }
 
-quint16*          Config :: environmentAlarmLightDAPtr()
+qint16*          Config :: environmentAlarmLightDAPtr()
 { return T_PrivPtr( m_obj )->environmentAlarmLightDAPtr(); }
 
-quint16*        Config::pupilGreyThresholdDAPtr()
+qint16*        Config::pupilGreyThresholdDAPtr()
 { return T_PrivPtr( m_obj )->pupilGreyThresholdDAPtr(); }
 
 int*          Config :: switchColorMotorPosPtr()

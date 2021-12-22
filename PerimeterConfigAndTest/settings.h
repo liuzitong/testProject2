@@ -18,7 +18,6 @@ public:
     QString m_VID,m_PID;
     QJsonObject m_rootObj;
     QList<QPair<QString,int>> m_colorToSlot,m_spotSizeToSlot;
-    QList<DotInfo> m_dotInfoList,m_secondaryDotInfoList;
     LocalTableData m_localTableData;
     QString localConfig,localData;
     void Write();

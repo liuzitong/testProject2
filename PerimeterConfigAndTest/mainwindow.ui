@@ -738,12 +738,27 @@
               <string>电机复位</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_15">
+              <property name="spacing">
+               <number>3</number>
+              </property>
+              <property name="leftMargin">
+               <number>5</number>
+              </property>
+              <property name="topMargin">
+               <number>5</number>
+              </property>
+              <property name="rightMargin">
+               <number>5</number>
+              </property>
+              <property name="bottomMargin">
+               <number>5</number>
+              </property>
               <item>
                <layout class="QGridLayout" name="gridLayout">
                 <item row="0" column="0">
                  <widget class="QRadioButton" name="radioButton_xMotor">
                   <property name="text">
-                   <string>x电机</string>
+                   <string>X电机</string>
                   </property>
                  </widget>
                 </item>
@@ -771,7 +786,7 @@
                 <item row="1" column="0">
                  <widget class="QRadioButton" name="radioButton_yMotor">
                   <property name="text">
-                   <string>y电机</string>
+                   <string>Y电机</string>
                   </property>
                  </widget>
                 </item>
@@ -872,7 +887,7 @@
               <item row="0" column="0">
                <widget class="QLabel" name="label_47">
                 <property name="text">
-                 <string>x电机:</string>
+                 <string>X电机:</string>
                 </property>
                </widget>
               </item>
@@ -928,7 +943,7 @@
               <item row="1" column="0">
                <widget class="QLabel" name="label_57">
                 <property name="text">
-                 <string>y电机;</string>
+                 <string>Y电机;</string>
                 </property>
                </widget>
               </item>
@@ -2137,13 +2152,6 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="1" column="4">
-                   <widget class="QLabel" name="label_44">
-                    <property name="text">
-                     <string>步数:</string>
-                    </property>
-                   </widget>
-                  </item>
                   <item row="1" column="0">
                    <widget class="QLabel" name="label_42">
                     <property name="minimumSize">
@@ -2174,16 +2182,6 @@
                     <property name="maximumSize">
                      <size>
                       <width>60</width>
-                      <height>16777215</height>
-                     </size>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="5">
-                   <widget class="QLineEdit" name="lineEdit_stepCount">
-                    <property name="maximumSize">
-                     <size>
-                      <width>50</width>
                       <height>16777215</height>
                      </size>
                     </property>
@@ -2243,7 +2241,7 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="1" column="6">
+                  <item row="1" column="4" colspan="3">
                    <spacer name="horizontalSpacer_8">
                     <property name="orientation">
                      <enum>Qt::Horizontal</enum>
@@ -2345,7 +2343,7 @@
                   <item>
                    <widget class="QCheckBox" name="checkBox_autoCalcFocalDist">
                     <property name="text">
-                     <string>根据x,y坐标自动计算</string>
+                     <string>根据X,Y坐标自动计算</string>
                     </property>
                     <property name="checked">
                      <bool>true</bool>
@@ -2522,7 +2520,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="pushButton_testStart_2">
+                 <widget class="QPushButton" name="pushButton_readCache">
                   <property name="text">
                    <string>读取缓存</string>
                   </property>

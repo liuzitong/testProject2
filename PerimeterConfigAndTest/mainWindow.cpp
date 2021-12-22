@@ -25,6 +25,8 @@
 #include <QDir>
 
 
+
+
 #pragma execution_character_set("utf-8")
 // 不能删
 static std::shared_ptr<spdlog::logger> logger=spdlog::get("logger");
@@ -104,7 +106,6 @@ void MainWindow::initTable()
     ui->tableView_colorSlotPos->setCornerName("颜色");
     ui->tableView_colorSlotPos->verticalHeader()->setVisible(true);
 
-
     m_spotPosTableModel=new TableModel();
     m_spotPosTableModel->m_column=1;
     m_spotPosTableModel->m_row=8;
@@ -160,7 +161,6 @@ void MainWindow::initTable()
     m_speedStepTimeTableModel->m_hozHeader<<"时间";
     for(int i=1;i<=7;i++){m_speedStepTimeTableModel->m_vertHeader<<QString::number(i);}
     m_speedStepTimeTableModel->m_modelData=m_config.stepTimePtr();
-//    m_speedStepTimeTableModel->m_modelData=m_config.switchColorMotorPosPtr();
     ui->tableView_speedStepTimeTable->setModel(m_speedStepTimeTableModel);
     ui->tableView_speedStepTimeTable->setCornerName("速度");
     ui->tableView_speedStepTimeTable->verticalHeader()->setVisible(true);
@@ -266,25 +266,25 @@ void MainWindow::refreshConfigDataByUI()
     bool ok;
     m_config.deviceIDRef()=ui->lineEdit_deviceSerialNo->text().toInt(&ok);                              //if(!ok) return;
     m_config.centerFixationLampDARef()=ui->lineEdit_centralLightDA->text().toInt(&ok);                  //if(!ok) return;
-    m_config.bigDiamondfixationLampDAPtr()[0]=ui->lineEdit_bigDiamond1DA->text().toInt(&ok);            //if(!ok) return;
-    m_config.bigDiamondfixationLampDAPtr()[1]=ui->lineEdit_bigDiamond2DA->text().toInt(&ok);            //if(!ok) return;
-    m_config.bigDiamondfixationLampDAPtr()[2]=ui->lineEdit_bigDiamond3DA->text().toInt(&ok);            //if(!ok) return;
-    m_config.bigDiamondfixationLampDAPtr()[3]=ui->lineEdit_bigDiamond4DA->text().toInt(&ok);            //if(!ok) return;
-    m_config.smallDiamondFixationLampDAPtr()[0]=ui->lineEdit_smallDiamond1DA->text().toInt(&ok);        //if(!ok) return;
-    m_config.smallDiamondFixationLampDAPtr()[1]=ui->lineEdit_smallDiamond2DA->text().toInt(&ok);        //if(!ok) return;
-    m_config.smallDiamondFixationLampDAPtr()[2]=ui->lineEdit_smallDiamond3DA->text().toInt(&ok);        //if(!ok) return;
-    m_config.smallDiamondFixationLampDAPtr()[3]=ui->lineEdit_smallDiamond4DA->text().toInt(&ok);        //if(!ok) return;
-    m_config.yellowBackgroundLampDARef()=ui->lineEdit_yellowBackGroundLampDa->text().toInt(&ok);        //if(!ok) return;
-    m_config.whiteBackgroundLampDAPtr()[0]=ui->lineEdit_whiteBackGroundLampR->text().toInt(&ok);        //if(!ok) return;
-    m_config.whiteBackgroundLampDAPtr()[1]=ui->lineEdit_whiteBackGroundLampG->text().toInt(&ok);        //if(!ok) return;
-    m_config.whiteBackgroundLampDAPtr()[2]=ui->lineEdit_whiteBackGroundLampB->text().toInt(&ok);        //if(!ok) return;
-    m_config.centerInfraredLampDARef()=ui->lineEdit_centerInfraredLampDA->text().toInt(&ok);            //if(!ok) return;
-    m_config.borderInfraredLampDARef()=ui->lineEdit_borderLampDA->text().toInt(&ok);                    //if(!ok) return;
-    m_config.eyeglassFrameLampDARef()=ui->lineEdit_eyeGlassLampDa->text().toInt(&ok);                   //if(!ok) return;
-    m_config.environmentAlarmLightDAPtr()[0]=ui->lineEdit_whiteLampEnvLightAlarm->text().toInt(&ok);
-    m_config.environmentAlarmLightDAPtr()[1]=ui->lineEdit_yellowLampEnvLightAlarm->text().toInt(&ok);
-    m_config.pupilGreyThresholdDAPtr()[0]=ui->lineEdit_whiteLampPupilGray->text().toInt(&ok);
-    m_config.pupilGreyThresholdDAPtr()[1]=ui->lineEdit_yellowLampPupilGray->text().toInt(&ok);
+    m_config.bigDiamondfixationLampDAPtr()[0]=ui->lineEdit_bigDiamond1DA->text().toShort(&ok);            //if(!ok) return;
+    m_config.bigDiamondfixationLampDAPtr()[1]=ui->lineEdit_bigDiamond2DA->text().toShort(&ok);            //if(!ok) return;
+    m_config.bigDiamondfixationLampDAPtr()[2]=ui->lineEdit_bigDiamond3DA->text().toShort(&ok);            //if(!ok) return;
+    m_config.bigDiamondfixationLampDAPtr()[3]=ui->lineEdit_bigDiamond4DA->text().toShort(&ok);            //if(!ok) return;
+    m_config.smallDiamondFixationLampDAPtr()[0]=ui->lineEdit_smallDiamond1DA->text().toShort(&ok);        //if(!ok) return;
+    m_config.smallDiamondFixationLampDAPtr()[1]=ui->lineEdit_smallDiamond2DA->text().toShort(&ok);        //if(!ok) return;
+    m_config.smallDiamondFixationLampDAPtr()[2]=ui->lineEdit_smallDiamond3DA->text().toShort(&ok);        //if(!ok) return;
+    m_config.smallDiamondFixationLampDAPtr()[3]=ui->lineEdit_smallDiamond4DA->text().toShort(&ok);        //if(!ok) return;
+    m_config.yellowBackgroundLampDARef()=ui->lineEdit_yellowBackGroundLampDa->text().toShort(&ok);        //if(!ok) return;
+    m_config.whiteBackgroundLampDAPtr()[0]=ui->lineEdit_whiteBackGroundLampR->text().toShort(&ok);        //if(!ok) return;
+    m_config.whiteBackgroundLampDAPtr()[1]=ui->lineEdit_whiteBackGroundLampG->text().toShort(&ok);        //if(!ok) return;
+    m_config.whiteBackgroundLampDAPtr()[2]=ui->lineEdit_whiteBackGroundLampB->text().toShort(&ok);        //if(!ok) return;
+    m_config.centerInfraredLampDARef()=ui->lineEdit_centerInfraredLampDA->text().toShort(&ok);            //if(!ok) return;
+    m_config.borderInfraredLampDARef()=ui->lineEdit_borderLampDA->text().toShort(&ok);                    //if(!ok) return;
+    m_config.eyeglassFrameLampDARef()=ui->lineEdit_eyeGlassLampDa->text().toShort(&ok);                   //if(!ok) return;
+    m_config.environmentAlarmLightDAPtr()[0]=ui->lineEdit_whiteLampEnvLightAlarm->text().toShort(&ok);
+    m_config.environmentAlarmLightDAPtr()[1]=ui->lineEdit_yellowLampEnvLightAlarm->text().toShort(&ok);
+    m_config.pupilGreyThresholdDAPtr()[0]=ui->lineEdit_whiteLampPupilGray->text().toShort(&ok);
+    m_config.pupilGreyThresholdDAPtr()[1]=ui->lineEdit_yellowLampPupilGray->text().toShort(&ok);
     m_config.focusPosForSpotAndColorChangeRef()=ui->lineEdit_focusUnite->text().toInt(&ok);
     m_config.shutterOpenPosRef()=ui->lineEdit_shutterOpen->text().toInt(&ok);
     m_config.mainTableCenterXRef()=ui->lineEdit_centerX->text().toInt(&ok);
@@ -487,33 +487,33 @@ void MainWindow::on_pushButton_testStart_clicked()
             float coordX=ui->lineEdit_coordX->text().toFloat();
             float coordY=ui->lineEdit_coordY->text().toFloat();
             int sps=ui->spinBox_speedLightDot->text().toInt();
-            DotInfo dot;dot.coordX=coordX;dot.coordY=coordY;
-            if(!getXYMotorPosAndFocalDistFromCoord(dot)) return;
+            CoordSpacePosInfo coordSpacePosInfo{coordX,coordY};
+            CoordMotorPosFocalDistInfo coordMotorPosFocalDistInfo;
+            if(!getXYMotorPosAndFocalDistFromCoord(coordSpacePosInfo,coordMotorPosFocalDistInfo)) return;
             if(!ui->checkBox_autoCalcFocalDist->isChecked())
             {
-                dot.focalDistance=ui->lineEdit_settingFocal->text().toInt();
+                coordMotorPosFocalDistInfo.focalDist=ui->lineEdit_settingFocal->text().toInt();
             }
             else{
-//                ui->lineEdit_settingFocal->setText(QString(dot.focalDistance));
+                ui->lineEdit_settingFocal->setText(QString::number(coordMotorPosFocalDistInfo.focalDist));
             }
-            staticCastTest(dot,spotSlot,colorSlot,db,sps,durationTime,shutterPos);
+            staticCastTest(coordMotorPosFocalDistInfo,spotSlot,colorSlot,db,sps,durationTime,shutterPos);
             break;
         }
         case 1:
         {
-            DotInfo dotBegin,dotEnd;
+            CoordSpacePosInfo dotBegin,dotEnd;
             dotBegin.coordX=ui->lineEdit_beginCoordX->text().toInt();
             dotBegin.coordY=ui->lineEdit_beginCoordY->text().toInt();
             dotEnd.coordX=ui->lineEdit_endCoordX->text().toInt();
             dotEnd.coordY=ui->lineEdit_endCoordY->text().toInt();
-            getXYMotorPosAndFocalDistFromCoord(dotBegin);
-            getXYMotorPosAndFocalDistFromCoord(dotEnd);
+
             quint8 db=ui->spinBox_settingDb->text().toInt();
             int sps=ui->spinBox_speedLightMove->text().toInt();
-            int stepCount=ui->lineEdit_stepCount->text().toInt();
+            int stepLength=ui->lineEdit_stepLength->text().toInt();
             int spotSlot=ui->spinBox_spotSlot->value();
             int colorSlot=ui->spinBox_colorSlot->value();
-            moveCastTest(dotBegin,dotEnd,spotSlot,colorSlot,stepCount,db,sps);
+            moveCastTest(dotBegin,dotEnd,spotSlot,colorSlot,stepLength,db,sps);
             break;
         }
     }
@@ -630,15 +630,12 @@ void MainWindow::on_action_chooseDevice_triggered()
 
 void MainWindow::on_tabWidget_currentChanged(int index)
 {
-    QDesktopWidget *desktop = QApplication::desktop();
-
     if(index==2||index==3)
     {
         int width = GetSystemMetrics(SM_CXFULLSCREEN);
         int height = GetSystemMetrics(SM_CYFULLSCREEN);
         setMinimumSize(0, 0);
         setMaximumSize(width,height);
-//       this->showMaximized();
     }
     else{
         showNormal();
@@ -683,11 +680,6 @@ void MainWindow::on_action_saveLocalData_triggered()
     QFile file(filePath);
     if(file.open(QIODevice::WriteOnly))
     {
-//        int* dataPtr=new int[MotorPosTable::columnCount*MotorPosTable::rowCount*3*2];
-//        int* mainTableData=ui->tableView_mainMotorPosTable->m_tableModel->m_modelData;
-//        int* secondaryTableData=ui->tableView_secondaryPosTable->m_tableModel->m_modelData;
-//        memcpy(dataPtr,mainTableData,MotorPosTable::columnCount*MotorPosTable::rowCount*3*sizeof(int));
-//        memcpy(dataPtr+MotorPosTable::columnCount*MotorPosTable::rowCount*3,secondaryTableData,MotorPosTable::columnCount*MotorPosTable::rowCount*3*sizeof(int));
         char* destPtr=(char*)m_settings.m_localTableData.m_data;
         int dateLen=m_settings.m_localTableData.dataLen;
         file.write(destPtr,dateLen*sizeof(int));
@@ -741,49 +733,45 @@ void MainWindow::readLocalConfig(QString filePath)
 
 void MainWindow::on_action_updateConfigToLower_triggered()
 {
-
+    m_devCtl->saveConfig(m_config);
 }
 
 void MainWindow::on_action_downloadConfig_triggered()
 {
-
+    memcpy(m_config.dataPtr(),m_devCtl->config().dataPtr(),m_config.dataLen());
+    refreshConfigUI();
 }
 
-//void MainWindow::on_action_SaveDBAngelDamping_triggered()
-//{
-//    QString filePath = QFileDialog::getSaveFileName(this,"打开文件",QDir::currentPath()+R"(/data/)",tr("(*.dat)"));
-//    QFile file(filePath);
-//    if(m_dbAngleDampingTableModel->m_modelData)
-//    {
-//        if(file.open(QIODevice::WriteOnly))
-//        {
-//            file.write((char*)m_dbAngleDampingTableModel->m_modelData,m_dbAngleDampingTableModel->m_column*m_dbAngleDampingTableModel->m_row*sizeof(int));
-//        }
-//    }
-//}
+void MainWindow::on_pushButton_readCache_clicked()
+{
 
-//void MainWindow::on_action_loadDBAngleDamping_triggered()
-//{
-//    QString filePath=QFileDialog::getOpenFileName(this,"打开文件",QDir::currentPath()+R"(/data/)",tr("(*.dat)"));
-//    qDebug()<<filePath;
-//    QFile file(filePath);
-//    if(file.exists())
-//    {
-//        if(file.open(QIODevice::ReadOnly))
-//        {
-//            QByteArray data=file.readAll();
-//            int length=m_dbAngleDampingTableModel->m_column*m_dbAngleDampingTableModel->m_row*sizeof(int);
-//            if(data.length()!=length)
-//            {
-//                qDebug()<<"length wrong:"<<data.length();
-//                return;
-//            }
-//            memcpy(m_dbAngleDampingTableModel->m_modelData,data,length);
-//        }
-//        file.flush();
-//        file.close();
-//    }
-//}
+    if(ui->comboBox_testFucntion->currentIndex()==0)
+    {
+        UsbDev::StaticCache* staticCache= m_devCtl->readStaticCache();
+        if(staticCache==Q_NULLPTR) return;
+        for(int i=0;i<3;i++)
+        {
+            auto v=staticCache[i];
+            showDevInfo(QString("缓存序号:%1.").arg(i));
+            showDevInfo(QString("刺激点编号:%1.X电机位置:%2.Y电机位置:%3."
+                                "快门打开时间:%4.应答器按下时间:%5.应答器松开时间:%6.\n")
+                        .arg(v.stimulateDotSerialNumber).arg(v.motorPosX).arg(v.motorPosY).
+                        arg(v.shutterTime).arg(v.answerPadPressedTime).arg(v.answerPadRealeasedTime));
+        }
+
+    }
+    else
+    {
+        UsbDev::MoveCache* moveCache=m_devCtl->readMoveCache();
+        if(moveCache==Q_NULLPTR) return;
+        for(int i=0;i<3;i++)
+        {
+            auto v=moveCache[i];
+            showDevInfo(QString("缓存序号:%1.").arg(i));
+            showDevInfo(QString(R"(刺激点编号:%1.X电机位置:%2.Y电机位置:%3.)").arg(v.stimulateDotSerialNumber).arg(v.motorPosX).arg(v.motorPosY));
+        }
+    }
+}
 
 
 
@@ -866,53 +854,49 @@ void MainWindow::move5Motors(UsbDev::DevCtl::MoveMethod method)
     m_devCtl->move5Motors(speed,value,method);
 }
 
-bool MainWindow::getXYMotorPosAndFocalDistFromCoord(DotInfo& dotInfo)
+bool MainWindow::getXYMotorPosAndFocalDistFromCoord(const CoordSpacePosInfo& coordSpacePosInfo,CoordMotorPosFocalDistInfo& coordMotorPosFocalDistInfo)
 {
     static bool isMainDotInfoTable=true;
-    int x1=floor(dotInfo.coordX/6.0f)*6;int x2=ceil(dotInfo.coordX/6.0f)*6;
-    int y1=floor(dotInfo.coordY/6.0f)*6;int y2=ceil(dotInfo.coordY/6.0f)*6;
-    DotInfo fourDots[4];
-    int count = 0;
-    for(auto& v:(isMainDotInfoTable?m_settings.m_dotInfoList:m_settings.m_secondaryDotInfoList))
+    int x1=floor(coordSpacePosInfo.coordX/6.0f)*6;int x2=ceil(coordSpacePosInfo.coordX/6.0f)*6;
+    int y1=floor(coordSpacePosInfo.coordY/6.0f)*6;int y2=ceil(coordSpacePosInfo.coordY/6.0f)*6;
+    auto data=m_settings.m_localTableData;
+    SingleTableData tableData;
+    isMainDotInfoTable?tableData=data.m_mainPosTableData:tableData=data.m_secondaryPosTableData;
+    CoordMotorPosFocalDistInfo fourDots[4]
     {
-        if((v.coordX==x1)&&(v.coordY==y1)) {fourDots[0]=v;count++;}
-        if((v.coordX==x2)&&(v.coordY==y1)) {fourDots[0]=v;count++;}
-        if((v.coordX==x1)&&(v.coordY==y2)) {fourDots[0]=v;count++;}
-        if((v.coordX==x2)&&(v.coordY==y2)) {fourDots[0]=v;count++;}
-    }
-    if(count != 4)          //找不到就切换到表
+        {tableData(x1*3,y1),tableData(x1*3+1,y1),tableData(x1*3+2,y1)},
+        {tableData(x2*3,y1),tableData(x2*3+1,y1),tableData(x2*3+2,y1)},
+        {tableData(x1*3,y2),tableData(x1*3+1,y2),tableData(x1*3+2,y2)},
+        {tableData(x2*3,y2),tableData(x2*3+1,y2),tableData(x2*3+2,y2)},
+    };
+    if(!((fourDots[0].motorX!=-1)&&(fourDots[1].motorX!=-1)&&(fourDots[2].motorX!=-1)&&(fourDots[3].motorX!=-1)))
     {
-        count=0;
-        for(auto& v:(isMainDotInfoTable?m_settings.m_secondaryDotInfoList:m_settings.m_dotInfoList))
-        {
-            if((v.coordX==x1)&&(v.coordY==y1)) {fourDots[0]=v;count++;}
-            if((v.coordX==x2)&&(v.coordY==y1)) {fourDots[0]=v;count++;}
-            if((v.coordX==x1)&&(v.coordY==y2)) {fourDots[0]=v;count++;}
-            if((v.coordX==x2)&&(v.coordY==y2)) {fourDots[0]=v;count++;}
-        }
-        if(count==4)
-        {
-             isMainDotInfoTable=!isMainDotInfoTable;    //记录当前表
-        }
-        else
+        isMainDotInfoTable=!isMainDotInfoTable;
+        isMainDotInfoTable?tableData=data.m_mainPosTableData:tableData=data.m_secondaryPosTableData;
+        fourDots[0]={tableData(x1*3,y1),tableData(x1*3+1,y1),tableData(x1*3+2,y1)};
+        fourDots[1]={tableData(x2*3,y1),tableData(x2*3+1,y1),tableData(x2*3+2,y1)};
+        fourDots[2]={tableData(x1*3,y2),tableData(x1*3+1,y2),tableData(x1*3+2,y2)};
+        fourDots[3]={tableData(x2*3,y2),tableData(x2*3+1,y2),tableData(x2*3+2,y2)};
+        if(!((fourDots[0].motorX=!-1)||(fourDots[1].motorX=-1)||(fourDots[2].motorX=-1)||(fourDots[3].motorX=-1)))
         {
             showDevInfo("point is out of range!");
+            isMainDotInfoTable=!isMainDotInfoTable;
             return false;
         }
     }
 
-    QPoint loc(dotInfo.coordX-fourDots[0].coordX,dotInfo.coordY-fourDots[0].coordY);
+    QPoint loc(coordSpacePosInfo.coordX-x1,coordSpacePosInfo.coordY-y1);
     int arr[4];
-    for(unsigned int i=0;i<sizeof(arr)/sizeof(int);i++) {arr[i]=fourDots[i].motorXPos;}
-    dotInfo.motorXPos=interpolation(arr,loc);
-    for(unsigned int i=0;i<sizeof(arr)/sizeof(int);i++) {arr[i]=fourDots[i].motorYPos;}
-    dotInfo.motorYPos=interpolation(arr,loc);
-    for(unsigned int i=0;i<sizeof(arr)/sizeof(int);i++) {arr[i]=fourDots[i].focalDistance;}
-    dotInfo.focalDistance=interpolation(arr,loc);
+    for(unsigned int i=0;i<sizeof(arr)/sizeof(int);i++) {arr[i]=fourDots[i].motorX;}
+    coordMotorPosFocalDistInfo.motorX=interpolation(arr,loc);
+    for(unsigned int i=0;i<sizeof(arr)/sizeof(int);i++) {arr[i]=fourDots[i].motorY;}
+    coordMotorPosFocalDistInfo.motorY=interpolation(arr,loc);
+    for(unsigned int i=0;i<sizeof(arr)/sizeof(int);i++) {arr[i]=fourDots[i].focalDist;}
+    coordMotorPosFocalDistInfo.focalDist=interpolation(arr,loc);
     return true;
 }
 
-void MainWindow::staticCastTest(DotInfo dot,int spotSlot ,int colorSlot,int db,int sps,int durationTime,int shutterPos)
+void MainWindow::staticCastTest(const CoordMotorPosFocalDistInfo& coordMotorPosFocalDistInfo,int spotSlot ,int colorSlot,int db,int sps,int durationTime,int shutterPos)
 {
     if(m_config.isEmpty()) {showDevInfo("empty config"); return;}
     while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_X)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Y)||
@@ -931,53 +915,61 @@ void MainWindow::staticCastTest(DotInfo dot,int spotSlot ,int colorSlot,int db,i
     }
 
     //调整颜色和光斑
-    QTime time;
-    time.start();
     memset(spsArr,0,sizeof(spsArr));
     memset(posArr,0,sizeof(posArr));
     spsArr[3]=sps;spsArr[4]=sps;
     posArr[3]=m_config.switchColorMotorPosPtr()[colorSlot];
-    posArr[4]=m_config.switchColorMotorPosPtr()[spotSlot];
+    posArr[4]=m_config.switchLightSpotMotorPosPtr()[spotSlot];
 
-    while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus)||(time.elapsed()<10))
+    while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus))
     {QCoreApplication::processEvents();}
-
     m_devCtl->move5Motors(spsArr,posArr);
 
     //调整焦距
-    time.restart();
     memset(spsArr,0,sizeof(spsArr));
     memset(posArr,0,sizeof(posArr));
     spsArr[2]=sps;
-    posArr[2]=getFocusMotorPosByDist(dot.focalDistance,spotSlot);
-    while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Color)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Light_Spot)||(time.elapsed()<10))
+    posArr[2]=getFocusMotorPosByDist(coordMotorPosFocalDistInfo.focalDist,spotSlot);
+    while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Color)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Light_Spot))
     {QCoreApplication::processEvents();}
     m_devCtl->move5Motors(spsArr,posArr);
 
     //调整DB同时移动到指定位置
-    time.restart();
     memset(spsArr,0,sizeof(spsArr));
     memset(posArr,0,sizeof(posArr));
     spsArr[0]=spsArr[1]=spsArr[3]=spsArr[4]=sps;
-    posArr[0]=dot.motorXPos;
-    posArr[1]=dot.motorYPos;
+    posArr[0]=coordMotorPosFocalDistInfo.motorX;
+    posArr[1]=coordMotorPosFocalDistInfo.motorY;
     posArr[3]=m_config.DbPosMappingPtr()[db][0];
     posArr[4]=m_config.DbPosMappingPtr()[db][1];
-    while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus)||(time.elapsed()<10))
+    while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus))
     {QCoreApplication::processEvents();}
     m_devCtl->move5Motors(spsArr,posArr);
 
     //打开快门
-    time.restart();
     ui->checkBox_useConfigPos->isChecked()?shutterPos=ui->lineEdit_shutterPos->text().toInt():shutterPos=m_config.shutterOpenPosRef();
     while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_X)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Y)||
-          m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Color)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Light_Spot)||(time.elapsed()<10))
+          m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Color)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Light_Spot))
     {QCoreApplication::processEvents();}
     m_devCtl->openShutter(durationTime,shutterPos);
 }
 
-void MainWindow::moveCastTest(DotInfo dotBegin,DotInfo dotEnd,int spotSlot ,int colorSlot,int stepAngle,int db,int sps)
+void MainWindow::moveCastTest(const CoordSpacePosInfo& dotSpaceBegin,const CoordSpacePosInfo& dotSpaceEnd,int spotSlot ,int colorSlot,int stepLength,int db,int sps)
 {
+
+    CoordMotorPosFocalDistInfo dotMotorBegin,dotMotorEnd;
+    if(getXYMotorPosAndFocalDistFromCoord(dotSpaceBegin,dotMotorBegin))
+    {
+        showDevInfo("begin coord out of range.");
+        return;
+    }
+    if(getXYMotorPosAndFocalDistFromCoord(dotSpaceBegin,dotMotorEnd))
+    {
+        showDevInfo("end coord out of range.");
+        return;
+    }
+
+
     if(m_config.isEmpty()) {showDevInfo("empty config"); return;}
     while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_X)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Y)||
           m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Color)||
@@ -995,61 +987,59 @@ void MainWindow::moveCastTest(DotInfo dotBegin,DotInfo dotEnd,int spotSlot ,int 
     }
 
     //调整颜色和光斑
-    QTime time;
-    time.start();
     memset(spsArr,0,sizeof(spsArr));
     memset(posArr,0,sizeof(posArr));
     spsArr[3]=sps;spsArr[4]=sps;
     posArr[3]=m_config.switchColorMotorPosPtr()[colorSlot];
-    posArr[4]=m_config.switchColorMotorPosPtr()[spotSlot];
+    posArr[4]=m_config.switchLightSpotMotorPosPtr()[spotSlot];
 
-    while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus)||(time.elapsed()<10))
+    while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus))
     {QCoreApplication::processEvents();}
     m_devCtl->move5Motors(spsArr,posArr);
 
+
     //调整焦距
-    time.restart();
     memset(spsArr,0,sizeof(spsArr));
     memset(posArr,0,sizeof(posArr));
     spsArr[2]=sps;
-    posArr[2]=getFocusMotorPosByDist(dotBegin.focalDistance,spotSlot);
-    while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Color)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Light_Spot)||(time.elapsed()<10))
+    posArr[2]=getFocusMotorPosByDist(dotMotorBegin.focalDist,spotSlot);
+
+    while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Color)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Light_Spot))
     {QCoreApplication::processEvents();}
     m_devCtl->move5Motors(spsArr,posArr);
 
     //调整DB同时移动到指定位置
-    time.restart();
     memset(spsArr,0,sizeof(spsArr));
     memset(posArr,0,sizeof(posArr));
     spsArr[0]=spsArr[1]=spsArr[3]=spsArr[4]=sps;
-    posArr[0]=dotBegin.motorXPos;
-    posArr[1]=dotBegin.motorYPos;
+    posArr[0]=dotMotorBegin.motorX;
+    posArr[1]=dotMotorBegin.motorY;
     posArr[3]=m_config.DbPosMappingPtr()[db][0];
     posArr[4]=m_config.DbPosMappingPtr()[db][1];
-    while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus)||(time.elapsed()<10))
+    while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus))
     {QCoreApplication::processEvents();}
     m_devCtl->move5Motors(spsArr,posArr);
 
 
-    float stepAngleX,stepAngleY;
+    float stepLengthX,stepLengthY;
+    int distX=dotSpaceBegin.coordX-dotSpaceEnd.coordX;
+    int distY=dotSpaceBegin.coordY-dotSpaceEnd.coordY;
     int stepCount;
-    int AngleX=dotBegin.coordX-dotEnd.coordX;
-    int AngleY=dotBegin.coordY-dotEnd.coordY;
-    if(std::abs(AngleX)>std::abs(AngleY))
+    if(std::abs(distX)>std::abs(distY))
     {
-        stepAngleX=stepAngle;
-        stepCount=AngleX/stepAngle;
-        stepAngleY=AngleY/stepCount;
+        stepLengthX=stepLength;
+        stepCount=distX/stepLength;
+        stepLengthY=distY/stepCount;
     }
 
     else
     {
-        stepAngleY=stepAngle;
-        stepCount=AngleY/stepAngle;
-        stepAngleX=AngleX/stepCount;
+        stepLengthY=stepLength;
+        stepCount=distY/stepLength;
+        stepLengthX=distX/stepCount;
     }
 
-    DotInfo temp=dotBegin;
+
     QSharedPointer<int> dotArr=QSharedPointer<int>(new int[stepCount*3],[](
             int* x){delete []x;std::cout<<__LINE__<<" deleter worked"<<std::endl;});
 
@@ -1077,15 +1067,17 @@ void MainWindow::moveCastTest(DotInfo dotBegin,DotInfo dotEnd,int spotSlot ,int 
 //    });
 //    while(!result._Is_ready()){QCoreApplication::processEvents();}
 
+    CoordSpacePosInfo coordSpacePosInfoTemp=dotSpaceBegin;
+    CoordMotorPosFocalDistInfo coordMotorPosFocalDistInfoTemp;
     QFuture<void> result=QtConcurrent::run([&](){
         for(int i=0;i<stepCount;i++)
         {
-            temp.coordX+=stepAngleX;
-            temp.coordY+=stepAngleY;
-            getXYMotorPosAndFocalDistFromCoord(temp);
-            dotArr.data()[i*3+0]=temp.motorXPos;
-            dotArr.data()[i*3+1]=temp.motorYPos;
-            dotArr.data()[i*3+2]=getFocusMotorPosByDist(temp.focalDistance,spotSlot);
+            coordSpacePosInfoTemp.coordX+=stepLengthX;
+            coordSpacePosInfoTemp.coordY+=stepLengthY;
+            getXYMotorPosAndFocalDistFromCoord(coordSpacePosInfoTemp,coordMotorPosFocalDistInfoTemp);
+            dotArr.data()[i*3+0]=coordMotorPosFocalDistInfoTemp.motorX;
+            dotArr.data()[i*3+1]=coordMotorPosFocalDistInfoTemp.motorY;
+            dotArr.data()[i*3+2]=getFocusMotorPosByDist(coordMotorPosFocalDistInfoTemp.focalDist,spotSlot);
         }
     });
 
@@ -1095,11 +1087,13 @@ void MainWindow::moveCastTest(DotInfo dotBegin,DotInfo dotEnd,int spotSlot ,int 
     int totalframe=ceil(stepCount/stepPerFrame);
     for(int i=0;i<totalframe-1;i++)
     {
-        m_devCtl->sendCastMoveData(totalframe,i,512,&dotArr.data()[(512-8)*i]);
+        m_devCtl->sendCastMoveData(totalframe,i,512,&dotArr.data()[stepPerFrame*i]);                        //一般帧
     }
+
+
     int dataLen= (stepCount%stepPerFrame)*12+8;
-    m_devCtl->sendCastMoveData(totalframe,totalframe-1,dataLen,&dotArr.data()[(512-8)*(totalframe-1)]);
-    m_devCtl->startCastMove(sps,sps,sps,m_config.stepTimePtr()[sps]);
+    m_devCtl->sendCastMoveData(totalframe,totalframe-1,dataLen,&dotArr.data()[(512-8)*(totalframe-1)]);     //最后一帧
+    m_devCtl->startCastMove(sps,sps,sps,m_config.stepTimePtr()[sps]);                                       //开始
 }
 
 

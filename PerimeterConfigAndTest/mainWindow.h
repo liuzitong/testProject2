@@ -7,13 +7,14 @@
 #include <usbdev/main/usbdev_framedata.hxx>
 #include <usbdev/main/usbdev_profile.hxx>
 #include <usbdev/main/usbdev_config.hxx>
+#include <usbdev/main/usbdev_cache.hxx>
 #include <QStandardItemModel>
 #include <QTimer>
 #include <QJsonObject>
 #include <Qpair>
 #include <settings.h>
 #include <table_model.h>
-
+#include <tuple>
 
 namespace Ui {
 class MainWindow;
@@ -103,6 +104,7 @@ private slots:
 
     void on_action_downloadConfig_triggered();
 
+    void on_pushButton_readCache_clicked();
 
 private:
     void initData();
@@ -110,9 +112,9 @@ private:
     void updateConfig();
     void moveChinMotors(UsbDev::DevCtl::MoveMethod);
     void move5Motors(UsbDev::DevCtl::MoveMethod);
-    bool getXYMotorPosAndFocalDistFromCoord(DotInfo& dotInfo);
-    void staticCastTest(DotInfo dotInfo,int spotSlot ,int colorSlot,int db,int sps,int durationTime,int shutterPos);
-    void moveCastTest(DotInfo dotBegin,DotInfo dotEnd,int spotSlot ,int colorSlot,int stepCount,int db,int sps);
+    bool getXYMotorPosAndFocalDistFromCoord(const CoordSpacePosInfo& coordSpacePosInfo,CoordMotorPosFocalDistInfo& coordMotorPosFocalDistInfo);
+    void staticCastTest(const CoordMotorPosFocalDistInfo& dot,int spotSlot ,int colorSlot,int db,int sps,int durationTime,int shutterPos);
+    void moveCastTest(const CoordSpacePosInfo& dotBegin,const CoordSpacePosInfo& dotEnd,int spotSlot ,int colorSlot,int stepCount,int db,int sps);
     void init();
     void uninit();
     int interpolation(int value[4],QPoint loc);

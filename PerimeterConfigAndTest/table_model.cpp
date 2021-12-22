@@ -29,7 +29,7 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
        }
        int data=m_modelData[index.row()*m_column+index.column()];
 
-       if(data==0) return "";
+       if(data==-1) return "";
        return data;
     }
     return QVariant();
@@ -44,7 +44,7 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
     if (index.isValid() && role == Qt::EditRole) {
         bool ok;
         int temp=value.toInt(&ok);
-        if(!ok) temp=0;
+        if(!ok) temp=-1;
         m_modelData[index.row()*m_column+index.column()]=temp;
         qDebug()<<index.row()<<" "<<index.column()<<" "<<temp;
         emit dataChanged(index, index, QVector<int>() << role);

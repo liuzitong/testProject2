@@ -1,6 +1,11 @@
 ﻿#ifndef USBDEV_DEVCTL_CXX
 #define USBDEV_DEVCTL_CXX
 
+#include "usbdev/main/usbdev_profile.hxx"
+#include "usbdev/main/usbdev_framedata.hxx"
+#include "usbdev/main/usbdev_statusdata.hxx"
+#include "usbdev/main/usbdev_config.hxx"
+#include "usbdev/main/usbdev_cache.hxx"
 #include "usbdev_devctl.hxx"
 #include <QThread>
 #include <QTimer>
@@ -10,16 +15,11 @@
 #include <QAtomicInt>
 #include <memory>
 #include <QByteArray>
-
 #include "nwkusbobj2.hxx"
 #include "usbdev/common/usbdev_memcntr.hxx"
 #include "qxpack/indcom/sys/qxpack_ic_rmtobjcreator_priv.hxx"
 #include "qxpack/indcom/common/qxpack_ic_queuetemp.hpp"
 #include "qxpack/indcom/sys/qxpack_ic_rmtobjsigblocker_priv.hxx"
-#include "usbdev/main/usbdev_profile.hxx"
-#include "usbdev/main/usbdev_framedata.hxx"
-#include "usbdev/main/usbdev_statusdata.hxx"
-#include "usbdev/main/usbdev_config.hxx"
 #include <spdlog/sinks/rotating_file_sink.h>
 #include <memory>
 
@@ -74,6 +74,8 @@ class USBDEV_HIDDEN DevCtl_Worker : public QObject {
 private:
     Profile m_profile;
     Config m_config;
+    StaticCache m_staticCache[3];
+    MoveCache m_moveCache[3];
     SciPack::NwkUsbObj2 *m_usb_dev;
     QElapsedTimer m_elapse_tmr;
     quint32 m_trg_cntr; quint32 m_vid_pid, m_cfg_id; bool m_is_video_on;
@@ -101,6 +103,8 @@ public :
     Q_INVOKABLE int   forceReadWorkStatus( ) { return m_wks; }  // since 0.2.1  try force check workstatus
     Q_INVOKABLE bool  cmd_ReadProfile( bool req_emit = true );
     Q_INVOKABLE bool  cmd_ReadConfig( bool req_emit = true );
+    Q_INVOKABLE StaticCache*  cmd_ReadStaticCache();
+    Q_INVOKABLE MoveCache*  cmd_ReadMoveCache();
     Q_INVOKABLE bool  cmd_ReadStatusData( );
     Q_INVOKABLE bool  cmd_ReadFrameData ( );
     Q_INVOKABLE bool  cmd_TurnOnVideo ( );
@@ -109,13 +113,14 @@ public :
     Q_INVOKABLE bool  cmd_SaveMotorCfg( int mot, const QByteArray &ba );
     Q_INVOKABLE bool  cmd_GeneralCmd( QByteArray ba  ,QString funcName,quint32 dataLen);
 
-    Q_SIGNAL void  workStatusChanged( int );
-    Q_SIGNAL void  newConfig(const UsbDev::Config &);
-    Q_SIGNAL void  newProfile   ( const UsbDev::Profile &    );
-    Q_SIGNAL void  newFrameData ( const UsbDev::FrameData &  );
-    Q_SIGNAL void  newStatusData( const UsbDev::StatusData & );
-    Q_SIGNAL void  videoStatusChanged( bool );
-    Q_SIGNAL void  updateInfo( QString );
+    Q_SIGNAL void  workStatusChanged    ( int );
+    Q_SIGNAL void  newConfig            (const UsbDev::Config &);
+    Q_SIGNAL void  newProfile           ( const UsbDev::Profile &    );
+    Q_SIGNAL void  newFrameData         ( const UsbDev::FrameData &  );
+    Q_SIGNAL void  newStatusData        ( const UsbDev::StatusData & );
+    Q_SIGNAL void  newStaticCache       ( const UsbDev::StaticCache* );
+    Q_SIGNAL void  videoStatusChanged   ( bool );
+    Q_SIGNAL void  updateInfo           ( QString );
 
 
     Q_INVOKABLE bool  cmd_readUsbEEPROM ( char *buff, int size, int eeprom_addr  ); // since 0.5
@@ -244,29 +249,93 @@ bool   DevCtl_Worker :: cmd_ReadProfile( bool req_emit )
     return ret;
 }
 
-// 读取程度设定有误需要修改
+
 // ============================================================================
 bool   DevCtl_Worker :: cmd_ReadConfig( bool req_emit )
 {
     if ( ! this->isDeviceWork()) { return false; }
-
-    unsigned char buff[512*3]={0}; bool ret = true;
+    unsigned char buffOut[512]={0}; bool ret = true;
+    unsigned char buffIn[512*3]={0};
     if ( ret ) {
-        buff[0] = 0x5a; buff[1] = 0xf1;
-        ret = this->cmdComm_bulkOutSync( buff, sizeof( buff ) );
+        buffOut[0] = 0x5a; buffOut[1] = 0xf1;
+        ret = this->cmdComm_bulkOutSync( buffOut, sizeof( buffOut ) );
         if ( ! ret ) { spdlog::warn("send read config command failed."); }
     }
     if ( ret ) {
-        ret = this->cmdComm_bulkInSync( buff, sizeof( buff ));
+        ret = this->cmdComm_bulkInSync( buffIn, sizeof( buffIn ));
         if ( ! ret ) { spdlog::warn("recv. config data failed."); }
     }
     if ( ret ) {
-        Config config( QByteArray::fromRawData( reinterpret_cast<const char*>(buff), sizeof(buff)));
+        Config config( QByteArray::fromRawData( reinterpret_cast<const char*>(buffIn), sizeof(buffIn)));
         if ( ! config.isEmpty()) { if ( req_emit ){ emit this->newConfig(config); }}
         m_config = config;
     }
 
     return ret;
+}
+
+StaticCache* DevCtl_Worker::cmd_ReadStaticCache()
+{
+    int constexpr dataLen=sizeof(m_staticCache);
+//    memset(&m_staticCache,5,dataLen);
+//    m_staticCache[0].stimulateDotSerialNumber=1;
+//    m_staticCache[1].stimulateDotSerialNumber=2;
+//    m_staticCache[2].stimulateDotSerialNumber=3;
+//    return m_staticCache;
+    if(!this->isDeviceWork()){return Q_NULLPTR;}
+    unsigned char buff[dataLen]={0};
+    bool ret = true;
+    if(ret)
+    {
+        buff[0]=0x5a;buff[1]=0xf4;
+        ret=this->cmdComm_bulkOutSync(buff,sizeof(buff));
+        if(!ret){spdlog::warn("send readStaticCache command failed.");}
+    }
+    if(ret)
+    {
+        ret=this->cmdComm_bulkInSync(buff,sizeof(buff));
+        if(!ret){spdlog::warn("recv staticCache data failed.");}
+    }
+    if(ret)
+    {
+        QByteArray qb= QByteArray::fromRawData( reinterpret_cast<const char*>(buff), sizeof(buff));
+        memcpy(m_staticCache,buff,sizeof(m_staticCache));
+        return m_staticCache;
+    }
+    return Q_NULLPTR;
+
+}
+
+MoveCache* DevCtl_Worker::cmd_ReadMoveCache()
+{
+    int constexpr dataLen=sizeof(m_moveCache);
+//    memset(&m_moveCache,5,dataLen);
+//    m_moveCache[0].stimulateDotSerialNumber=4;
+//    m_moveCache[1].stimulateDotSerialNumber=5;
+//    m_moveCache[2].stimulateDotSerialNumber=6;
+//    return m_moveCache;
+
+    if(!this->isDeviceWork()){return Q_NULLPTR;}
+    unsigned char buff[dataLen]={0};
+    bool ret = true;
+    if(ret)
+    {
+        buff[0]=0x5a;buff[1]=0xf5;
+        ret=this->cmdComm_bulkOutSync(buff,sizeof(buff));
+        if(!ret){spdlog::warn("send readMoveCache command failed.");}
+    }
+    if(ret)
+    {
+        ret=this->cmdComm_bulkInSync(buff,sizeof(buff));
+        if(!ret){spdlog::warn("recv moveCache data failed.");}
+    }
+    if(ret)
+    {
+        QByteArray qb= QByteArray::fromRawData( reinterpret_cast<const char*>(buff), sizeof(buff));
+        memcpy(m_moveCache,buff,sizeof(m_moveCache));
+        return m_moveCache;
+    }
+    return Q_NULLPTR;
 }
 
 
@@ -938,14 +1007,30 @@ void   DevCtl :: resetMotor( MotorId mot,quint8 speed )
 // ============================================================================
 // save the motor config
 // ============================================================================
-void   DevCtl :: saveConfig( const Config& cfg )
+void   DevCtl :: saveConfig(Config& cfg )
 {
-    QByteArray ba(512*3,0);
-    unsigned char* ptr=reinterpret_cast<unsigned char*>(ba.data());
-    QMetaObject::invokeMethod(
-        T_PrivPtr( m_obj )->wkrPtr(), "cmd_GeneralCmd", Qt::QueuedConnection,
-        Q_ARG( QByteArray, ba  ),Q_ARG( QString,QString(__FUNCTION__)),Q_ARG( quint32, 4 )
-    );
+    int frameSize=512-4;
+    int totalFrame=ceil(double(cfg.dataLen())/frameSize);
+    int fragment=cfg.dataLen()-frameSize*(totalFrame-1);
+    qDebug()<<totalFrame;
+    qDebug()<<cfg.dataLen();
+    qDebug()<<fragment;
+    unsigned char* dataPtr=(unsigned char*)cfg.dataPtr();
+
+    for(int i=0;i<totalFrame;i++)
+    {
+        QByteArray ba(512,0);
+        unsigned char* ptr=reinterpret_cast<unsigned char*>(ba.data());
+        ptr[0]=0x5a;ptr[1]=0xf2;ptr[2]=totalFrame;ptr[3]=i;
+        if(i!=totalFrame-1)
+            memcpy(ptr+4,dataPtr+frameSize*i,frameSize);
+        else
+            memcpy(ptr+4,dataPtr+frameSize*i,fragment);
+        QMetaObject::invokeMethod(
+         T_PrivPtr( m_obj )->wkrPtr(), "cmd_GeneralCmd", Qt::QueuedConnection,
+         Q_ARG( QByteArray, ba  ),Q_ARG( QString,QString(__FUNCTION__)),Q_ARG( quint32, 512)
+        );
+    }
 }
 
 // ============================================================================
@@ -967,7 +1052,27 @@ void   DevCtl :: setFrontVideo( bool on_off )
     QMetaObject::invokeMethod(
         T_PrivPtr( m_obj )->wkrPtr(), ( on_off ? "cmd_TurnOnVideo" : "cmd_TurnOffVideo" ),
         Qt::QueuedConnection
-    );
+                );
+}
+
+StaticCache* DevCtl::readStaticCache() const
+{
+    StaticCache* retVal=Q_NULLPTR;
+    QMetaObject::invokeMethod(
+                T_PrivPtr( m_obj )->wkrPtr(), "cmd_ReadStaticCache", Qt::BlockingQueuedConnection,
+                Q_RETURN_ARG( StaticCache*, retVal )
+                );
+    return retVal;
+}
+
+MoveCache *DevCtl::readMoveCache() const
+{
+    MoveCache* retVal=Q_NULLPTR;
+    QMetaObject::invokeMethod(
+                T_PrivPtr( m_obj )->wkrPtr(), "cmd_ReadMoveCache", Qt::BlockingQueuedConnection,
+                Q_RETURN_ARG( MoveCache*, retVal )
+                );
+    return retVal;
 }
 
 // ============================================================================

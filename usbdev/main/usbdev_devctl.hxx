@@ -5,12 +5,15 @@
 #include <QObject>
 #include <QByteArray>
 #include <spdlog/spdlog.h>
+
 namespace UsbDev {
 
 class Profile;
 class StatusData;
 class FrameData;
 class Config;
+class StaticCache;
+class MoveCache;
 
 
 // ////////////////////////////////////////////////////////////////////////////
@@ -130,7 +133,7 @@ public:
      * \note  the cfg data is a raw binary stream, but the usb board maybe do not \n
      *   save all data. Maximum data size is 500 bytes.
      */
-    void  saveConfig(const Config &cfg );
+    void  saveConfig(Config &cfg );
 
     /*!
      * \brief contol the sample motor
@@ -155,6 +158,13 @@ public:
      */
     void  setFrontVideo( bool on_off );
 
+
+    StaticCache* readStaticCache() const;
+
+    MoveCache* readMoveCache() const;
+
+
+
     /*!
      * @brief get the current profile of the device
      * @note while device workstatus is OK, user can take it
@@ -164,7 +174,7 @@ public:
 
 
     /*!
-     * @brief get the current profile of the device
+     * @brief get the current config of the device
      * @note while device workstatus is OK, user can take it
      */
     Config  config( ) const;
@@ -180,6 +190,8 @@ public:
      * \return non empty object returned if succ.
      */
     FrameData   takeNextPendingFrameData( );
+
+
 
     /*!
      * @brief this signal emited while work status changed.

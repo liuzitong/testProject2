@@ -71,39 +71,39 @@ Settings::Settings()
 
 
 
-void Settings::Write()
-{
-    QJsonObject obj;
-    obj.insert("VID",m_VID);
-    obj.insert("PID",m_PID);
+//void Settings::Write()
+//{
+//    QJsonObject obj;
+//    obj.insert("VID",m_VID);
+//    obj.insert("PID",m_PID);
 
-    QJsonArray array,array2;
-    for(auto&v:m_spotSizeToSlot){
-        QJsonObject spotSlot;
-        spotSlot.insert("spotSize",v.first);
-        spotSlot.insert("Slot",v.second);
-        array2.append(spotSlot);
-    }
+//    QJsonArray array,array2;
+//    for(auto&v:m_spotSizeToSlot){
+//        QJsonObject spotSlot;
+//        spotSlot.insert("spotSize",v.first);
+//        spotSlot.insert("Slot",v.second);
+//        array2.append(spotSlot);
+//    }
 
-    for(auto&v:m_dotInfoList){
-        QJsonObject dotInfo;
-        dotInfo.insert("coordx",v.coordX);
-        dotInfo.insert("coordy",v.coordY);
-        dotInfo.insert("motorXPos",v.motorXPos);
-        dotInfo.insert("motorYPos",v.motorYPos);
-        dotInfo.insert("focalDistance",v.focalDistance);
-        array.append(dotInfo);
-    }
-    obj.insert("dotInfoList",array);
-    obj.insert("spotSizeToSlot",array2);
-    qDebug()<<obj;
-    QJsonDocument qjDoc(obj);
-    auto ba= qjDoc.toJson();
-    QFile file("config.json");
-    file.open(QIODevice::WriteOnly);
-    file.write(ba);
-    file.close();
-}
+//    for(auto&v:m_dotInfoList){
+//        QJsonObject dotInfo;
+//        dotInfo.insert("coordx",v.coordX);
+//        dotInfo.insert("coordy",v.coordY);
+//        dotInfo.insert("motorXPos",v.motorXPos);
+//        dotInfo.insert("motorYPos",v.motorYPos);
+//        dotInfo.insert("focalDistance",v.focalDistance);
+//        array.append(dotInfo);
+//    }
+//    obj.insert("dotInfoList",array);
+//    obj.insert("spotSizeToSlot",array2);
+//    qDebug()<<obj;
+//    QJsonDocument qjDoc(obj);
+//    auto ba= qjDoc.toJson();
+//    QFile file("config.json");
+//    file.open(QIODevice::WriteOnly);
+//    file.write(ba);
+//    file.close();
+//}
 
 
 

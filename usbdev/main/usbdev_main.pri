@@ -22,6 +22,7 @@
               $$PWD/usbdev_profile.hxx \
               $$PWD/usbdev_statusdata.hxx \
               $$PWD/usbdev_framedata.hxx \
+              $$PWD/usbdev_cache.hxx \
 
         HEADERS_COPY *= $${HEADERS_MAIN}
 
@@ -72,4 +73,10 @@
     }
 
 }
+
+HEADERS += \
+    $$PWD/usbdev_cache.hxx
+
+SOURCES += \
+    $$PWD/usbdev_cache.cpp
 
