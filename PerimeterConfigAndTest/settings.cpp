@@ -29,12 +29,11 @@ Settings::Settings()
     }
 
     m_rootObj = jsonDoc.object();
-
     QStringList keys = m_rootObj.keys();
-    for(int i = 0; i < keys.size(); i++)
-    {
-        qDebug() << "key" << i << " is:" << keys.at(i);
-    }
+//    for(int i = 0; i < keys.size(); i++)
+//    {
+//        qDebug() << "key" << i << " is:" << keys.at(i);
+//    }
 
 
     m_PID = m_rootObj.value("PID").toString();

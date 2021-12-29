@@ -31,7 +31,9 @@ public:
 
 private slots:
 //    void saveConfig();
+
     void showDevInfo(QString);
+    void showDevRefreshInfo(QString str);
     void refreshStatus();
     void refreshVideo();
     void refreshConnectionStatus(int);
@@ -106,6 +108,12 @@ private slots:
 
     void on_pushButton_readCache_clicked();
 
+    void on_checkBox_IO_stateChanged(int arg1);
+
+    void on_checkBox_RefreshIO_stateChanged(int arg1);
+
+    void on_checkBox_starRefreshInfo_stateChanged(int arg1);
+
 private:
     void initData();
     void initTable();
@@ -113,8 +121,8 @@ private:
     void moveChinMotors(UsbDev::DevCtl::MoveMethod);
     void move5Motors(UsbDev::DevCtl::MoveMethod);
     bool getXYMotorPosAndFocalDistFromCoord(const CoordSpacePosInfo& coordSpacePosInfo,CoordMotorPosFocalDistInfo& coordMotorPosFocalDistInfo);
-    void staticCastTest(const CoordMotorPosFocalDistInfo& dot,int spotSlot ,int colorSlot,int db,int sps,int durationTime,int shutterPos);
-    void moveCastTest(const CoordSpacePosInfo& dotBegin,const CoordSpacePosInfo& dotEnd,int spotSlot ,int colorSlot,int stepCount,int db,int sps);
+    void staticCastTest(const CoordMotorPosFocalDistInfo& dot,int spotSlot ,int colorSlot,int db,int* sps,int durationTime,int shutterPos);
+    void moveCastTest(const CoordSpacePosInfo& dotBegin,const CoordSpacePosInfo& dotEnd,int spotSlot ,int colorSlot,int stepCount,int db,int* sps,int stepSpeed);
     void init();
     void uninit();
     int interpolation(int value[4],QPoint loc);
@@ -140,6 +148,7 @@ private:
     int m_width,m_height;
     void readLocalData(QString filePath);
     void readLocalConfig(QString filePath);
+    uchar* data;
 };
 
 #endif // MAINWINDOW_H

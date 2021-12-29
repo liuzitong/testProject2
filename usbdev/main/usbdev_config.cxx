@@ -199,7 +199,6 @@ Config :: Config ( )
     gRegInQt();
     ConfigPriv::buildIfNull( & m_obj );
     memset(dataPtr(),-1,dataLen());
-    printf("%p",m_obj);
 }
 
 // ============================================================================

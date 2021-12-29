@@ -5,7 +5,7 @@
 #include <QObject>
 #include <QByteArray>
 #include <spdlog/spdlog.h>
-
+#include <spdlog/sinks/rotating_file_sink.h>
 namespace UsbDev {
 
 class Profile;
@@ -217,8 +217,13 @@ public:
 
     Q_SIGNAL  void  newConfig( );
 
-    Q_SIGNAL  void  updateInfo(QString str);
+    Q_SIGNAL  void  updateInfo(QString);
 
+    Q_SIGNAL  void updateIOInfo(QString);
+
+    Q_SIGNAL void updateRefreshInfo(QString);
+
+    Q_SIGNAL void updateRefreshIOInfo(QString);
 
     static DevCtl*  createInstance( quint32 vid_pid = 0xffffa60e, quint32 cfg_id = 1 );
 

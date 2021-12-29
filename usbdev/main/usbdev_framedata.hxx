@@ -1,4 +1,4 @@
-#ifndef USBDEV_FRAMEDATA_HXX
+﻿#ifndef USBDEV_FRAMEDATA_HXX
 #define USBDEV_FRAMEDATA_HXX
 
 #include "usbdev/common/usbdev_def.h"
@@ -39,19 +39,23 @@ public:
     //! check if it is empty
     bool        isEmpty( ) const;
 
+    quint32      crc_veryfication( ) const;
+
     //! return the time stamp of this frame data
     //! @note the empty FrameData will return 0
     quint32      timeStamp( ) const;
+
+    quint16 shutterStatus() const;
+    quint16 stimulateDotSerialNumber() const;
+    qint32 xMotorCoordinate() const;
+    qint32 yMotorCoordinate() const;
 
     //! return the raw data
     //! @return if OK, return object is not empty
     //! @note user should check return object whether if it is empty.
     //! @note the empty FrameData will return empty QByteArray()
     QByteArray  rawData( ) const;
-    quint16 shutterStatus() const;
-    quint16 stimulateDotSerialNumber() const;
-    qint32 xMotorCoordinate() const;
-    qint32 yMotorCoordinate() const;
+
 private:
     void *m_obj;
 };

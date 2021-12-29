@@ -26,7 +26,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout_10">
+   <layout class="QHBoxLayout" name="horizontalLayout_21">
     <property name="spacing">
      <number>0</number>
     </property>
@@ -44,6 +44,9 @@
     </property>
     <item>
      <widget class="QTabWidget" name="tabWidget">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <property name="currentIndex">
        <number>0</number>
       </property>
@@ -1546,6 +1549,67 @@
                </layout>
               </item>
               <item>
+               <layout class="QGridLayout" name="gridLayout_7">
+                <property name="spacing">
+                 <number>3</number>
+                </property>
+                <item row="1" column="2">
+                 <widget class="QPushButton" name="pushButton_chinMoveDown">
+                  <property name="text">
+                   <string>下</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1" rowspan="2">
+                 <widget class="QPushButton" name="pushButton_chinMoveLeft">
+                  <property name="text">
+                   <string>左</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="2">
+                 <widget class="QPushButton" name="pushButton_chinMoveUp">
+                  <property name="text">
+                   <string>上</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="3" rowspan="2">
+                 <widget class="QPushButton" name="pushButton_chinMoveRight">
+                  <property name="text">
+                   <string>右</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0">
+                 <spacer name="horizontalSpacer_3">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="0" column="4">
+                 <spacer name="horizontalSpacer_4">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+              <item>
                <layout class="QHBoxLayout" name="horizontalLayout_9">
                 <item>
                  <spacer name="horizontalSpacer">
@@ -1605,67 +1669,6 @@
                 </item>
                 <item>
                  <spacer name="horizontalSpacer_2">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QGridLayout" name="gridLayout_7">
-                <property name="spacing">
-                 <number>3</number>
-                </property>
-                <item row="1" column="2">
-                 <widget class="QPushButton" name="pushButton_chinMoveDown">
-                  <property name="text">
-                   <string>下</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="1" rowspan="2">
-                 <widget class="QPushButton" name="pushButton_chinMoveLeft">
-                  <property name="text">
-                   <string>左</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="2">
-                 <widget class="QPushButton" name="pushButton_chinMoveUp">
-                  <property name="text">
-                   <string>上</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="3" rowspan="2">
-                 <widget class="QPushButton" name="pushButton_chinMoveRight">
-                  <property name="text">
-                   <string>右</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="0">
-                 <spacer name="horizontalSpacer_3">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item row="0" column="4">
-                 <spacer name="horizontalSpacer_4">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
                   </property>
@@ -2336,12 +2339,15 @@
                      </size>
                     </property>
                     <property name="readOnly">
-                     <bool>true</bool>
+                     <bool>false</bool>
                     </property>
                    </widget>
                   </item>
                   <item>
                    <widget class="QCheckBox" name="checkBox_autoCalcFocalDist">
+                    <property name="enabled">
+                     <bool>true</bool>
+                    </property>
                     <property name="text">
                      <string>根据X,Y坐标自动计算</string>
                     </property>
@@ -2441,7 +2447,7 @@
                      </size>
                     </property>
                     <property name="readOnly">
-                     <bool>true</bool>
+                     <bool>false</bool>
                     </property>
                    </widget>
                   </item>
@@ -3964,13 +3970,129 @@
             </widget>
            </item>
            <item>
-            <widget class="QTextBrowser" name="textBrowser_infoText">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>0</height>
-              </size>
+            <widget class="QTabWidget" name="tabWidget_2">
+             <property name="currentIndex">
+              <number>1</number>
              </property>
+             <widget class="QWidget" name="tab_5">
+              <attribute name="title">
+               <string>控制信息</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout_21">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QTextBrowser" name="textBrowser_infoText">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_19">
+                 <item>
+                  <spacer name="horizontalSpacer_27">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="checkBox_IO">
+                   <property name="text">
+                    <string>16进制信息</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="tab_6">
+              <attribute name="title">
+               <string>自动刷新信息</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout_10">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QTextBrowser" name="textBrowser_refreshInfoText">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_20">
+                 <item>
+                  <spacer name="horizontalSpacer_36">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="checkBox_starRefreshInfo">
+                   <property name="text">
+                    <string>开始刷新</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="checkBox_RefreshIO">
+                   <property name="text">
+                    <string>16进制信息</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
             </widget>
            </item>
           </layout>

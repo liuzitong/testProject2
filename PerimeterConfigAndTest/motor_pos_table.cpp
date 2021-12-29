@@ -127,8 +127,6 @@ void MotorPosTable::selectionChanged(const QItemSelection &selected, const QItem
         {
             auto col=index.column();
             auto row=index.row();
-            qDebug()<<row;
-            qDebug()<<col;
             hHead->setCellBackgroundColor(hModel->index(0,col),0xefebe7);
             vHead->setCellBackgroundColor(vModel->index(int(row/3)*3,0),0xefebe7);
         }
@@ -146,8 +144,6 @@ void MotorPosTable::selectionChanged(const QItemSelection &selected, const QItem
         {
             auto col=index.column();
             auto row=index.row();
-            qDebug()<<row;
-            qDebug()<<col;
             hHead->setCellBackgroundColor(hModel->index(0,col),0x96eaf5);
             vHead->setCellBackgroundColor(vModel->index(int(row/3)*3,0),0x96eaf5);
         }

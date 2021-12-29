@@ -1,4 +1,4 @@
-#ifndef USBDEV_FRAMEDATA_CXX
+﻿#ifndef USBDEV_FRAMEDATA_CXX
 #define USBDEV_FRAMEDATA_CXX
 
 #include "usbdev/common/usbdev_def.h"
@@ -161,10 +161,8 @@ FrameData :: FrameData ( const QByteArray &ba)
     priv->shutterStatusRef()=buff[8];
     priv->xMotorCoordinateRef()=gReadData_Le_I32(&buff[12]);
     priv->yMotorCoordinateRef()=gReadData_Le_I32(&buff[16]);
-    quint8* data=(quint8*)priv->rawDataRef().data();
-    size_t size=priv->rawDataRef().size();
-    memcpy(data,&buff[20],20);
-    memcpy(&data[20],&buff[20],size-20);
+    priv->rawDataRef().resize(ba.size()-20);
+    memcpy(priv->rawDataRef().data(),&buff[20],priv->rawDataRef().size());
     m_obj = d;
 }
 
@@ -174,6 +172,11 @@ FrameData :: FrameData ( const QByteArray &ba)
 // ============================================================================
 bool      FrameData :: isEmpty() const
 { return ( m_obj == nullptr ); }
+
+quint32 FrameData::crc_veryfication() const
+{
+    { return ( m_obj != nullptr ? T_PrivPtr( m_obj )->crcVeryficationRef() : 0 ); }
+}
 
 quint32    FrameData :: timeStamp( ) const
 { return ( m_obj != nullptr ? T_PrivPtr( m_obj )->timeStampRef() : 0 ); }
