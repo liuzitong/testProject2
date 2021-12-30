@@ -1,4 +1,4 @@
-
+QT       += network
 
 SOURCES += \
         $$PWD/UsbViewerQt.cpp\

@@ -32,8 +32,15 @@ QXIC_MODULE_OTHER_COPY_FILES =
 win32:VERSION = 0.5.0.0
 else: VERSION = 0.5.0
 
-SRCFILE = $$QXIC_MODULE_DESTDIR/$${TARGET}d.dll
-PERIMETERDIR = $$PWD/../../PerimeterConfigAndTest/bin/$${TARGET}d.dll
+#SRCFILE = $$QXIC_MODULE_DESTDIR/$${TARGET}d.dll
+
+CONFIG(debug,debug|release){
+    PERIMETERDIR = $$PWD/../../PerimeterConfigAndTest/bin/debug/$${TARGET}d.dll
+    SRCFILE = $$QXIC_MODULE_DESTDIR/$${TARGET}d.dll
+}else {
+    PERIMETERDIR = $$PWD/../../PerimeterConfigAndTest/bin/release/$${TARGET}.dll
+    SRCFILE = $$QXIC_MODULE_DESTDIR/$${TARGET}.dll
+}
 message( $$SRCFILE)
 message( $$PERIMETERDIR)
 
