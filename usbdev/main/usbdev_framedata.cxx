@@ -173,28 +173,26 @@ FrameData :: FrameData ( const QByteArray &ba)
 bool      FrameData :: isEmpty() const
 { return ( m_obj == nullptr ); }
 
-quint32 FrameData::crc_veryfication() const
-{
-    { return ( m_obj != nullptr ? T_PrivPtr( m_obj )->crcVeryficationRef() : 0 ); }
-}
+quint32& FrameData::crc_veryfication() const
+{ return  T_PrivPtr( m_obj )->crcVeryficationRef();}
 
-quint32    FrameData :: timeStamp( ) const
-{ return ( m_obj != nullptr ? T_PrivPtr( m_obj )->timeStampRef() : 0 ); }
+quint32&    FrameData :: timeStamp( ) const
+{ return  T_PrivPtr( m_obj )->timeStampRef(); }
 
-quint16   FrameData::shutterStatus() const
-{ return ( m_obj != nullptr ? T_PrivPtr( m_obj )->shutterStatusRef() : 0 ); }
+bool&   FrameData::shutterStatus() const
+{ return  T_PrivPtr( m_obj )->shutterStatusRef() ; }
 
-quint16   FrameData::stimulateDotSerialNumber() const
-{ return ( m_obj != nullptr ? T_PrivPtr( m_obj )->stimulateDotSerialNumberRef() : 0 ); }
+quint16&   FrameData::stimulateDotSerialNumber() const
+{ return  T_PrivPtr( m_obj )->stimulateDotSerialNumberRef() ; }
 
-qint32   FrameData::xMotorCoordinate() const
-{ return ( m_obj != nullptr ? T_PrivPtr( m_obj )->xMotorCoordinateRef() : 0 ); }
+qint32&   FrameData::xMotorCoordinate() const
+{ return  T_PrivPtr( m_obj )->xMotorCoordinateRef() ; }
 
-qint32   FrameData::yMotorCoordinate() const
-{ return ( m_obj != nullptr ? T_PrivPtr( m_obj )->yMotorCoordinateRef() : 0 ); }
+qint32&   FrameData::yMotorCoordinate() const
+{ return  T_PrivPtr( m_obj )->yMotorCoordinateRef()  ; }
 
-QByteArray  FrameData :: rawData( ) const
-{ return ( m_obj != nullptr ? T_PrivPtr( m_obj )->rawDataRef() : QByteArray()); }
+QByteArray&  FrameData :: rawData( ) const
+{ return  T_PrivPtr( m_obj )->rawDataRef() ; }
 
 
 }

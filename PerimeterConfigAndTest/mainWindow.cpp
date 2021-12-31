@@ -322,21 +322,42 @@ void MainWindow::refreshStatus()
 
 void MainWindow::refreshVideo()
 {
-    if(m_profile.isEmpty()) return;
-    spdlog::info(std::string("refreshVideo"));
+    QSize size;
+    m_profile.isEmpty()?size={320,240}:size=m_profile.videoSize();
+    showDevRefreshInfo("refreshVideo");
+    int dataSize=size.height()*size.width();
+    if(pixData==NULL){pixData=new quint8[dataSize];}
     m_frameData=m_devCtl->takeNextPendingFrameData();
-    QSize size=m_profile.videoSize();
-
-    data=new uchar[size.height()*size.width()];
-
-    QImage image(data,size.height(),size.width(),QImage::Format::Format_Grayscale8);
+    memcpy(pixData+20,m_frameData.rawData().data(),dataSize-20);
+    memset(pixData,pixData[20],20);
+    QImage image(pixData,size.height(),size.width(),QImage::Format::Format_Grayscale8);
     QPainter painter(ui->openGLWidget);
     QPixmap pix;
     pix.convertFromImage(image);
     painter.drawPixmap(0,0,pix.width(), pix.height(),pix);
     update();
-    auto str=("frame time stamp:"+buffToQStr((const char*)(data)+4,4)).toStdString().c_str();
-    spdlog::info(str);
+    auto str=QString("frame time stamp:")+QString::number(m_frameData.timeStamp());
+    showDevRefreshInfo(str);
+
+
+//    qDebug()<<"refresh";
+//    m_devCtl->takeNextPendingFrameData();
+//    spdlog::info(std::string("refreshVideo"));
+
+
+//    m_frameData=m_devCtl->takeNextPendingFrameData();
+//    uchar* data=(uchar*)&(m_frameData.crc_veryfication());
+//   qDebug()<<data[0];
+
+//   memcpy(framedata+20,m_frameData.rawData().data(),320*240-20);
+//   memset(framedata,framedata[20],20);
+//   qDebug()<<framedata[320*240-1];
+//    QImage image(framedata,320,240,QImage::Format::Format_Grayscale8);
+//    QPainter painter(ui->openGLWidget);
+//    QPixmap pix;
+//    pix.convertFromImage(image);
+//    painter.drawPixmap(0,0,pix.width(), pix.height(),pix);
+//    update();
 }
 
 void MainWindow::refreshConnectionStatus(int status)

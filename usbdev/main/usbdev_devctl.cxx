@@ -160,7 +160,7 @@ DevCtl_Worker :: ~DevCtl_Worker ( )
 void   DevCtl_Worker :: init( bool req_emit )
 {
     if ( m_usb_dev == nullptr ) {
-        emit updateInfo(QString("正在初始化连接.VIdPId:%1.").arg(QString::number(m_vid_pid)));
+        emit updateInfo(QString("正在初始化连接.VIdPId:%1.").arg(QString::number(m_vid_pid,16)));
         m_wks = DevCtl::WorkStatus_S_ConnectToDev;
         if ( req_emit ) { emit this->workStatusChanged( DevCtl::WorkStatus_S_ConnectToDev ); }
         m_usb_dev = usbdev_new( SciPack::NwkUsbObj2, m_vid_pid, uint8_t( m_cfg_id ), 0xff000000, 0, 0 );//连接实例
@@ -249,7 +249,7 @@ bool   DevCtl_Worker :: cmd_ReadProfile( bool req_emit )
     unsigned char buff[512]={0}; bool ret = true;
     if ( ret ) {
         buff[0] = 0x5a; buff[1] = 0xf0;
-        updateIOInfo(QString("W:\n")+buffToQStr(reinterpret_cast<const char*>(buff),2));return  false;
+        updateIOInfo(QString("W:")+buffToQStr(reinterpret_cast<const char*>(buff),2));return  false;
         ret = this->cmdComm_bulkOutSync( buff, sizeof( buff ) );
         if ( ! ret ) { updateInfo("send read profile command failed."); }
     }
@@ -258,7 +258,7 @@ bool   DevCtl_Worker :: cmd_ReadProfile( bool req_emit )
         if ( ! ret ) { updateInfo("recv. profile data failed."); }
     }
     if ( ret ) {
-        updateIOInfo(QString("R:\n")+buffToQStr(reinterpret_cast<const char*>(buff),72));
+        updateIOInfo(QString("R:")+buffToQStr(reinterpret_cast<const char*>(buff),72));
         Profile profile( QByteArray::fromRawData( reinterpret_cast<const char*>(buff), sizeof(buff)));
         if ( ! profile.isEmpty()) { if ( req_emit ){ emit this->newProfile( profile );} }
         m_profile = profile;
@@ -277,7 +277,7 @@ bool   DevCtl_Worker :: cmd_ReadConfig( bool req_emit )
     unsigned char buffIn[512*3]={0};
     if ( ret ) {
         buffOut[0] = 0x5a; buffOut[1] = 0xf1;
-        updateIOInfo(QString("W:\n")+buffToQStr(reinterpret_cast<const char*>(buffOut),2));
+        updateIOInfo(QString("W:")+buffToQStr(reinterpret_cast<const char*>(buffOut),2));
         ret = this->cmdComm_bulkOutSync( buffOut, sizeof( buffOut ) );
         if ( ! ret ) { updateInfo("send read config command failed."); }
     }
@@ -286,7 +286,7 @@ bool   DevCtl_Worker :: cmd_ReadConfig( bool req_emit )
         if ( ! ret ) { updateInfo("recv. config data failed."); }
     }
     if ( ret ) {
-        updateIOInfo(QString("Config R:\n")+buffToQStr(reinterpret_cast<const char*>(buffIn),1328));
+        updateIOInfo(QString("Config R:")+buffToQStr(reinterpret_cast<const char*>(buffIn),1328));
         Config config( QByteArray::fromRawData( reinterpret_cast<const char*>(buffIn), sizeof(buffIn)));
         if ( ! config.isEmpty()) { if ( req_emit ){ emit this->newConfig(config); }}
         m_config = config;
@@ -305,7 +305,7 @@ StaticCache* DevCtl_Worker::cmd_ReadStaticCache()
     {
         buff[0]=0x5a;buff[1]=0xf4;
         ret=this->cmdComm_bulkOutSync(buff,sizeof(buff));
-        updateIOInfo(QString("W:\n")+buffToQStr(reinterpret_cast<const char*>(buff),2));
+        updateIOInfo(QString("W:")+buffToQStr(reinterpret_cast<const char*>(buff),2));
         if(!ret){updateInfo("send readStaticCache command failed.");}
     }
     if(ret)
@@ -316,7 +316,7 @@ StaticCache* DevCtl_Worker::cmd_ReadStaticCache()
     }
     if(ret)
     {
-        updateIOInfo(QString("R:\n")+buffToQStr(reinterpret_cast<const char*>(buff),sizeof(m_staticCache)));
+        updateIOInfo(QString("R:")+buffToQStr(reinterpret_cast<const char*>(buff),sizeof(m_staticCache)));
         memcpy(m_staticCache,buff,sizeof(m_staticCache));
         return m_staticCache;
     }
@@ -334,7 +334,7 @@ MoveCache* DevCtl_Worker::cmd_ReadMoveCache()
     {
         buff[0]=0x5a;buff[1]=0xf5;
         ret=this->cmdComm_bulkOutSync(buff,sizeof(buff));
-        updateIOInfo(QString("W:\n")+buffToQStr(reinterpret_cast<const char*>(buff),2));
+        updateIOInfo(QString("W:")+buffToQStr(reinterpret_cast<const char*>(buff),2));
         if(!ret){updateInfo("send readMoveCache command failed.");}
     }
     if(ret)
@@ -344,7 +344,7 @@ MoveCache* DevCtl_Worker::cmd_ReadMoveCache()
     }
     if(ret)
     {
-        updateIOInfo(QString("R:\n")+buffToQStr(reinterpret_cast<const char*>(buff),sizeof(m_moveCache)));
+        updateIOInfo(QString("R:")+buffToQStr(reinterpret_cast<const char*>(buff),sizeof(m_moveCache)));
         memcpy(m_moveCache,buff,sizeof(m_moveCache));
         return m_moveCache;
     }
@@ -364,7 +364,7 @@ bool   DevCtl_Worker :: cmd_ReadStatusData()
     unsigned char buff[512]={0}; bool ret = true;
     if ( ret ) {
         buff[0] = 0x55; buff[1] = 0xf3;
-        updateRefreshIOInfo(QString("W:\n")+buffToQStr(reinterpret_cast<const char*>(buff),2));return false;
+        updateRefreshIOInfo(QString("W:")+buffToQStr(reinterpret_cast<const char*>(buff),2));return false;
         ret = this->cmdComm_bulkOutSync( buff, sizeof( buff ));
         if ( ! ret  ) { updateRefreshInfo("send read status command failed."); }
     }
@@ -373,7 +373,7 @@ bool   DevCtl_Worker :: cmd_ReadStatusData()
         if ( ! ret ) { updateRefreshInfo("recv. status data failed."); }
     }
     if ( ret ) {
-        updateRefreshIOInfo(QString("R:\n")+buffToQStr(reinterpret_cast<const char*>(buff),2));
+        updateRefreshIOInfo(QString("R:")+buffToQStr(reinterpret_cast<const char*>(buff),2));
         StatusData sd( QByteArray::fromRawData( reinterpret_cast<const char*>(buff),sizeof(buff)));
         if ( ! sd.isEmpty()) {
             emit this->newStatusData( sd );
@@ -389,20 +389,16 @@ bool  DevCtl_Worker :: cmd_ReadFrameData()
 {
     if ( m_trg_called.loadAcquire() > 0 ) { m_trg_called.fetchAndSubOrdered(1); }
     if ( ! this->isDeviceWork() || ! m_is_video_on || m_profile.isEmpty()) { updateRefreshInfo("no connection."); return false; }
-    updateRefreshInfo("读取视频帧");
+    updateRefreshInfo("读取视频帧.");
     bool ret = true;
     QSize sz = m_profile.videoSize();
-    qintptr total_bytes = sz.height()*sz.width();
-    if ( total_bytes > 64 * 1024 * 1024 || total_bytes % 512 != 0 ) { return false; }
-
-    QByteArray ba( int( total_bytes ), 0 );
+    QByteArray ba( sz.height()*sz.width(), 0 );
     ret = this->cmdComm_strInSync( reinterpret_cast<unsigned char*>( ba.data()), ba.size());
     if ( ret ) {
-        updateRefreshIOInfo(QString("R:\n")+buffToQStr(reinterpret_cast<const char*>(ba.data()),20));
+        updateRefreshIOInfo(QString("R:")+buffToQStr(reinterpret_cast<const char*>(ba.data()),20));
         FrameData fd( ba );
         emit this->newFrameData( fd );
     }
-
     else
     {
         updateRefreshInfo("recv frame data failed.");
@@ -410,17 +406,15 @@ bool  DevCtl_Worker :: cmd_ReadFrameData()
     return ret;
 
 
-
 //    static int i=0;
 //    if ( m_trg_called.loadAcquire() > 0 ) { m_trg_called.fetchAndSubOrdered(1); }
-//    updateRefreshInfo("读取视频帧\n.");
-//    bool ret = true;
-//    qintptr total_bytes = 320*240;
-//    i=(i+1)%256;
-//    QByteArray ba( int( total_bytes ), i );
+//    updateRefreshInfo("读取视频帧.");
+//    i%=256;
+//    i++;
+//    QByteArray ba(320*240, i );
 //    FrameData fd( ba );
 //    emit this->newFrameData( fd );
-//    return ret;
+//    return true;
 
 
 }
@@ -953,6 +947,7 @@ UsbDev::FrameData    DevCtl :: takeNextPendingFrameData()
 }
 
 
+
 // ============================================================================
 // move the motor
 // ============================================================================
@@ -967,7 +962,7 @@ void  DevCtl :: moveChinMotors( quint8* sps, qint32* dist,MoveMethod method)
     memcpy(ptr+4,dist,8);
     QMetaObject::invokeMethod(
         T_PrivPtr( m_obj )->wkrPtr(), "cmd_GeneralCmd", Qt::QueuedConnection,
-        Q_ARG( QByteArray, ba ),Q_ARG( QString,QString(__FUNCTION__)),Q_ARG( quint32, 12 )
+        Q_ARG( QByteArray, ba ),Q_ARG( QString,QString("移动腮托电机")),Q_ARG( quint32, 12 )
     );
 }
 
@@ -1054,7 +1049,7 @@ void   DevCtl :: saveConfig(Config& cfg )
             memcpy(ptr+4,dataPtr+frameSize*i,fragment);
         QMetaObject::invokeMethod(
          T_PrivPtr( m_obj )->wkrPtr(), "cmd_GeneralCmd", Qt::QueuedConnection,
-         Q_ARG( QByteArray, ba  ),Q_ARG( QString,QString(__FUNCTION__)),Q_ARG( quint32, 512)
+         Q_ARG( QByteArray, ba  ),Q_ARG( QString,QString("上传配置")),Q_ARG( quint32, 512)
         );
     }
 }
@@ -1112,7 +1107,7 @@ void   DevCtl :: setLamp( LampId lampId,quint8 lampNumber, quint16 da)
     gPutInt16(&ptr[4],da);
     QMetaObject::invokeMethod(
         T_PrivPtr( m_obj )->wkrPtr(), "cmd_GeneralCmd", Qt::QueuedConnection,
-        Q_ARG( QByteArray, ba),Q_ARG( QString,QString(__FUNCTION__)),Q_ARG( quint32, 6 )
+        Q_ARG( QByteArray, ba),Q_ARG( QString,QString("设置背景灯")),Q_ARG( quint32, 6 )
         );
 }
 
@@ -1123,7 +1118,7 @@ void DevCtl::setWhiteLamp(quint8 r,quint8 g,quint8 b)
     ptr[0]=0x5a;ptr[1]=0x80;ptr[2]=r;ptr[3]=g;ptr[4]=b;
     QMetaObject::invokeMethod(
         T_PrivPtr( m_obj )->wkrPtr(), "cmd_GeneralCmd", Qt::QueuedConnection,
-        Q_ARG( QByteArray, ba),Q_ARG( QString,QString(__FUNCTION__)),Q_ARG( quint32, 5 )
+        Q_ARG( QByteArray, ba),Q_ARG( QString,QString("设置背景白灯")),Q_ARG( quint32, 5 )
                 );
 }
 
@@ -1136,7 +1131,7 @@ void DevCtl::openShutter(quint16 durationTime, qint32 coord_shutter)
     gPutInt32(&ptr[4],coord_shutter);
     QMetaObject::invokeMethod(
         T_PrivPtr( m_obj )->wkrPtr(), "cmd_GeneralCmd", Qt::QueuedConnection,
-        Q_ARG( QByteArray, ba),Q_ARG( QString,QString(__FUNCTION__)),Q_ARG( quint32, 5 )
+        Q_ARG( QByteArray, ba),Q_ARG( QString,QString("打开快门")),Q_ARG( quint32, 5 )
                 );
 }
 

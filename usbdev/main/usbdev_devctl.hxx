@@ -225,6 +225,7 @@ public:
 
     Q_SIGNAL void updateRefreshIOInfo(QString);
 
+
     static DevCtl*  createInstance( quint32 vid_pid = 0xffffa60e, quint32 cfg_id = 1 );
 
     //! @brief create the instance ( wait version )

@@ -145,10 +145,10 @@ private:
     UsbDev::Profile m_profile;
     QTimer* m_timer=NULL;
     Settings m_settings;
+    quint8* pixData=NULL;
     int m_width,m_height;
     void readLocalData(QString filePath);
     void readLocalConfig(QString filePath);
-    uchar* data;
 };
 
 #endif // MAINWINDOW_H
