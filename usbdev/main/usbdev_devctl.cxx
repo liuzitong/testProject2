@@ -304,8 +304,8 @@ StaticCache* DevCtl_Worker::cmd_ReadStaticCache()
     if(ret)
     {
         buff[0]=0x5a;buff[1]=0xf4;
-        ret=this->cmdComm_bulkOutSync(buff,sizeof(buff));
         updateIOInfo(QString("W:")+buffToQStr(reinterpret_cast<const char*>(buff),2));
+        ret=this->cmdComm_bulkOutSync(buff,sizeof(buff));
         if(!ret){updateInfo("send readStaticCache command failed.");}
     }
     if(ret)
@@ -333,8 +333,8 @@ MoveCache* DevCtl_Worker::cmd_ReadMoveCache()
     if(ret)
     {
         buff[0]=0x5a;buff[1]=0xf5;
-        ret=this->cmdComm_bulkOutSync(buff,sizeof(buff));
         updateIOInfo(QString("W:")+buffToQStr(reinterpret_cast<const char*>(buff),2));
+        ret=this->cmdComm_bulkOutSync(buff,sizeof(buff));
         if(!ret){updateInfo("send readMoveCache command failed.");}
     }
     if(ret)
@@ -358,8 +358,7 @@ MoveCache* DevCtl_Worker::cmd_ReadMoveCache()
 bool   DevCtl_Worker :: cmd_ReadStatusData()
 {
     if ( m_trg_called.loadAcquire() > 0 ) { m_trg_called.fetchAndSubOrdered(1); }
-//    if ( ! this->isDeviceWork()) { updateRefreshInfo("no connection.");return false; }
-
+    if ( ! this->isDeviceWork()) { updateRefreshInfo("no connection.");return false; }
     updateRefreshInfo("读取状态.");
     unsigned char buff[512]={0}; bool ret = true;
     if ( ret ) {
@@ -496,9 +495,9 @@ bool  DevCtl_Worker :: cmd_TurnOffVideo()
 bool DevCtl_Worker::cmd_GeneralCmd(QByteArray ba, QString funcName,quint32 dataLen)
 {
     QString msg=buffToQStr(reinterpret_cast<const char*>(ba.data()),dataLen);
-//    if ( ! this->isDeviceWork()) { updateInfo("no connection!");return false; }
+    if ( ! this->isDeviceWork()) { updateInfo("no connection!");return false; }
     emit updateInfo(funcName);
-    emit updateIOInfo(buffToQStr(reinterpret_cast<const char*>(ba.data()),dataLen));return false;
+    emit updateIOInfo(buffToQStr(reinterpret_cast<const char*>(ba.data()),dataLen));
     bool ret = this->cmdComm_bulkOutSync((unsigned char*) ba.data(), ba.size() );
     if(ret)
     {

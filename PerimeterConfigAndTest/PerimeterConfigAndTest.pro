@@ -29,7 +29,7 @@ CONFIG += c++11
 CONFIG(debug, debug|release) {
     TARGET = $$join(TARGET,,,d)
     DESTDIR =$$PWD/bin/debug
-    CONFIG += console
+#    CONFIG += console
 }
 else{
     DESTDIR =$$PWD/bin/release

@@ -42,8 +42,6 @@ Settings::Settings()
     localConfig=m_rootObj.value("localConfig").toString();
     localData=m_rootObj.value("localData").toString();
 
-    QJsonArray dotInfoList=m_rootObj.value("dotInfoList").toArray();
-    QJsonArray secondaryDotInfoList=m_rootObj.value("secondaryDotInfoList").toArray();
     QJsonArray spotSizeToSlot=m_rootObj.value("spotSizeToSlot").toArray();
     QJsonArray colorToSlot=m_rootObj.value("colorToSlot").toArray();
 

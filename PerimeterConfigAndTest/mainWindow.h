@@ -29,6 +29,10 @@ public:
     ~MainWindow();
     QString PID,VID;
 
+private:signals:
+    void updateRefreshInfo(QString str);
+    void updateInfo(QString str);
+
 private slots:
 //    void saveConfig();
 
@@ -112,7 +116,7 @@ private slots:
 
     void on_checkBox_RefreshIO_stateChanged(int arg1);
 
-    void on_checkBox_starRefreshInfo_stateChanged(int arg1);
+    void on_checkBox_startRefreshInfo_stateChanged(int arg1);
 
 private:
     void initData();
@@ -122,10 +126,10 @@ private:
     void move5Motors(UsbDev::DevCtl::MoveMethod);
     bool getXYMotorPosAndFocalDistFromCoord(const CoordSpacePosInfo& coordSpacePosInfo,CoordMotorPosFocalDistInfo& coordMotorPosFocalDistInfo);
     void staticCastTest(const CoordMotorPosFocalDistInfo& dot,int spotSlot ,int colorSlot,int db,int* sps,int durationTime,int shutterPos);
-    void moveCastTest(const CoordSpacePosInfo& dotBegin,const CoordSpacePosInfo& dotEnd,int spotSlot ,int colorSlot,int stepCount,int db,int* sps,int stepSpeed);
+    void moveCastTest(const CoordSpacePosInfo& dotBegin,const CoordSpacePosInfo& dotEnd,int spotSlot ,int colorSlot,float stepLength,int db,int* sps,int stepSpeed);
     void init();
     void uninit();
-    int interpolation(int value[4],QPoint loc);
+    int interpolation(int value[4],QPointF loc);
     int getFocusMotorPosByDist(int focalDist,int spotSlot);
     void refreshConfigUI();
     void refreshConfigDataByUI();
@@ -149,6 +153,8 @@ private:
     int m_width,m_height;
     void readLocalData(QString filePath);
     void readLocalConfig(QString filePath);
+
+
 };
 
 #endif // MAINWINDOW_H

@@ -74,8 +74,10 @@ void MainWindow::init()
     connect(m_devCtl,&UsbDev::DevCtl::newFrameData,this,&MainWindow::refreshVideo);
     connect(m_devCtl,&UsbDev::DevCtl::newProfile,this,&MainWindow::updateProfile);
     connect(m_devCtl,&UsbDev::DevCtl::newConfig,this,&MainWindow::updateConfig);
+    connect(this,&MainWindow::updateInfo,this,&MainWindow::showDevInfo);
     on_comboBox_color_currentIndexChanged(1);
     on_comboBox_spotSize_currentIndexChanged(1);
+    ui->groupBox_moveCastPos->setVisible(false);
 
 }
 
@@ -106,6 +108,7 @@ void MainWindow::initTable()
     m_spotPosTableModel->m_row=8;
     m_spotPosTableModel->m_hozHeader<<"步数";
     m_spotPosTableModel->m_vertHeader<<"全透";
+
     m_spotPosTableModel->m_modelData=m_config.switchLightSpotMotorPosPtr();
     ui->tableView_spotSlotPos->setModel(m_spotPosTableModel);
     ui->tableView_spotSlotPos->setCornerName("光斑");
@@ -189,9 +192,9 @@ void MainWindow::uninit()
     delete m_devCtl;
 }
 
-int MainWindow::interpolation(int value[], QPoint loc)
+int MainWindow::interpolation(int value[], QPointF loc)
 {
-    int secondVal[2];
+    double secondVal[2];
     secondVal[0]=value[0]+(value[1]-value[0])*(loc.y()/6.0);
     secondVal[1]=value[2]+(value[3]-value[2])*(loc.y()/6.0);
     int ret=secondVal[0]+(secondVal[1]-secondVal[0])*(loc.x()/6.0);
@@ -208,7 +211,6 @@ int MainWindow::getFocusMotorPosByDist(int focalDist,int spotSlot)
     int pos2=map[indexDist+1][spotSlot];
     int focalMotorPos=pos1+(pos2-pos1)*(focalDist%10)/10;
     return focalMotorPos;
-    return 0;
 }
 
 void MainWindow::refreshConfigUI()
@@ -324,23 +326,20 @@ void MainWindow::refreshVideo()
 {
     QSize size;
     m_profile.isEmpty()?size={320,240}:size=m_profile.videoSize();
-    showDevRefreshInfo("refreshVideo");
-    int dataSize=size.height()*size.width();
+    int dataSize=size.width()*size.height();
     if(pixData==NULL){pixData=new quint8[dataSize];}
     m_frameData=m_devCtl->takeNextPendingFrameData();
     memcpy(pixData+20,m_frameData.rawData().data(),dataSize-20);
     memset(pixData,pixData[20],20);
-    QImage image(pixData,size.height(),size.width(),QImage::Format::Format_Grayscale8);
+    QImage image(pixData,size.width(),size.height(),QImage::Format::Format_Grayscale8);
     QPainter painter(ui->openGLWidget);
     QPixmap pix;
     pix.convertFromImage(image);
     painter.drawPixmap(0,0,pix.width(), pix.height(),pix);
     update();
     auto str=QString("frame time stamp:")+QString::number(m_frameData.timeStamp());
-    showDevRefreshInfo(str);
+    emit updateRefreshInfo(str);
 
-
-//    qDebug()<<"refresh";
 //    m_devCtl->takeNextPendingFrameData();
 //    spdlog::info(std::string("refreshVideo"));
 
@@ -349,10 +348,10 @@ void MainWindow::refreshVideo()
 //    uchar* data=(uchar*)&(m_frameData.crc_veryfication());
 //   qDebug()<<data[0];
 
-//   memcpy(framedata+20,m_frameData.rawData().data(),320*240-20);
-//   memset(framedata,framedata[20],20);
-//   qDebug()<<framedata[320*240-1];
-//    QImage image(framedata,320,240,QImage::Format::Format_Grayscale8);
+//   memcpy(pixData+20,m_frameData.rawData().data(),320*240-20);
+//   memset(pixData,pixData[20],20);
+//   qDebug()<<pixData[320*240-1];
+//    QImage image(pixData,320,240,QImage::Format::Format_Grayscale8);
 //    QPainter painter(ui->openGLWidget);
 //    QPixmap pix;
 //    pix.convertFromImage(image);
@@ -527,7 +526,7 @@ void MainWindow::on_pushButton_testStart_clicked()
             int stepSpeed=ui->spinBox_speedLightMove->text().toInt();
             int sps[5];
             for(auto& v:sps){v=ui->spinBox_speedLightDot->text().toInt();}
-            int stepLength=ui->lineEdit_stepLength->text().toInt();
+            float stepLength=ui->lineEdit_stepLength->text().toFloat();
             int spotSlot=ui->spinBox_spotSlot->value();
             int colorSlot=ui->spinBox_colorSlot->value();
             moveCastTest(dotBegin,dotEnd,spotSlot,colorSlot,stepLength,db,sps,stepSpeed);
@@ -604,15 +603,11 @@ void MainWindow::on_checkBox_useConfigPos_stateChanged(int arg1)
 
 void MainWindow::on_comboBox_testFucntion_currentIndexChanged(int index)
 {
-
-    ui->groupBox_staticCastPos->setEnabled(index==0);
-    ui->lineEdit_durationTime->setEnabled(index==0);
-    ui->groupBox_moveCastPos->setEnabled(index==1);
-    ui->checkBox_autoCalcFocalDist->setEnabled(index==0);
-    if(index==1)
-    {
-        ui->checkBox_autoCalcFocalDist->setChecked(true);
-    }
+    ui->groupBox_staticCastPos->setVisible(index==0);
+    ui->lineEdit_durationTime->setVisible(index==0);
+    ui->groupBox_moveCastPos->setVisible(index==1);
+    ui->checkBox_autoCalcFocalDist->setVisible(index==0);
+    if(index==1) ui->checkBox_autoCalcFocalDist->setChecked(true);
 }
 
 
@@ -784,19 +779,22 @@ void MainWindow::on_checkBox_RefreshIO_stateChanged(int arg1)
 {
     arg1==Qt::CheckState::Checked?connect(m_devCtl,&UsbDev::DevCtl::updateRefreshIOInfo,this,&MainWindow::showDevRefreshInfo):
                                   disconnect(m_devCtl,&UsbDev::DevCtl::updateRefreshIOInfo,this,&MainWindow::showDevRefreshInfo);
+
 }
 
-void MainWindow::on_checkBox_starRefreshInfo_stateChanged(int arg1)
+void MainWindow::on_checkBox_startRefreshInfo_stateChanged(int arg1)
 {
 
     if(arg1==Qt::CheckState::Checked)
     {
         connect(m_devCtl,&UsbDev::DevCtl::updateRefreshInfo,this,&MainWindow::showDevRefreshInfo);
+        connect(this,&MainWindow::updateRefreshInfo,this,&MainWindow::showDevRefreshInfo);
         ui->checkBox_RefreshIO->setEnabled(true);
     }
     else
     {
         disconnect(m_devCtl,&UsbDev::DevCtl::updateRefreshInfo,this,&MainWindow::showDevRefreshInfo);
+        disconnect(this,&MainWindow::updateRefreshInfo,this,&MainWindow::showDevRefreshInfo);
         ui->checkBox_RefreshIO->setCheckState(Qt::CheckState::Unchecked);
         ui->checkBox_RefreshIO->setEnabled(false);
     }
@@ -919,7 +917,7 @@ bool MainWindow::getXYMotorPosAndFocalDistFromCoord(const CoordSpacePosInfo& coo
     }
 
 
-    QPoint loc(coordSpacePosInfo.coordX-(x1-15)*6,coordSpacePosInfo.coordY-(y1-15)*6);
+    QPointF loc(coordSpacePosInfo.coordX-(x1-15)*6,coordSpacePosInfo.coordY-(y1-15)*6);
     int arr[4];
     for(unsigned int i=0;i<sizeof(arr)/sizeof(int);i++) {arr[i]=fourDots[i].motorX;}
     coordMotorPosFocalDistInfo.motorX=interpolation(arr,loc);
@@ -929,10 +927,14 @@ bool MainWindow::getXYMotorPosAndFocalDistFromCoord(const CoordSpacePosInfo& coo
 
     for(unsigned int i=0;i<sizeof(arr)/sizeof(int);i++) {arr[i]=fourDots[i].focalDist;}
     coordMotorPosFocalDistInfo.focalDist=interpolation(arr,loc);
-    showDevInfo(QString("X电机:%1,Y电机:%2,焦距:%3.").
-                arg(QString::number(coordMotorPosFocalDistInfo.motorX)).
-                arg(QString::number(coordMotorPosFocalDistInfo.motorY)).
-                arg(QString::number(coordMotorPosFocalDistInfo.focalDist)));
+//    showDevInfo(QString("X电机:%1,Y电机:%2,焦距:%3.").
+//                arg(QString::number(coordMotorPosFocalDistInfo.motorX)).
+//                arg(QString::number(coordMotorPosFocalDistInfo.motorY)).
+//                arg(QString::number(coordMotorPosFocalDistInfo.focalDist)));
+    qDebug()<<QString("X电机:%1,Y电机:%2,焦距:%3.").
+              arg(QString::number(coordMotorPosFocalDistInfo.motorX)).
+              arg(QString::number(coordMotorPosFocalDistInfo.motorY)).
+              arg(QString::number(coordMotorPosFocalDistInfo.focalDist));
     return true;
 }
 
@@ -947,17 +949,17 @@ void MainWindow::staticCastTest(const CoordMotorPosFocalDistInfo& coordMotorPosF
     //移动焦距电机到调节位置
     quint8 spsArr[5]={0};
     qint32 posArr[5]={0};
+    showDevInfo("移动焦距电机到联动位置.");
     if(!m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus))
     {
         spsArr[2]=sps[2];
         posArr[2]=m_config.focusPosForSpotAndColorChangeRef();
-        showDevInfo(QString("焦距电机速度:%1,焦距电机位置:%2.").
-                    arg(QString::number(sps[2])).
-                    arg(QString::number(posArr[2])));
         m_devCtl->move5Motors(spsArr,posArr);
     }
 
+
     //调整颜色和光斑
+    showDevInfo("调整颜色和光斑.");
     memset(spsArr,0,sizeof(spsArr));
     memset(posArr,0,sizeof(posArr));
     spsArr[3]=sps[3];
@@ -970,6 +972,7 @@ void MainWindow::staticCastTest(const CoordMotorPosFocalDistInfo& coordMotorPosF
     m_devCtl->move5Motors(spsArr,posArr);
 
     //调整焦距
+    showDevInfo("调整焦距.");
     memset(spsArr,0,sizeof(spsArr));
     memset(posArr,0,sizeof(posArr));
     spsArr[2]=sps[2];
@@ -979,6 +982,7 @@ void MainWindow::staticCastTest(const CoordMotorPosFocalDistInfo& coordMotorPosF
     m_devCtl->move5Motors(spsArr,posArr);
 
     //调整DB同时移动到指定位置
+    showDevInfo("调整DB同时移动到指定位置.");
     memset(spsArr,0,sizeof(spsArr));
     memset(posArr,0,sizeof(posArr));
     spsArr[0]=sps[0];spsArr[1]=sps[1];spsArr[3]=sps[3];spsArr[4]=sps[4];
@@ -991,6 +995,7 @@ void MainWindow::staticCastTest(const CoordMotorPosFocalDistInfo& coordMotorPosF
     m_devCtl->move5Motors(spsArr,posArr);
 
     //打开快门
+    showDevInfo("打开快门.");
     ui->checkBox_useConfigPos->isChecked()?shutterPos=ui->lineEdit_shutterPos->text().toInt():shutterPos=m_config.shutterOpenPosRef();
     while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_X)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Y)||
           m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Color)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Light_Spot))
@@ -998,16 +1003,16 @@ void MainWindow::staticCastTest(const CoordMotorPosFocalDistInfo& coordMotorPosF
     m_devCtl->openShutter(durationTime,shutterPos);
 }
 
-void MainWindow::moveCastTest(const CoordSpacePosInfo& dotSpaceBegin,const CoordSpacePosInfo& dotSpaceEnd,int spotSlot ,int colorSlot,int stepLength,int db,int* sps,int stepSpeed)
+void MainWindow::moveCastTest(const CoordSpacePosInfo& dotSpaceBegin,const CoordSpacePosInfo& dotSpaceEnd,int spotSlot ,int colorSlot,float stepLength,int db,int* sps,int stepSpeed)
 {
 
     CoordMotorPosFocalDistInfo dotMotorBegin,dotMotorEnd;
-    if(getXYMotorPosAndFocalDistFromCoord(dotSpaceBegin,dotMotorBegin))
+    if(!getXYMotorPosAndFocalDistFromCoord(dotSpaceBegin,dotMotorBegin))
     {
         showDevInfo("begin coord out of range.");
         return;
     }
-    if(getXYMotorPosAndFocalDistFromCoord(dotSpaceBegin,dotMotorEnd))
+    if(!getXYMotorPosAndFocalDistFromCoord(dotSpaceEnd,dotMotorEnd))
     {
         showDevInfo("end coord out of range.");
         return;
@@ -1021,6 +1026,7 @@ void MainWindow::moveCastTest(const CoordSpacePosInfo& dotSpaceBegin,const Coord
     {QCoreApplication::processEvents();}
 
     //移动焦距电机到调节位置
+    showDevInfo("移动焦距电机到调节位置.");
     quint8 spsArr[5]={0};
     qint32 posArr[5]={0};
     if(!m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus))
@@ -1031,6 +1037,7 @@ void MainWindow::moveCastTest(const CoordSpacePosInfo& dotSpaceBegin,const Coord
     }
 
     //调整颜色和光斑
+    showDevInfo("调整颜色和光斑.");
     memset(spsArr,0,sizeof(spsArr));
     memset(posArr,0,sizeof(posArr));
     spsArr[3]=sps[3];
@@ -1044,6 +1051,7 @@ void MainWindow::moveCastTest(const CoordSpacePosInfo& dotSpaceBegin,const Coord
 
 
     //调整焦距
+    showDevInfo("调整焦距.");
     memset(spsArr,0,sizeof(spsArr));
     memset(posArr,0,sizeof(posArr));
     spsArr[2]=sps[2];
@@ -1054,6 +1062,7 @@ void MainWindow::moveCastTest(const CoordSpacePosInfo& dotSpaceBegin,const Coord
     m_devCtl->move5Motors(spsArr,posArr);
 
     //调整DB同时移动到指定位置
+    showDevInfo("调整DB同时移动到指定位置.");
     memset(spsArr,0,sizeof(spsArr));
     memset(posArr,0,sizeof(posArr));
     spsArr[0]=sps[0];spsArr[1]=sps[1];spsArr[3]=sps[3];spsArr[4]=sps[4];
@@ -1067,81 +1076,123 @@ void MainWindow::moveCastTest(const CoordSpacePosInfo& dotSpaceBegin,const Coord
 
 
     float stepLengthX,stepLengthY;
-    int distX=dotSpaceBegin.coordX-dotSpaceEnd.coordX;
-    int distY=dotSpaceBegin.coordY-dotSpaceEnd.coordY;
+    float distX=dotSpaceEnd.coordX-dotSpaceBegin.coordX;
+    float distY=dotSpaceEnd.coordY-dotSpaceBegin.coordY;
     int stepCount;
-    int timeSps;
     if(std::abs(distX)>std::abs(distY))
     {
-        stepLengthX=stepLength;
-        stepCount=distX/stepLength;
+        distX>0?stepLengthX=stepLength:stepLengthX=-stepLength;
+        stepCount=distX/stepLengthX;
         stepLengthY=distY/stepCount;
-        timeSps=sps[0];
     }
 
     else
     {
+        distY>0?stepLengthY=stepLength:stepLengthY=-stepLength;
         stepLengthY=stepLength;
         stepCount=distY/stepLength;
         stepLengthX=distX/stepCount;
-        timeSps=sps[1];
     }
 
-
-    QSharedPointer<int> dotArr=QSharedPointer<int>(new int[stepCount*3],[](
-            int* x){delete []x;std::cout<<__LINE__<<" deleter worked"<<std::endl;});
-
-//    for(int i=0;i<stepCount;i++)
-//    {
-//        temp.coordX+=stepAngleX;
-//        temp.coordY+=stepAngleY;
-//        getXYMotorPosAndFocalDistFromCoord(temp);
-//        dotArr.data()[i][0]=temp.motorXPos;
-//        dotArr.data()[i][1]=temp.motorYPos;
-//        dotArr.data()[i][2]=getFocusMotorPosByDist(temp.focalDistance,spotSlot);
-//    }
-
-//    std::future<void> result = std::async(std::launch::async, [&]()
-//    {
-//        for(int i=0;i<stepCount;i++)
-//        {
-//            temp.coordX+=stepAngleX;
-//            temp.coordY+=stepAngleY;
-//            getXYMotorPosAndFocalDistFromCoord(temp);
-//            dotArr.data()[i*3+0]=temp.motorXPos;
-//            dotArr.data()[i*3+1]=temp.motorYPos;
-//            dotArr.data()[i*3+2]=getFocusMotorPosByDist(temp.focalDistance,spotSlot);
-//        }
-//    });
-//    while(!result._Is_ready()){QCoreApplication::processEvents();}
-
+    int* dotArr=new int[stepCount*3];
     CoordSpacePosInfo coordSpacePosInfoTemp=dotSpaceBegin;
     CoordMotorPosFocalDistInfo coordMotorPosFocalDistInfoTemp;
-    QFuture<void> result=QtConcurrent::run([&](){
-        for(int i=0;i<stepCount;i++)
-        {
-            coordSpacePosInfoTemp.coordX+=stepLengthX;
-            coordSpacePosInfoTemp.coordY+=stepLengthY;
-            getXYMotorPosAndFocalDistFromCoord(coordSpacePosInfoTemp,coordMotorPosFocalDistInfoTemp);
-            dotArr.data()[i*3+0]=coordMotorPosFocalDistInfoTemp.motorX;
-            dotArr.data()[i*3+1]=coordMotorPosFocalDistInfoTemp.motorY;
-            dotArr.data()[i*3+2]=getFocusMotorPosByDist(coordMotorPosFocalDistInfoTemp.focalDist,spotSlot);
-        }
-    });
+    qDebug()<<stepCount;
 
-    while(!result.isFinished()){QCoreApplication::processEvents();}
 
-    constexpr int stepPerFrame=(512-8)/4;
-    int totalframe=ceil(stepCount/stepPerFrame);
-    for(int i=0;i<totalframe-1;i++)
+    for(int i=0;i<stepCount;i++)
     {
-        m_devCtl->sendCastMoveData(totalframe,i,512,&dotArr.data()[stepPerFrame*i]);                        //一般帧
+        coordSpacePosInfoTemp.coordX+=stepLengthX;
+        coordSpacePosInfoTemp.coordY+=stepLengthY;
+        getXYMotorPosAndFocalDistFromCoord(coordSpacePosInfoTemp,coordMotorPosFocalDistInfoTemp);
+        dotArr[i*3+0]=coordMotorPosFocalDistInfoTemp.motorX;
+        dotArr[i*3+1]=coordMotorPosFocalDistInfoTemp.motorY;
+        dotArr[i*3+2]=getFocusMotorPosByDist(coordMotorPosFocalDistInfoTemp.focalDist,spotSlot);
+        qDebug()<<i;
+
     }
 
+    showDevInfo("发送移动数据");
+    constexpr int stepPerFrame=(512-8)/(4*3);
+    int totalframe=ceil((float)stepCount/stepPerFrame);
+    for(int i=0;i<totalframe-1;i++)
+    {
+        qDebug()<<i;
+        qDebug()<<QString::pointer(&dotArr[stepPerFrame*3*i]);
+        qDebug()<<dotArr[stepPerFrame*3*i];
+        qDebug()<<dotArr[stepPerFrame*3*i+1];
+        qDebug()<<dotArr[stepPerFrame*3*i+2];
 
-    int dataLen= (stepCount%stepPerFrame)*12+8;
-    m_devCtl->sendCastMoveData(totalframe,totalframe-1,dataLen,&dotArr.data()[(512-8)*(totalframe-1)]);     //最后一帧
-    m_devCtl->startCastMove(sps[0],sps[1],sps[2],m_config.stepTimePtr()[stepSpeed]);                                       //开始
+        qDebug()<<dotArr[stepPerFrame*3*(i+1)-3];
+        qDebug()<<dotArr[stepPerFrame*3*(i+1)-2];
+        qDebug()<<dotArr[stepPerFrame*3*(i+1)-1];
+        m_devCtl->sendCastMoveData(totalframe,i,512,&dotArr[stepPerFrame*3*i]);                        //一般帧
+
+    }
+
+    qDebug()<<dotArr[(stepCount-1)*3];
+    qDebug()<<dotArr[(stepCount-1)*3+1];
+    qDebug()<<dotArr[(stepCount-1)*3+2];
+
+    int dataLen= (stepCount%stepPerFrame)*3*4+8;
+    m_devCtl->sendCastMoveData(totalframe,totalframe-1,dataLen,&dotArr[stepPerFrame*3*(totalframe-1)]);     //最后一帧
+    showDevInfo("开始移动");
+    m_devCtl->startCastMove(sps[0],sps[1],sps[2],m_config.stepTimePtr()[stepSpeed]);    //开始
+    delete[] dotArr;
+
+
+
+    //    QFuture<void> result=QtConcurrent::run([&](){
+    //        for(int i=0;i<stepCount;i++)
+    //        {
+    //            coordSpacePosInfoTemp.coordX+=stepLengthX;
+    //            coordSpacePosInfoTemp.coordY+=stepLengthY;
+    //            getXYMotorPosAndFocalDistFromCoord(coordSpacePosInfoTemp,coordMotorPosFocalDistInfoTemp);
+    //            dotArr.data()[i*3+0]=coordMotorPosFocalDistInfoTemp.motorX;
+    //            dotArr.data()[i*3+1]=coordMotorPosFocalDistInfoTemp.motorY;
+    //            dotArr.data()[i*3+2]=getFocusMotorPosByDist(coordMotorPosFocalDistInfoTemp.focalDist,spotSlot);
+    //        }
+    //    });
+
+    //    while(!result.isFinished()){QCoreApplication::processEvents();}
+
+    //    QSharedPointer<int> dotArr=QSharedPointer<int>(new int[stepCount*3],
+    //            [](int* x){delete x;std::cout<<__LINE__<<" deleter worked"<<std::endl;});
+
+
+    //    for(int i=0;i<stepCount;i++)
+    //    {
+    //        coordSpacePosInfoTemp.coordX+=stepLengthX;
+    //        coordSpacePosInfoTemp.coordY+=stepLengthY;
+    //        getXYMotorPosAndFocalDistFromCoord(coordSpacePosInfoTemp,coordMotorPosFocalDistInfoTemp);
+    //        dotArr.data()[i*3+0]=coordMotorPosFocalDistInfoTemp.motorX;
+    //        dotArr.data()[i*3+1]=coordMotorPosFocalDistInfoTemp.motorY;
+    //        dotArr.data()[i*3+2]=getFocusMotorPosByDist(coordMotorPosFocalDistInfoTemp.focalDist,spotSlot);
+    //        qDebug()<<i;
+    //    }
+
+
+    //    constexpr int stepPerFrame=(512-8)/(4*3);
+    //    int totalframe=ceil((float)stepCount/stepPerFrame);
+    //    auto dataPtr=dotArr.data();
+    //    for(int i=0;i<totalframe-1;i++)
+    //    {
+    //        qDebug()<<i;
+    //        qDebug()<<QString::pointer(&dataPtr[stepPerFrame*3*i]);
+    //        qDebug()<<dotArr.data()[stepPerFrame*3*i];
+    //        qDebug()<<dotArr.data()[stepPerFrame*3*i+1];
+    //        qDebug()<<dotArr.data()[stepPerFrame*3*i+2];
+
+    //        qDebug()<<dotArr.data()[stepPerFrame*3*(i+1)-3];
+    //        qDebug()<<dotArr.data()[stepPerFrame*3*(i+1)-2];
+    //        qDebug()<<dotArr.data()[stepPerFrame*3*(i+1)-1];
+    //        m_devCtl->sendCastMoveData(totalframe,i,512,&dataPtr[stepPerFrame*3*i]);                        //一般帧
+    //    }
+
+//    int dataLen= (stepCount%stepPerFrame)*12+8;
+//    m_devCtl->sendCastMoveData(totalframe,totalframe-1,dataLen,&dotArr.data()[stepPerFrame*3*(totalframe-1)]);     //最后一帧
+//    m_devCtl->startCastMove(sps[0],sps[1],sps[2],m_config.stepTimePtr()[stepSpeed]);
+
 }
 
 
