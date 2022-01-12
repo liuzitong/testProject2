@@ -77,7 +77,6 @@ void MainWindow::init()
     connect(this,&MainWindow::updateInfo,this,&MainWindow::showDevInfo);
     on_comboBox_color_currentIndexChanged(1);
     on_comboBox_spotSize_currentIndexChanged(1);
-    ui->groupBox_moveCastPos->setVisible(false);
 
 }
 
@@ -207,8 +206,8 @@ int MainWindow::getFocusMotorPosByDist(int focalDist,int spotSlot)
     if(m_config.isEmpty()) {return 0;}
     auto map = m_config.focalLengthMotorPosMappingPtr();
     int indexDist= floor(focalDist/10)-8;
-    int pos1=map[indexDist][spotSlot];
-    int pos2=map[indexDist+1][spotSlot];
+    int pos1=map[indexDist][spotSlot-1];
+    int pos2=map[indexDist+1][spotSlot-1];
     int focalMotorPos=pos1+(pos2-pos1)*(focalDist%10)/10;
     return focalMotorPos;
 }
@@ -465,13 +464,13 @@ void MainWindow::on_pushButton_lightSwitch_clicked()
     UsbDev::DevCtl::LampId lampId=(UsbDev::DevCtl::LampId)ui->comboBox_lightSelect->currentIndex();
     if(lampId!=UsbDev::DevCtl::LampId::LampId_whiteBackground)
     {
-        m_devCtl->setLamp(lampId,ui->comboBox_lampNumber->currentIndex(),ui->lineEdit_lightDAR->text().toInt());
+        m_devCtl->setLamp(lampId,ui->comboBox_lampNumber->currentIndex(),ui->spinBox_lightDAR->value());
     }
     else
     {
-        int r=ui->lineEdit_lightDAR->text().toInt(nullptr,16);
-        int g=ui->lineEdit_lightDAG->text().toInt(nullptr,16);
-        int b=ui->lineEdit_lightDAB->text().toInt(nullptr,16);
+        int r=ui->spinBox_lightDAR->value();
+        int g=ui->spinBox_lightDAG->value();
+        int b=ui->spinBox_lightDAB->value();
         m_devCtl->setWhiteLamp(r,g,b);
     }
 }
@@ -480,37 +479,36 @@ void MainWindow::on_comboBox_lightSelect_currentIndexChanged(int index)
 {
     ui->comboBox_lampNumber->setEnabled(index==1||index==2);
     index==7?ui->label_da_RGB->setText("RGB:"):ui->label_da_RGB->setText("DA:");
-    ui->lineEdit_lightDAG->setEnabled(index==7);
-    ui->lineEdit_lightDAB->setEnabled(index==7);
+    ui->spinBox_lightDAG->setEnabled(index==7);
+    ui->spinBox_lightDAB->setEnabled(index==7);
 }
 
 void MainWindow::on_pushButton_testStart_clicked()
 {
+    int sps[5];
+    sps[0]=ui->spinBox_XMotorSpeed_2->value();
+    sps[0]=ui->spinBox_YMotorSpeed_2->value();
+    sps[0]=ui->spinBox_focalMotorSpeed_2->value();
+    sps[0]=ui->spinBox_colorMotorSpeed_2->value();
+    sps[0]=ui->spinBox_spotMotorSpeed_2->value();
     switch (ui->comboBox_testFucntion->currentIndex())
     {
         case 0:
         {
-            quint8 db=ui->spinBox_settingDb->text().toInt();
-            quint16 durationTime=ui->lineEdit_durationTime->text().toInt();
-            quint32 shutterPos=ui->lineEdit_shutterPos->text().toInt();
+            quint8 db=ui->spinBox_DbSetting->value();
+            quint16 durationTime=ui->spinBox_shutterOpenDuration->text().toInt();
+            quint32 shutterPos=ui->spinBox_shutterOpenPos->text().toInt();
             int spotSlot=ui->spinBox_spotSlot->value();
             int colorSlot=ui->spinBox_colorSlot->value();
             float coordX=ui->lineEdit_coordX->text().toFloat();
             float coordY=ui->lineEdit_coordY->text().toFloat();
-            int sps[5];
-            for(auto& v:sps){v=ui->spinBox_speedLightDot->text().toInt();}
-            if(ui->checkBox_useConfigPos->isChecked())
-            {ui->lineEdit_shutterPos->setText(QString::number(m_config.shutterOpenPosRef()));}
+
+//            if(ui->checkBox_useConfigPos->isChecked())
+//            {ui->spinBox_shutterOpenPos->setValue(m_config.shutterOpenPosRef());}
             CoordSpacePosInfo coordSpacePosInfo{coordX,coordY};
             CoordMotorPosFocalDistInfo coordMotorPosFocalDistInfo;
             if(!getXYMotorPosAndFocalDistFromCoord(coordSpacePosInfo,coordMotorPosFocalDistInfo)) return;
-            if(!ui->checkBox_autoCalcFocalDist->isChecked())
-            {
-                coordMotorPosFocalDistInfo.focalDist=ui->lineEdit_settingFocal->text().toInt();
-            }
-            else{
-                ui->lineEdit_settingFocal->setText(QString::number(coordMotorPosFocalDistInfo.focalDist));
-            }
+            coordMotorPosFocalDistInfo.focalDist=ui->spinBox_focalMotorPos_2->value();
             staticCastTest(coordMotorPosFocalDistInfo,spotSlot,colorSlot,db,sps,durationTime,shutterPos);
             break;
         }
@@ -522,14 +520,11 @@ void MainWindow::on_pushButton_testStart_clicked()
             dotEnd.coordX=ui->lineEdit_endCoordX->text().toInt();
             dotEnd.coordY=ui->lineEdit_endCoordY->text().toInt();
 
-            quint8 db=ui->spinBox_settingDb->text().toInt();
-            int stepSpeed=ui->spinBox_speedLightMove->text().toInt();
-            int sps[5];
-            for(auto& v:sps){v=ui->spinBox_speedLightDot->text().toInt();}
+            quint8 db=ui->spinBox_DbSetting->value();
             float stepLength=ui->lineEdit_stepLength->text().toFloat();
             int spotSlot=ui->spinBox_spotSlot->value();
             int colorSlot=ui->spinBox_colorSlot->value();
-            moveCastTest(dotBegin,dotEnd,spotSlot,colorSlot,stepLength,db,sps,stepSpeed);
+            moveCastTest(dotBegin,dotEnd,spotSlot,colorSlot,stepLength,db,sps);
             break;
         }
     }
@@ -583,31 +578,21 @@ void MainWindow::on_spinBox_colorSlot_valueChanged(int arg1)
 
 void MainWindow::on_pushButton_shuterMotor_clicked()
 {
-    quint16 time = ui->lineEdit_shutterMotorTime->text().toInt();
-    quint32 pos = ui->lineEdit_shutterMotorPos->text().toInt();
+    quint16 time = ui->spinBox_shutterOpenDuration->value();
+    quint32 pos = ui->spinBox_shutterOpenPos->value();
     m_devCtl->openShutter(time,pos);
 }
 
-void MainWindow::on_checkBox_autoCalcFocalDist_stateChanged(int arg1)
-{
-    ui->lineEdit_settingFocal->setEnabled(!(arg1==Qt::CheckState::Checked));
-
-}
-
-void MainWindow::on_checkBox_useConfigPos_stateChanged(int arg1)
-{
-    if(m_config.isEmpty()) return;
-    ui->lineEdit_shutterPos->setEnabled(!(arg1==Qt::CheckState::Checked));
-
-}
 
 void MainWindow::on_comboBox_testFucntion_currentIndexChanged(int index)
 {
-    ui->groupBox_staticCastPos->setVisible(index==0);
-    ui->lineEdit_durationTime->setVisible(index==0);
-    ui->groupBox_moveCastPos->setVisible(index==1);
-    ui->checkBox_autoCalcFocalDist->setVisible(index==0);
-    if(index==1) ui->checkBox_autoCalcFocalDist->setChecked(true);
+    ui->stackedWidget->setCurrentIndex(index);
+    ui->spinBox_shutterOpenDuration->setEnabled(index==0);
+    ui->groupBox_focalTest->setEnabled(index==0);
+    if(index==1)
+    {
+        ui->spinBox_spotSlot->setMinimum(1);
+    }
 }
 
 
@@ -833,7 +818,7 @@ void MainWindow::on_pushButton_resetCheckedMotors_clicked()
     if(ui->radioButton_shutterMotor->isChecked()) motorid = UsbDev::DevCtl::MotorId::MotorId_Shutter;
     if(ui->radioButton_chinHozMotor->isChecked()) motorid = UsbDev::DevCtl::MotorId::MotorId_Chin_Hoz;
     if(ui->radioButton_chinVertMotor->isChecked()) motorid = UsbDev::DevCtl::MotorId::MotorId_Chin_Vert;
-    m_devCtl->resetMotor(motorid,ui->lineEdit_resetSpeed->text().toInt());
+    m_devCtl->resetMotor(motorid,ui->spinBox_resetSpeed->value());
 }
 
 void MainWindow::moveChinMotors(UsbDev::DevCtl::MoveMethod method)
@@ -842,45 +827,45 @@ void MainWindow::moveChinMotors(UsbDev::DevCtl::MoveMethod method)
     quint8 speed[2]={0};
     if(ui->checkBox_testChinHoz->isChecked())
     {
-        value[0] = ui->lineEdit_posChinHoz->text().toInt();
-        speed[0] = ui->lineEdit_speedChinHoz->text().toInt();
+        value[0] = ui->spinBox_hozChinMotorPos->value();
+        speed[0] = ui->spinBox_hosChinMotorSpeed->value();
     }
     if(ui->checkBox_testChinVert->isChecked())
     {
-        value[1] = ui->lineEdit_posChinVert->text().toInt();
-        speed[1] = ui->lineEdit_speedChinVert->text().toInt();
+        value[1] = ui->spinBox_vertChinMotorPos->value();
+        speed[1] = ui->spinBox_vertChinMotorSpeed->value();
     }
     m_devCtl->moveChinMotors(speed,value,method);
 }
 
 void MainWindow::move5Motors(UsbDev::DevCtl::MoveMethod method)
 {
-    qint32 value[5]={0};
-    quint8 speed[5]={0};
+    qint32 value[5]{0};
+    quint8 speed[5]{0};
     if(ui->checkBox_testX->isChecked())
     {
-        value[0]=ui->lineEdit_posX->text().toInt();
-        speed[0]=ui->lineEdit_speedX->text().toInt();
+        value[0]=ui->spinBox_XMotorPos->value();
+        speed[0]=ui->spinBox_XMotorSpeed->value();
     }
     if(ui->checkBox_testY->isChecked())
     {
-        value[1]=ui->lineEdit_posY->text().toInt();
-        speed[1]=ui->lineEdit_speedY->text().toInt();
+        value[1]=ui->spinBox_YMotorPos->value();
+        speed[1]=ui->spinBox_YMotorSpeed->value();
     }
     if(ui->checkBox_testFocus->isChecked())
     {
-        value[2]=ui->lineEdit_posFocus->text().toInt();
-        speed[2]=ui->lineEdit_speedFocus->text().toInt();
+        value[2]=ui->spinBox_focalMotorPos->value();
+        speed[2]=ui->spinBox_focalMotorSpeed->value();
     }
     if(ui->checkBox_testColor->isChecked())
     {
-        value[3]=ui->lineEdit_posColor->text().toInt();
-        speed[3]=ui->lineEdit_speedColor->text().toInt();
+        value[3]=ui->spinBox_colorMotorPos->value();
+        speed[3]=ui->spinBox_colorMotorSpeed->value();
     }
     if(ui->checkBox_testSpot->isChecked())
     {
-        value[4]=ui->lineEdit_posSpot->text().toInt();
-        speed[4]=ui->lineEdit_speedSpot->text().toInt();
+        value[4]=ui->spinBox_spotMotorPos->value();
+        speed[4]=ui->spinBox_spotMotorSpeed->value();
     }
     m_devCtl->move5Motors(speed,value,method);
 }
@@ -996,14 +981,14 @@ void MainWindow::staticCastTest(const CoordMotorPosFocalDistInfo& coordMotorPosF
 
     //打开快门
     showDevInfo("打开快门.");
-    ui->checkBox_useConfigPos->isChecked()?shutterPos=ui->lineEdit_shutterPos->text().toInt():shutterPos=m_config.shutterOpenPosRef();
+    shutterPos=ui->spinBox_shutterOpenPos->value();
     while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_X)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Y)||
           m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Color)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Light_Spot))
     {QCoreApplication::processEvents();}
     m_devCtl->openShutter(durationTime,shutterPos);
 }
 
-void MainWindow::moveCastTest(const CoordSpacePosInfo& dotSpaceBegin,const CoordSpacePosInfo& dotSpaceEnd,int spotSlot ,int colorSlot,float stepLength,int db,int* sps,int stepSpeed)
+void MainWindow::moveCastTest(const CoordSpacePosInfo& dotSpaceBegin,const CoordSpacePosInfo& dotSpaceEnd,int spotSlot ,int colorSlot,float stepLength,int db,int* sps)
 {
 
     CoordMotorPosFocalDistInfo dotMotorBegin,dotMotorEnd;
@@ -1078,12 +1063,13 @@ void MainWindow::moveCastTest(const CoordSpacePosInfo& dotSpaceBegin,const Coord
     float stepLengthX,stepLengthY;
     float distX=dotSpaceEnd.coordX-dotSpaceBegin.coordX;
     float distY=dotSpaceEnd.coordY-dotSpaceBegin.coordY;
-    int stepCount;
+    int stepCount,stepSpeed;
     if(std::abs(distX)>std::abs(distY))
     {
         distX>0?stepLengthX=stepLength:stepLengthX=-stepLength;
         stepCount=distX/stepLengthX;
         stepLengthY=distY/stepCount;
+        stepSpeed=sps[0];
     }
 
     else
@@ -1092,6 +1078,7 @@ void MainWindow::moveCastTest(const CoordSpacePosInfo& dotSpaceBegin,const Coord
         stepLengthY=stepLength;
         stepCount=distY/stepLength;
         stepLengthX=distX/stepCount;
+        stepSpeed=sps[1];
     }
 
     int* dotArr=new int[stepCount*3];
@@ -1099,7 +1086,8 @@ void MainWindow::moveCastTest(const CoordSpacePosInfo& dotSpaceBegin,const Coord
     CoordMotorPosFocalDistInfo coordMotorPosFocalDistInfoTemp;
     qDebug()<<stepCount;
 
-
+    showDevInfo(QString("分割为%1个点,X步长为%2,Y步长为%3.").arg(QString::number(stepCount)).
+                arg(QString::number(stepLengthX)).arg(QString::number(stepLengthY)));
     for(int i=0;i<stepCount;i++)
     {
         coordSpacePosInfoTemp.coordX+=stepLengthX;
@@ -1108,7 +1096,8 @@ void MainWindow::moveCastTest(const CoordSpacePosInfo& dotSpaceBegin,const Coord
         dotArr[i*3+0]=coordMotorPosFocalDistInfoTemp.motorX;
         dotArr[i*3+1]=coordMotorPosFocalDistInfoTemp.motorY;
         dotArr[i*3+2]=getFocusMotorPosByDist(coordMotorPosFocalDistInfoTemp.focalDist,spotSlot);
-        qDebug()<<i;
+        showDevInfo(QString("第%1个点,X电机坐标%2,Y电机坐标%3,焦距电机坐标%4.").arg(QString::number(i)).arg(QString::number( dotArr[i*3+0])).
+                    arg(QString::number( dotArr[i*3+1])).arg(QString::number( dotArr[i*3+2])));
 
     }
 
@@ -1117,7 +1106,6 @@ void MainWindow::moveCastTest(const CoordSpacePosInfo& dotSpaceBegin,const Coord
     int totalframe=ceil((float)stepCount/stepPerFrame);
     for(int i=0;i<totalframe-1;i++)
     {
-        qDebug()<<i;
         qDebug()<<QString::pointer(&dotArr[stepPerFrame*3*i]);
         qDebug()<<dotArr[stepPerFrame*3*i];
         qDebug()<<dotArr[stepPerFrame*3*i+1];

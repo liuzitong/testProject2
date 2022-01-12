@@ -88,10 +88,6 @@ private slots:
 
     void on_pushButton_shuterMotor_clicked();
 
-    void on_checkBox_autoCalcFocalDist_stateChanged(int arg1);
-
-    void on_checkBox_useConfigPos_stateChanged(int arg1);
-
     void on_comboBox_testFucntion_currentIndexChanged(int index);
 
     void on_action_chooseDevice_triggered();
@@ -126,7 +122,7 @@ private:
     void move5Motors(UsbDev::DevCtl::MoveMethod);
     bool getXYMotorPosAndFocalDistFromCoord(const CoordSpacePosInfo& coordSpacePosInfo,CoordMotorPosFocalDistInfo& coordMotorPosFocalDistInfo);
     void staticCastTest(const CoordMotorPosFocalDistInfo& dot,int spotSlot ,int colorSlot,int db,int* sps,int durationTime,int shutterPos);
-    void moveCastTest(const CoordSpacePosInfo& dotBegin,const CoordSpacePosInfo& dotEnd,int spotSlot ,int colorSlot,float stepLength,int db,int* sps,int stepSpeed);
+    void moveCastTest(const CoordSpacePosInfo& dotBegin,const CoordSpacePosInfo& dotEnd,int spotSlot ,int colorSlot,float stepLength,int db,int* sps);
     void init();
     void uninit();
     int interpolation(int value[4],QPointF loc);
