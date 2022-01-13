@@ -42,7 +42,22 @@ private slots:
     void refreshVideo();
     void refreshConnectionStatus(int);
     void updateProfile();
-//    void updateConfig();
+
+    void on_tabWidget_currentChanged(int index);
+
+    void on_action_chooseDevice_triggered();
+
+    void on_action_readLocalData_triggered();
+
+    void on_action_saveLocalData_triggered();
+
+    void on_action_saveConfig_triggered();
+
+    void on_action_readConfigFromLocal_triggered();
+
+    void on_action_updateConfigToLower_triggered();
+
+    void on_action_downloadConfig_triggered();
 
     void on_pushButton_relativeMoveChin_clicked();
 
@@ -76,50 +91,62 @@ private slots:
 
     void on_comboBox_lightSelect_currentIndexChanged(int index);
 
-    void on_pushButton_testStart_clicked();
+    void on_comboBox_color_currentIndexChanged(int index);
+
+    void on_spinBox_colorSlot_valueChanged(int arg1);
+
+    void on_spinBox_colorMotorPos_2_valueChanged(int arg1);
 
     void on_comboBox_spotSize_currentIndexChanged(int);
 
     void on_spinBox_spotSlot_valueChanged(int arg1);
 
-    void on_comboBox_color_currentIndexChanged(int index);
+    void on_spinBox_spotMotorPos_2_valueChanged(int arg1);
 
-    void on_spinBox_colorSlot_valueChanged(int arg1);
+    void on_spinBox_DbSetting_valueChanged(int arg1);
 
-    void on_pushButton_shuterMotor_clicked();
+    void on_spinBox_DbColorPos_valueChanged(int arg1);
+
+    void on_spinBox_DbSpotPos_valueChanged(int arg1);
+
+    void on_lineEdit_coordX_textChanged(const QString &arg1){fillXYMotorAndFocalInfoByXYCoord();};
+
+    void on_lineEdit_coordY_textChanged(const QString &arg1){fillXYMotorAndFocalInfoByXYCoord();};
+
+    void on_spinBox_shutterOpenPos_valueChanged(int arg1);
+
+    void on_pushButton_colorTest_clicked();
+
+    void on_pushButton_spotTest_clicked();
+
+    void on_pushButton_focalTest_clicked();
+
+    void on_pushButton_dbTest_clicked();
+
+    void on_pushButton_staticCastTest_clicked();
+
+    void on_pushButton_shuterTest_clicked();
 
     void on_comboBox_testFucntion_currentIndexChanged(int index);
 
-    void on_action_chooseDevice_triggered();
-
-    void on_tabWidget_currentChanged(int index);
-
-    void on_action_readLocalData_triggered();
-
-    void on_action_saveLocalData_triggered();
-
-    void on_action_saveConfig_triggered();
-
-    void on_action_readConfigFromLocal_triggered();
-
-    void on_action_updateConfigToLower_triggered();
-
-    void on_action_downloadConfig_triggered();
+    void on_pushButton_testStart_clicked();
 
     void on_pushButton_readCache_clicked();
 
     void on_checkBox_IO_stateChanged(int arg1);
 
+    void on_checkBox_startRefreshInfo_stateChanged(int arg1);
+
     void on_checkBox_RefreshIO_stateChanged(int arg1);
 
-    void on_checkBox_startRefreshInfo_stateChanged(int arg1);
+
 
 private:
     void initData();
     void initTable();
-    void updateConfig();
     void moveChinMotors(UsbDev::DevCtl::MoveMethod);
     void move5Motors(UsbDev::DevCtl::MoveMethod);
+    void fillXYMotorAndFocalInfoByXYCoord();
     bool getXYMotorPosAndFocalDistFromCoord(const CoordSpacePosInfo& coordSpacePosInfo,CoordMotorPosFocalDistInfo& coordMotorPosFocalDistInfo);
     void staticCastTest(const CoordMotorPosFocalDistInfo& dot,int spotSlot ,int colorSlot,int db,int* sps,int durationTime,int shutterPos);
     void moveCastTest(const CoordSpacePosInfo& dotBegin,const CoordSpacePosInfo& dotEnd,int spotSlot ,int colorSlot,float stepLength,int db,int* sps);
@@ -140,6 +167,7 @@ private:
     TableModel *m_dbAngleDampingTableModel;                 //DB离心度衰减参数表 本机数据
     UsbDev::DevCtl *m_devCtl=NULL;
     UsbDev::Config m_config;
+    LocalTableData m_localTableData;
     UsbDev::StatusData m_statusData;
     UsbDev::FrameData m_frameData;
     UsbDev::Profile m_profile;

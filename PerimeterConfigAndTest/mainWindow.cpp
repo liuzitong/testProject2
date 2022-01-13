@@ -25,6 +25,13 @@
 #include <QDir>
 #pragma execution_character_set("utf-8")
 
+#define SET_BLOCKING_VALUE(obj,value)       \
+{                                           \
+    obj->blockSignals(true);                \
+    obj->setValue(value);                   \
+    obj->blockSignals(false);               \
+}                                           \
+
 static std::shared_ptr<spdlog::logger> logger=NULL;
 static QString buffToQStr(const char* buff,size_t length)
 {
@@ -73,7 +80,7 @@ void MainWindow::init()
     connect(m_devCtl,&UsbDev::DevCtl::newStatusData,this,&MainWindow::refreshStatus);
     connect(m_devCtl,&UsbDev::DevCtl::newFrameData,this,&MainWindow::refreshVideo);
     connect(m_devCtl,&UsbDev::DevCtl::newProfile,this,&MainWindow::updateProfile);
-    connect(m_devCtl,&UsbDev::DevCtl::newConfig,this,&MainWindow::updateConfig);
+    connect(m_devCtl,&UsbDev::DevCtl::newConfig,this,[&](){showDevInfo("new Config updated");});
     connect(this,&MainWindow::updateInfo,this,&MainWindow::showDevInfo);
     on_comboBox_color_currentIndexChanged(1);
     on_comboBox_spotSize_currentIndexChanged(1);
@@ -113,7 +120,7 @@ void MainWindow::initTable()
     ui->tableView_spotSlotPos->setCornerName("光斑");
     ui->tableView_spotSlotPos->verticalHeader()->setVisible(true);
 
-    auto tableData=m_settings.m_localTableData.m_xyDistTableData;
+    auto tableData=m_localTableData.m_xyDistTableData;
     m_xyDistTableModel=new TableModel();
     m_xyDistTableModel->m_column=tableData.m_column;
     m_xyDistTableModel->m_row=tableData.m_row;
@@ -162,7 +169,7 @@ void MainWindow::initTable()
     ui->tableView_speedStepTimeTable->setCornerName("速度");
     ui->tableView_speedStepTimeTable->verticalHeader()->setVisible(true);
 
-    tableData=m_settings.m_localTableData.m_dbAngleDampingTableData;
+    tableData=m_localTableData.m_dbAngleDampingTableData;
     m_dbAngleDampingTableModel=new TableModel();
     m_dbAngleDampingTableModel->m_column=tableData.m_column;
     m_dbAngleDampingTableModel->m_row=tableData.m_row;
@@ -173,8 +180,8 @@ void MainWindow::initTable()
     ui->tableView_dbAngleDampingTable->setCornerName("离心度");
     ui->tableView_dbAngleDampingTable->verticalHeader()->setVisible(true);
 
-    ui->tableView_mainMotorPosTable->setData(m_settings.m_localTableData.m_mainPosTableData.m_data);
-    ui->tableView_secondaryPosTable->setData(m_settings.m_localTableData.m_secondaryPosTableData.m_data);
+    ui->tableView_mainMotorPosTable->setData(m_localTableData.m_mainPosTableData.m_data);
+    ui->tableView_secondaryPosTable->setData(m_localTableData.m_secondaryPosTableData.m_data);
 }
 
 
@@ -215,6 +222,7 @@ int MainWindow::getFocusMotorPosByDist(int focalDist,int spotSlot)
 void MainWindow::refreshConfigUI()
 {
     bool ok;
+    ui->spinBox_shutterOpenPos->setValue(m_config.shutterOpenPosRef());
     ui->lineEdit_deviceSerialNo->setText(QString::number(m_config.deviceIDRef()));
     ui->lineEdit_centralLightDA->setText(QString::number(m_config.centerFixationLampDARef()));
     ui->lineEdit_bigDiamond1DA->setText(QString::number(m_config.bigDiamondfixationLampDAPtr()[0]));
@@ -338,24 +346,6 @@ void MainWindow::refreshVideo()
     update();
     auto str=QString("frame time stamp:")+QString::number(m_frameData.timeStamp());
     emit updateRefreshInfo(str);
-
-//    m_devCtl->takeNextPendingFrameData();
-//    spdlog::info(std::string("refreshVideo"));
-
-
-//    m_frameData=m_devCtl->takeNextPendingFrameData();
-//    uchar* data=(uchar*)&(m_frameData.crc_veryfication());
-//   qDebug()<<data[0];
-
-//   memcpy(pixData+20,m_frameData.rawData().data(),320*240-20);
-//   memset(pixData,pixData[20],20);
-//   qDebug()<<pixData[320*240-1];
-//    QImage image(pixData,320,240,QImage::Format::Format_Grayscale8);
-//    QPainter painter(ui->openGLWidget);
-//    QPixmap pix;
-//    pix.convertFromImage(image);
-//    painter.drawPixmap(0,0,pix.width(), pix.height(),pix);
-//    update();
 }
 
 void MainWindow::refreshConnectionStatus(int status)
@@ -384,11 +374,6 @@ void MainWindow::updateProfile()
     ui->label_colorMotorRange->setText(QString("%1-%2").arg(QString::number(profile.motorRange(x::MotorId_Color).first)).arg(QString::number(profile.motorRange(x::MotorId_Color).second)));
     ui->label_chinHozMotorRange->setText(QString("%1-%2").arg(QString::number(profile.motorRange(x::MotorId_Chin_Hoz).first)).arg(QString::number(profile.motorRange(x::MotorId_Chin_Hoz).second)));
     ui->label_chinVertMotorRange->setText(QString("%1-%2").arg(QString::number(profile.motorRange(x::MotorId_Chin_Vert).first)).arg(QString::number(profile.motorRange(x::MotorId_Chin_Vert).second)));
-}
-
-void MainWindow::updateConfig()
-{
-    showDevInfo("Config Got.");
 }
 
 void MainWindow::on_pushButton_cameraSwitch_clicked()
@@ -530,27 +515,7 @@ void MainWindow::on_pushButton_testStart_clicked()
     }
 }
 
-void MainWindow::on_comboBox_spotSize_currentIndexChanged(int)
-{
-   QString text=ui->comboBox_spotSize->currentText();
-   for(auto &v:m_settings.m_spotSizeToSlot)
-   {
-       if(v.first==text) ui->spinBox_spotSlot->setValue(v.second);
-   }
 
-}
-
-void MainWindow::on_spinBox_spotSlot_valueChanged(int arg1)
-{
-    for(auto &v:m_settings.m_spotSizeToSlot)
-    {
-        if(v.second==arg1)
-        {
-         ui->comboBox_spotSize->setCurrentText(v.first);return;
-        }
-    }
-    ui->comboBox_spotSize->setCurrentText("--");
-}
 
 void MainWindow::on_comboBox_color_currentIndexChanged(int)
 {
@@ -566,17 +531,146 @@ void MainWindow::on_comboBox_color_currentIndexChanged(int)
 
 void MainWindow::on_spinBox_colorSlot_valueChanged(int arg1)
 {
+    bool findColor=false;
     for(auto &v:m_settings.m_colorToSlot)
     {
          if(v.second==arg1)
          {
-             ui->comboBox_color->setCurrentText(v.first);return;
+             ui->comboBox_color->setCurrentText(v.first);
+             findColor=true;break;
          }
     }
-    ui->comboBox_color->setCurrentText("--");
+
+    if(!findColor) ui->comboBox_color->setCurrentText("--");
+    SET_BLOCKING_VALUE(ui->spinBox_colorMotorPos_2,m_config.switchColorMotorPosPtr()[arg1]);
 }
 
-void MainWindow::on_pushButton_shuterMotor_clicked()
+void MainWindow::on_spinBox_colorMotorPos_2_valueChanged(int arg1)
+{
+    if(ui->checkBox_colorConfigSync->isChecked())
+    {
+        int colorSlot=ui->spinBox_colorSlot->value();
+        m_config.switchColorMotorPosPtr()[colorSlot]=arg1;
+    }
+}
+
+void MainWindow::on_comboBox_spotSize_currentIndexChanged(int)
+{
+   QString text=ui->comboBox_spotSize->currentText();
+   for(auto &v:m_settings.m_spotSizeToSlot)
+   {
+       if(v.first==text) ui->spinBox_spotSlot->setValue(v.second);
+   }
+}
+
+void MainWindow::on_spinBox_spotSlot_valueChanged(int arg1)
+{
+    bool findSpot=false;
+    for(auto &v:m_settings.m_spotSizeToSlot)
+    {
+        if(v.second==arg1)
+        {
+            ui->comboBox_spotSize->setCurrentText(v.first);
+            findSpot=true;break;
+        }
+    }
+    if(!findSpot) ui->comboBox_spotSize->setCurrentText("--");
+    SET_BLOCKING_VALUE(ui->spinBox_spotMotorPos_2,m_config.switchLightSpotMotorPosPtr()[arg1]);
+}
+
+void MainWindow::on_spinBox_spotMotorPos_2_valueChanged(int arg1)
+{
+    if(ui->checkBox_spotConfigSync->isChecked())
+    {
+        int spotSlot=ui->spinBox_spotSlot->value();
+        m_config.switchColorMotorPosPtr()[spotSlot]=arg1;
+    }
+}
+
+void MainWindow::on_spinBox_DbSetting_valueChanged(int arg1)
+{
+   ui->spinBox_DbColorPos->setValue(m_config.DbPosMappingPtr()[arg1][0]);
+   ui->spinBox_DbSpotPos->setValue(m_config.DbPosMappingPtr()[arg1][1]);
+}
+
+void MainWindow::on_spinBox_DbColorPos_valueChanged(int arg1)
+{
+    if(ui->checkBox_DbConfigSync->isChecked())
+    {
+        int db=ui->spinBox_DbSetting->value();
+        m_config.DbPosMappingPtr()[db][0]=arg1;
+    }
+}
+
+void MainWindow::on_spinBox_DbSpotPos_valueChanged(int arg1)
+{
+    if(ui->checkBox_DbConfigSync->isChecked())
+    {
+        int db=ui->spinBox_DbSetting->value();
+        m_config.DbPosMappingPtr()[db][1]=arg1;
+    }
+}
+
+
+void MainWindow::on_spinBox_shutterOpenPos_valueChanged(int arg1)
+{
+    if(ui->checkBox_shutterConfigSync->isChecked())
+    {
+        ui->lineEdit_shutterOpen->setText(QString::number(arg1));
+    }
+}
+
+void MainWindow::on_pushButton_colorTest_clicked()
+{
+    quint8 sps[5]{0};
+    int motorPos[5]{0};
+    sps[3]=ui->spinBox_colorMotorSpeed_2->value();
+    motorPos[3]=ui->spinBox_colorMotorPos_2->value();
+    m_devCtl->move5Motors(sps,motorPos);
+}
+
+void MainWindow::on_pushButton_spotTest_clicked()
+{
+    quint8 sps[5]{0};
+    int motorPos[5]{0};
+    sps[4]=ui->spinBox_spotMotorSpeed_2->value();
+    motorPos[4]=ui->spinBox_spotMotorPos_2->value();
+    m_devCtl->move5Motors(sps,motorPos);
+}
+
+
+void MainWindow::on_pushButton_dbTest_clicked()
+{
+    quint8 sps[5]{0};
+    int motorPos[5]{0};
+    sps[3]=ui->spinBox_focalMotorSpeed_2->value();
+    motorPos[3]=ui->spinBox_DbColorPos->value();
+    sps[4]=ui->spinBox_spotMotorSpeed_2->value();
+    motorPos[4]=ui->spinBox_DbSpotPos->value();
+    m_devCtl->move5Motors(sps,motorPos);
+}
+
+void MainWindow::on_pushButton_staticCastTest_clicked()
+{
+    quint8 sps[5]{0};
+    int motorPos[5]{0};
+    sps[0]=ui->spinBox_XMotorSpeed_2->value();
+    sps[1]=ui->spinBox_YMotorSpeed_2->value();
+    motorPos[0]=ui->spinBox_XMotorPos_2->value();
+    motorPos[1]=ui->spinBox_YMotorPos_2->value();
+    m_devCtl->move5Motors(sps,motorPos);
+}
+
+void MainWindow::on_pushButton_focalTest_clicked()
+{
+    quint8 sps[5]{0};
+    int motorPos[5]{0};
+    sps[2]=ui->spinBox_focalMotorSpeed_2->value();
+    motorPos[2]=ui->spinBox_focalMotorPos_2->value();
+    m_devCtl->move5Motors(sps,motorPos);
+}
+
+void MainWindow::on_pushButton_shuterTest_clicked()
 {
     quint16 time = ui->spinBox_shutterOpenDuration->value();
     quint32 pos = ui->spinBox_shutterOpenPos->value();
@@ -605,12 +699,12 @@ void MainWindow::on_action_chooseDevice_triggered()
     {
         VID=dialog->VID;
         PID=dialog->PID;
+        if(m_devCtl!=NULL)
+        {
+            uninit();
+        }
+        init();
     }
-    if(m_devCtl!=NULL)
-    {
-        uninit();
-    }
-    init();
 }
 
 void MainWindow::on_tabWidget_currentChanged(int index)
@@ -642,8 +736,8 @@ void MainWindow::readLocalData(QString filePath)
     {
         if(file.open(QIODevice::ReadOnly))
         {
-            char* destPtr=(char*)m_settings.m_localTableData.m_data;
-            int dateLen=m_settings.m_localTableData.dataLen;
+            char* destPtr=(char*)m_localTableData.m_data.data();
+            int dateLen=m_localTableData.dataLen;
             QByteArray data=file.readAll();
             if(data.length()!=(int)(dateLen*sizeof(int)))
             {
@@ -663,8 +757,8 @@ void MainWindow::on_action_saveLocalData_triggered()
     QFile file(filePath);
     if(file.open(QIODevice::WriteOnly))
     {
-        char* destPtr=(char*)m_settings.m_localTableData.m_data;
-        int dateLen=m_settings.m_localTableData.dataLen;
+        char* destPtr=(char*)m_localTableData.m_data.data();
+        int dateLen=m_localTableData.dataLen;
         file.write(destPtr,dateLen*sizeof(int));
         file.flush();
         file.close();
@@ -786,8 +880,6 @@ void MainWindow::on_checkBox_startRefreshInfo_stateChanged(int arg1)
 }
 
 
-
-
 void MainWindow::on_pushButton_relativeMoveChin_clicked()
 { moveChinMotors(UsbDev::DevCtl::MoveMethod::Relative); }
 
@@ -870,12 +962,28 @@ void MainWindow::move5Motors(UsbDev::DevCtl::MoveMethod method)
     m_devCtl->move5Motors(speed,value,method);
 }
 
+void MainWindow::fillXYMotorAndFocalInfoByXYCoord()
+{
+    if(!ui->checkBox_calcFocalDist->isChecked()) return;
+    CoordSpacePosInfo coordSpacePosInfo;
+    coordSpacePosInfo.coordX=ui->lineEdit_coordX->text().toFloat();
+    coordSpacePosInfo.coordY=ui->lineEdit_coordY->text().toFloat();
+    CoordMotorPosFocalDistInfo coordMotorPosFocalDistInfo;
+    getXYMotorPosAndFocalDistFromCoord(coordSpacePosInfo,coordMotorPosFocalDistInfo);
+    int focalMotorPos=getFocusMotorPosByDist(coordMotorPosFocalDistInfo.focalDist,ui->spinBox_spotSlot->value());
+    ui->spinBox_XMotorPos_2->setValue(coordMotorPosFocalDistInfo.motorX);
+    ui->spinBox_YMotorPos_2->setValue(coordMotorPosFocalDistInfo.motorY);
+    ui->spinBox_focalDist->setValue(coordMotorPosFocalDistInfo.focalDist);
+    ui->spinBox_focalMotorPos_2->setValue(focalMotorPos);
+
+}
+
 bool MainWindow::getXYMotorPosAndFocalDistFromCoord(const CoordSpacePosInfo& coordSpacePosInfo,CoordMotorPosFocalDistInfo& coordMotorPosFocalDistInfo)
 {
     static bool isMainDotInfoTable=true;
     int x1=floor(coordSpacePosInfo.coordX/6.0f)+15;int x2=ceil(coordSpacePosInfo.coordX/6.0f)+15;
     int y1=floor(coordSpacePosInfo.coordY/6.0f)+15;int y2=ceil(coordSpacePosInfo.coordY/6.0f)+15;
-    auto data=m_settings.m_localTableData;
+    auto data=m_localTableData;
     SingleTableData tableData;
     isMainDotInfoTable?tableData=data.m_mainPosTableData:tableData=data.m_secondaryPosTableData;
     CoordMotorPosFocalDistInfo fourDots[4]

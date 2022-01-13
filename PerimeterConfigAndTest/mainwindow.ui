@@ -137,16 +137,16 @@
                <number>0</number>
               </property>
               <property name="leftMargin">
-               <number>5</number>
+               <number>3</number>
               </property>
               <property name="topMargin">
-               <number>5</number>
+               <number>3</number>
               </property>
               <property name="rightMargin">
-               <number>5</number>
+               <number>3</number>
               </property>
               <property name="bottomMargin">
-               <number>5</number>
+               <number>3</number>
               </property>
               <item>
                <widget class="QComboBox" name="comboBox_lightSelect">
@@ -418,17 +418,20 @@
               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_6">
+              <property name="spacing">
+               <number>2</number>
+              </property>
               <property name="leftMargin">
-               <number>5</number>
+               <number>3</number>
               </property>
               <property name="topMargin">
-               <number>5</number>
+               <number>3</number>
               </property>
               <property name="rightMargin">
-               <number>5</number>
+               <number>3</number>
               </property>
               <property name="bottomMargin">
-               <number>5</number>
+               <number>3</number>
               </property>
               <item>
                <layout class="QGridLayout" name="gridLayout_4">
@@ -607,17 +610,20 @@
               <string>五电机</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_5">
+              <property name="spacing">
+               <number>2</number>
+              </property>
               <property name="leftMargin">
-               <number>5</number>
+               <number>3</number>
               </property>
               <property name="topMargin">
-               <number>5</number>
+               <number>3</number>
               </property>
               <property name="rightMargin">
-               <number>5</number>
+               <number>3</number>
               </property>
               <property name="bottomMargin">
-               <number>5</number>
+               <number>3</number>
               </property>
               <item>
                <layout class="QGridLayout" name="gridLayout_5">
@@ -992,19 +998,19 @@
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_15">
               <property name="spacing">
-               <number>3</number>
+               <number>2</number>
               </property>
               <property name="leftMargin">
-               <number>5</number>
+               <number>3</number>
               </property>
               <property name="topMargin">
-               <number>5</number>
+               <number>3</number>
               </property>
               <property name="rightMargin">
-               <number>5</number>
+               <number>3</number>
               </property>
               <property name="bottomMargin">
-               <number>5</number>
+               <number>3</number>
               </property>
               <item>
                <layout class="QGridLayout" name="gridLayout">
@@ -1393,8 +1399,11 @@
               <property name="bottomMargin">
                <number>3</number>
               </property>
-              <property name="spacing">
+              <property name="horizontalSpacing">
                <number>3</number>
+              </property>
+              <property name="verticalSpacing">
+               <number>2</number>
               </property>
               <item row="0" column="0">
                <widget class="QLabel" name="label_47">
@@ -1547,7 +1556,10 @@
               <property name="bottomMargin">
                <number>3</number>
               </property>
-              <property name="spacing">
+              <property name="horizontalSpacing">
+               <number>2</number>
+              </property>
+              <property name="verticalSpacing">
                <number>3</number>
               </property>
               <item row="0" column="1">
@@ -1715,7 +1727,7 @@
         <item>
          <widget class="QGroupBox" name="groupBox_15">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -1728,14 +1740,14 @@
           </property>
           <property name="maximumSize">
            <size>
-            <width>610</width>
+            <width>440</width>
             <height>16777215</height>
            </size>
           </property>
           <property name="title">
            <string>功能测试</string>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_4">
+          <layout class="QVBoxLayout" name="verticalLayout_9">
            <property name="spacing">
             <number>0</number>
            </property>
@@ -1776,19 +1788,19 @@
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_2">
               <property name="spacing">
-               <number>3</number>
+               <number>2</number>
               </property>
               <property name="leftMargin">
-               <number>3</number>
+               <number>2</number>
               </property>
               <property name="topMargin">
-               <number>3</number>
+               <number>2</number>
               </property>
               <property name="rightMargin">
-               <number>3</number>
+               <number>2</number>
               </property>
               <property name="bottomMargin">
-               <number>3</number>
+               <number>2</number>
               </property>
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_57">
@@ -1838,6 +1850,9 @@
               </item>
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_10">
+                <property name="spacing">
+                 <number>3</number>
+                </property>
                 <item>
                  <spacer name="horizontalSpacer_3">
                   <property name="orientation">
@@ -1896,6 +1911,9 @@
               </item>
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_9">
+                <property name="spacing">
+                 <number>3</number>
+                </property>
                 <item>
                  <spacer name="horizontalSpacer">
                   <property name="orientation">
@@ -1904,7 +1922,7 @@
                   <property name="sizeHint" stdset="0">
                    <size>
                     <width>40</width>
-                    <height>20</height>
+                    <height>0</height>
                    </size>
                   </property>
                  </spacer>
@@ -1967,7 +1985,7 @@
                   <property name="sizeHint" stdset="0">
                    <size>
                     <width>40</width>
-                    <height>20</height>
+                    <height>0</height>
                    </size>
                   </property>
                  </spacer>
@@ -1976,19 +1994,6 @@
               </item>
              </layout>
             </widget>
-           </item>
-           <item>
-            <spacer name="verticalSpacer_6">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
            </item>
            <item>
             <widget class="QGroupBox" name="groupBox_7">
@@ -2066,6 +2071,9 @@
                   <height>0</height>
                  </size>
                 </property>
+                <property name="minimum">
+                 <number>0</number>
+                </property>
                 <property name="maximum">
                  <number>6</number>
                 </property>
@@ -2108,7 +2116,7 @@
                </spacer>
               </item>
               <item>
-               <widget class="QCheckBox" name="checkBox_useConfigPos_4">
+               <widget class="QCheckBox" name="checkBox_colorConfigSync">
                 <property name="text">
                  <string>同步配置</string>
                 </property>
@@ -2127,7 +2135,7 @@
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>60</width>
+                  <width>40</width>
                   <height>16777215</height>
                  </size>
                 </property>
@@ -2140,20 +2148,7 @@
             </widget>
            </item>
            <item>
-            <spacer name="verticalSpacer_8">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QGroupBox" name="groupBox_5">
+            <widget class="QGroupBox" name="groupBox_s">
              <property name="title">
               <string>光斑</string>
              </property>
@@ -2291,7 +2286,7 @@
                </spacer>
               </item>
               <item>
-               <widget class="QCheckBox" name="checkBox_useConfigPos_5">
+               <widget class="QCheckBox" name="checkBox_spotConfigSync">
                 <property name="text">
                  <string>同步配置</string>
                 </property>
@@ -2310,7 +2305,7 @@
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>60</width>
+                  <width>40</width>
                   <height>16777215</height>
                  </size>
                 </property>
@@ -2321,19 +2316,6 @@
               </item>
              </layout>
             </widget>
-           </item>
-           <item>
-            <spacer name="verticalSpacer_7">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
            </item>
            <item>
             <widget class="QGroupBox" name="groupBox_12">
@@ -2352,7 +2334,10 @@
              <property name="title">
               <string>DB</string>
              </property>
-             <layout class="QGridLayout" name="gridLayout_12">
+             <layout class="QHBoxLayout" name="horizontalLayout_15">
+              <property name="spacing">
+               <number>2</number>
+              </property>
               <property name="leftMargin">
                <number>3</number>
               </property>
@@ -2365,66 +2350,11 @@
               <property name="bottomMargin">
                <number>3</number>
               </property>
-              <property name="spacing">
-               <number>3</number>
-              </property>
-              <item row="0" column="2">
-               <widget class="QLabel" name="label_82">
-                <property name="minimumSize">
-                 <size>
-                  <width>60</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>颜色电机位置:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="4">
-               <widget class="QLabel" name="label_83">
-                <property name="minimumSize">
-                 <size>
-                  <width>60</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>光斑电机位置:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="3">
-               <widget class="QSpinBox" name="spinBox_DbColorPos">
-                <property name="minimumSize">
-                 <size>
-                  <width>60</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="maximum">
-                 <number>51</number>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QSpinBox" name="spinBox_DbSetting">
-                <property name="minimumSize">
-                 <size>
-                  <width>60</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="maximum">
-                 <number>51</number>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0">
+              <item>
                <widget class="QLabel" name="label_46">
                 <property name="minimumSize">
                  <size>
-                  <width>40</width>
+                  <width>30</width>
                   <height>0</height>
                  </size>
                 </property>
@@ -2435,11 +2365,69 @@
                  </size>
                 </property>
                 <property name="text">
-                 <string>DB设置:</string>
+                 <string>大小:</string>
                 </property>
                </widget>
               </item>
-              <item row="0" column="5">
+              <item>
+               <widget class="QSpinBox" name="spinBox_DbSetting">
+                <property name="minimumSize">
+                 <size>
+                  <width>40</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="minimum">
+                 <number>0</number>
+                </property>
+                <property name="maximum">
+                 <number>51</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_82">
+                <property name="minimumSize">
+                 <size>
+                  <width>50</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>颜色位置:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="spinBox_DbColorPos">
+                <property name="minimumSize">
+                 <size>
+                  <width>60</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="minimum">
+                 <number>-200000</number>
+                </property>
+                <property name="maximum">
+                 <number>200000</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_83">
+                <property name="minimumSize">
+                 <size>
+                  <width>50</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>光斑位置:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
                <widget class="QSpinBox" name="spinBox_DbSpotPos">
                 <property name="minimumSize">
                  <size>
@@ -2447,35 +2435,15 @@
                   <height>0</height>
                  </size>
                 </property>
+                <property name="minimum">
+                 <number>-200000</number>
+                </property>
                 <property name="maximum">
-                 <number>51</number>
+                 <number>200000</number>
                 </property>
                </widget>
               </item>
-              <item row="0" column="7">
-               <widget class="QCheckBox" name="checkBox_useConfigPos_6">
-                <property name="text">
-                 <string>同步配置</string>
-                </property>
-                <property name="checked">
-                 <bool>false</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="8">
-               <widget class="QPushButton" name="pushButton_shuterMotor_2">
-                <property name="maximumSize">
-                 <size>
-                  <width>60</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>测试</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="6">
+              <item>
                <spacer name="horizontalSpacer_17">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
@@ -2488,21 +2456,31 @@
                 </property>
                </spacer>
               </item>
+              <item>
+               <widget class="QCheckBox" name="checkBox_DbConfigSync">
+                <property name="text">
+                 <string>同步配置</string>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_dbTest">
+                <property name="maximumSize">
+                 <size>
+                  <width>40</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>测试</string>
+                </property>
+               </widget>
+              </item>
              </layout>
             </widget>
-           </item>
-           <item>
-            <spacer name="verticalSpacer_9">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
            </item>
            <item>
             <widget class="QStackedWidget" name="stackedWidget">
@@ -2601,8 +2579,8 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="0" column="8">
-                   <widget class="QCheckBox" name="checkBox_useConfigPos_2">
+                  <item row="0" column="7">
+                   <widget class="QCheckBox" name="checkBox_calcFocalDist">
                     <property name="text">
                      <string>算出焦距</string>
                     </property>
@@ -2621,27 +2599,46 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="0" column="9">
-                   <widget class="QPushButton" name="pushButton_shuterMotor_3">
-                    <property name="maximumSize">
-                     <size>
-                      <width>60</width>
-                      <height>16777215</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>测试</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="6">
+                  <item row="1" column="2">
                    <widget class="QLabel" name="label_73">
                     <property name="text">
                      <string>电机位置:</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="0" column="7">
+                  <item row="0" column="4">
+                   <spacer name="horizontalSpacer_19">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_23">
+                    <property name="minimumSize">
+                     <size>
+                      <width>40</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>40</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>Y坐标:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="3">
                    <widget class="QSpinBox" name="spinBox_YMotorPos_2">
                     <property name="minimumSize">
                      <size>
@@ -2663,7 +2660,7 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="0" column="5">
+                  <item row="1" column="1">
                    <widget class="QLineEdit" name="lineEdit_coordY">
                     <property name="maximumSize">
                      <size>
@@ -2673,14 +2670,8 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="0" column="4">
-                   <widget class="QLabel" name="label_23">
-                    <property name="minimumSize">
-                     <size>
-                      <width>40</width>
-                      <height>0</height>
-                     </size>
-                    </property>
+                  <item row="0" column="8">
+                   <widget class="QPushButton" name="pushButton_staticCastTest">
                     <property name="maximumSize">
                      <size>
                       <width>40</width>
@@ -2688,7 +2679,7 @@
                      </size>
                     </property>
                     <property name="text">
-                     <string>Y坐标:</string>
+                     <string>测试</string>
                     </property>
                    </widget>
                   </item>
@@ -2741,31 +2732,9 @@
                   <property name="bottomMargin">
                    <number>3</number>
                   </property>
-                  <property name="horizontalSpacing">
+                  <property name="spacing">
                    <number>3</number>
                   </property>
-                  <property name="verticalSpacing">
-                   <number>0</number>
-                  </property>
-                  <item row="0" column="2">
-                   <widget class="QLabel" name="label_40">
-                    <property name="minimumSize">
-                     <size>
-                      <width>50</width>
-                      <height>0</height>
-                     </size>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>16777215</width>
-                      <height>16777215</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>起点Y坐标:</string>
-                    </property>
-                   </widget>
-                  </item>
                   <item row="0" column="0">
                    <widget class="QLabel" name="label_41">
                     <property name="minimumSize">
@@ -2785,16 +2754,6 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="0" column="3">
-                   <widget class="QLineEdit" name="lineEdit_beginCoordY">
-                    <property name="maximumSize">
-                     <size>
-                      <width>60</width>
-                      <height>16777215</height>
-                     </size>
-                    </property>
-                   </widget>
-                  </item>
                   <item row="0" column="8" colspan="2">
                    <spacer name="horizontalSpacer_44">
                     <property name="orientation">
@@ -2807,25 +2766,6 @@
                      </size>
                     </property>
                    </spacer>
-                  </item>
-                  <item row="0" column="6">
-                   <widget class="QLabel" name="label_43">
-                    <property name="minimumSize">
-                     <size>
-                      <width>50</width>
-                      <height>0</height>
-                     </size>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>16777215</width>
-                      <height>16777215</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>终点Y坐标:</string>
-                    </property>
-                   </widget>
                   </item>
                   <item row="0" column="4">
                    <widget class="QLabel" name="label_42">
@@ -2856,16 +2796,6 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="0" column="7">
-                   <widget class="QLineEdit" name="lineEdit_endCoordY">
-                    <property name="maximumSize">
-                     <size>
-                      <width>60</width>
-                      <height>16777215</height>
-                     </size>
-                    </property>
-                   </widget>
-                  </item>
                   <item row="0" column="1">
                    <widget class="QLineEdit" name="lineEdit_beginCoordX">
                     <property name="maximumSize">
@@ -2876,25 +2806,83 @@
                     </property>
                    </widget>
                   </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_40">
+                    <property name="minimumSize">
+                     <size>
+                      <width>50</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>起点Y坐标:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QLineEdit" name="lineEdit_beginCoordY">
+                    <property name="maximumSize">
+                     <size>
+                      <width>60</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="4">
+                   <widget class="QLabel" name="label_43">
+                    <property name="minimumSize">
+                     <size>
+                      <width>50</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>终点Y坐标:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="5">
+                   <widget class="QLineEdit" name="lineEdit_endCoordY">
+                    <property name="maximumSize">
+                     <size>
+                      <width>60</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="8" colspan="2">
+                   <spacer name="horizontalSpacer_20">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
                  </layout>
                 </widget>
                </item>
               </layout>
              </widget>
             </widget>
-           </item>
-           <item>
-            <spacer name="verticalSpacer_10">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
            </item>
            <item>
             <widget class="QGroupBox" name="groupBox_focalTest">
@@ -2951,6 +2939,51 @@
                 </property>
                </widget>
               </item>
+              <item row="1" column="4">
+               <spacer name="horizontalSpacer_39">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_37">
+                <property name="minimumSize">
+                 <size>
+                  <width>50</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>焦距:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="5">
+               <widget class="QPushButton" name="pushButton_focalTest">
+                <property name="maximumSize">
+                 <size>
+                  <width>40</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>测试</string>
+                </property>
+               </widget>
+              </item>
               <item row="1" column="3">
                <widget class="QSpinBox" name="spinBox_focalMotorPos_2">
                 <property name="minimumSize">
@@ -2973,48 +3006,6 @@
                 </property>
                </widget>
               </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_37">
-                <property name="minimumSize">
-                 <size>
-                  <width>50</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>50</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>焦距:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="5">
-               <spacer name="horizontalSpacer_39">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item row="1" column="4">
-               <widget class="QCheckBox" name="checkBox_useConfigPos_3">
-                <property name="text">
-                 <string>同步配置</string>
-                </property>
-                <property name="checked">
-                 <bool>false</bool>
-                </property>
-               </widget>
-              </item>
               <item row="1" column="2">
                <widget class="QLabel" name="label_39">
                 <property name="text">
@@ -3022,34 +3013,8 @@
                 </property>
                </widget>
               </item>
-              <item row="1" column="6">
-               <widget class="QPushButton" name="pushButton_shuterMotor_4">
-                <property name="maximumSize">
-                 <size>
-                  <width>60</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>测试</string>
-                </property>
-               </widget>
-              </item>
              </layout>
             </widget>
-           </item>
-           <item>
-            <spacer name="verticalSpacer_11">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
            </item>
            <item>
             <widget class="QGroupBox" name="groupBox_8">
@@ -3106,10 +3071,13 @@
                  </size>
                 </property>
                 <property name="minimum">
-                 <number>-1</number>
+                 <number>0</number>
                 </property>
                 <property name="maximum">
                  <number>10000</number>
+                </property>
+                <property name="value">
+                 <number>200</number>
                 </property>
                </widget>
               </item>
@@ -3143,19 +3111,6 @@
                </widget>
               </item>
               <item>
-               <widget class="QCheckBox" name="checkBox_useConfigPos">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="text">
-                 <string>同步配置</string>
-                </property>
-                <property name="checked">
-                 <bool>false</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
                <spacer name="horizontalSpacer_6">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
@@ -3169,10 +3124,23 @@
                </spacer>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_shuterMotor">
+               <widget class="QCheckBox" name="checkBox_shutterConfigSync">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="text">
+                 <string>同步配置</string>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_shuterTest">
                 <property name="maximumSize">
                  <size>
-                  <width>60</width>
+                  <width>40</width>
                   <height>16777215</height>
                  </size>
                 </property>
@@ -3183,19 +3151,6 @@
               </item>
              </layout>
             </widget>
-           </item>
-           <item>
-            <spacer name="verticalSpacer_12">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
            </item>
            <item>
             <widget class="QGroupBox" name="groupBox_24">
@@ -3219,99 +3174,19 @@
                <number>3</number>
               </property>
               <item row="0" column="0">
-               <widget class="QLabel" name="label_28">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>腮托水平:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QSpinBox" name="spinBox_hosChinMotorSpeed_2">
-                <property name="minimumSize">
-                 <size>
-                  <width>50</width>
-                  <height>0</height>
-                 </size>
-                </property>
+               <widget class="QLabel" name="label_77">
                 <property name="maximumSize">
                  <size>
-                  <width>50</width>
+                  <width>16777215</width>
                   <height>16777215</height>
                  </size>
                 </property>
-                <property name="minimum">
-                 <number>1</number>
-                </property>
-                <property name="maximum">
-                 <number>7</number>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="2">
-               <widget class="QLabel" name="label_75">
-                <property name="text">
-                 <string>腮托竖向:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="4">
-               <widget class="QLabel" name="label_77">
                 <property name="text">
                  <string>X:</string>
                 </property>
                </widget>
               </item>
-              <item row="0" column="3">
-               <widget class="QSpinBox" name="spinBox_vertChinMotorSpeed_2">
-                <property name="minimumSize">
-                 <size>
-                  <width>50</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>50</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="minimum">
-                 <number>1</number>
-                </property>
-                <property name="maximum">
-                 <number>7</number>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="5">
-               <widget class="QSpinBox" name="spinBox_XMotorSpeed_2">
-                <property name="minimumSize">
-                 <size>
-                  <width>50</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>50</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="minimum">
-                 <number>1</number>
-                </property>
-                <property name="maximum">
-                 <number>7</number>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="7">
+              <item row="0" column="4">
                <widget class="QSpinBox" name="spinBox_YMotorSpeed_2">
                 <property name="minimumSize">
                  <size>
@@ -3333,15 +3208,8 @@
                 </property>
                </widget>
               </item>
-              <item row="0" column="6">
-               <widget class="QLabel" name="label_78">
-                <property name="text">
-                 <string>Y:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="9">
-               <widget class="QSpinBox" name="spinBox_focalMotorSpeed_2">
+              <item row="0" column="1">
+               <widget class="QSpinBox" name="spinBox_XMotorSpeed_2">
                 <property name="minimumSize">
                  <size>
                   <width>50</width>
@@ -3362,14 +3230,7 @@
                 </property>
                </widget>
               </item>
-              <item row="0" column="10">
-               <widget class="QLabel" name="label_80">
-                <property name="text">
-                 <string>颜色:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="11">
+              <item row="0" column="9">
                <widget class="QSpinBox" name="spinBox_colorMotorSpeed_2">
                 <property name="minimumSize">
                  <size>
@@ -3391,21 +3252,63 @@
                 </property>
                </widget>
               </item>
+              <item row="0" column="3">
+               <widget class="QLabel" name="label_78">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Y:</string>
+                </property>
+               </widget>
+              </item>
               <item row="0" column="8">
+               <widget class="QLabel" name="label_80">
+                <property name="text">
+                 <string>颜色:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="7">
+               <widget class="QSpinBox" name="spinBox_focalMotorSpeed_2">
+                <property name="minimumSize">
+                 <size>
+                  <width>50</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>7</number>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="6">
                <widget class="QLabel" name="label_79">
                 <property name="text">
                  <string>焦距:</string>
                 </property>
                </widget>
               </item>
-              <item row="0" column="12">
+              <item row="0" column="10">
                <widget class="QLabel" name="label_81">
                 <property name="text">
                  <string>光斑:</string>
                 </property>
                </widget>
               </item>
-              <item row="0" column="13">
+              <item row="0" column="11">
                <widget class="QSpinBox" name="spinBox_spotMotorSpeed_2">
                 <property name="minimumSize">
                  <size>
@@ -3427,21 +3330,34 @@
                 </property>
                </widget>
               </item>
+              <item row="0" column="2">
+               <spacer name="horizontalSpacer_41">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="0" column="5">
+               <spacer name="horizontalSpacer_42">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
              </layout>
             </widget>
-           </item>
-           <item>
-            <spacer name="verticalSpacer_13">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
            </item>
            <item>
             <widget class="QGroupBox" name="groupBox_6">
@@ -3545,6 +3461,12 @@
             </property>
             <item>
              <widget class="QTextBrowser" name="textBrowser_infoText">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="minimumSize">
                <size>
                 <width>0</width>
@@ -5767,7 +5689,10 @@
   </action>
   <action name="action_saveConfig">
    <property name="text">
-    <string>保存设置</string>
+    <string>保存配置</string>
+   </property>
+   <property name="iconText">
+    <string>保存配置</string>
    </property>
    <property name="toolTip">
     <string>保存配置文件到本地</string>

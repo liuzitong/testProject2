@@ -1,5 +1,6 @@
 ﻿#ifndef MODELS_H
 #define MODELS_H
+#include <QSharedPointer>
 
 struct CoordSpacePosInfo
 {
@@ -33,15 +34,16 @@ class LocalTableData
 {
 public:
     LocalTableData();
-//    ~LocalTableData(){
+    ~LocalTableData(){
 //        delete[] m_data;
-//    }
+    }
 public:
     SingleTableData m_mainPosTableData;
     SingleTableData m_secondaryPosTableData;
     SingleTableData m_dbAngleDampingTableData;
     SingleTableData m_xyDistTableData;
-    int* m_data;
+//    int* m_data;
+    QSharedPointer<int> m_data;
     const int dataLen=31*31*3*2+46+52*2;
 };
 
