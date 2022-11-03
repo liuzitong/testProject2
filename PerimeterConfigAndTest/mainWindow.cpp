@@ -23,6 +23,7 @@
 #include <QFileDialog>
 #include "windows.h"
 #include <QDir>
+
 #pragma execution_character_set("utf-8")
 
 #define SET_BLOCKING_VALUE(obj,value)       \
@@ -62,8 +63,27 @@ MainWindow::MainWindow(QWidget *parent) :
     VID=m_settings.m_VID;
     PID=m_settings.m_PID;
     m_timer=new QTimer();
-    connect(m_timer,&QTimer::timeout,[&](){ui->label_connectionStatus->setText("连接断开");});
+    connect(m_timer,&QTimer::timeout,[&](){
+        ui->label_connectionStatus->setText("连接断开");
+    });
     init();
+}
+
+void MainWindow::on_action_chooseDevice_triggered()
+{
+
+    auto* dialog=new UsbViewerQt(this);
+    dialog->setModal(true);
+    if(dialog->exec()==QDialog::Accepted)
+    {
+        VID=dialog->VID;
+        PID=dialog->PID;
+        if(m_devCtl!=NULL)
+        {
+            uninitDevCtl();
+        }
+        initDevCtl();
+    }
 }
 
 
@@ -71,6 +91,14 @@ void MainWindow::init()
 {
     initData();
     initTable();
+    initDevCtl();
+    on_comboBox_color_currentIndexChanged(1);
+    on_comboBox_spotSize_currentIndexChanged(1);
+
+}
+
+void MainWindow::initDevCtl()
+{
     quint32 vid_pid=VID.toInt(nullptr,16)<<16|PID.toInt(nullptr,16);
     m_devCtl=UsbDev::DevCtl::createInstance(vid_pid);
     ui->label_VID->setText(VID);
@@ -82,9 +110,6 @@ void MainWindow::init()
     connect(m_devCtl,&UsbDev::DevCtl::newProfile,this,&MainWindow::updateProfile);
     connect(m_devCtl,&UsbDev::DevCtl::newConfig,this,[&](){showDevInfo("new Config updated");});
     connect(this,&MainWindow::updateInfo,this,&MainWindow::showDevInfo);
-    on_comboBox_color_currentIndexChanged(1);
-    on_comboBox_spotSize_currentIndexChanged(1);
-
 }
 
 void MainWindow::initData()
@@ -187,7 +212,7 @@ void MainWindow::initTable()
 
 
 
-void MainWindow::uninit()
+void MainWindow::uninitDevCtl()
 {
     m_timer->stop();
     ui->label_connectionStatus->setText("未连接");
@@ -310,22 +335,32 @@ MainWindow::~MainWindow()
 
 void MainWindow::refreshStatus()
 {
+    using MotorId=UsbDev::DevCtl::MotorId;
     spdlog::info("refreshStatus");
     m_timer->start(1000);
     ui->label_connectionStatus->setText("保持连接");
     m_statusData=m_devCtl->takeNextPendingStatusData();
-    ui->label_stateX->setText(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId::MotorId_X)?"忙":"闲");
-    ui->label_stateY->setText(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId::MotorId_Y)?"忙":"闲");
-    ui->label_stateFocus->setText(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId::MotorId_Focus)?"忙":"闲");
-    ui->label_stateColor->setText(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId::MotorId_Color)?"忙":"闲");
-    ui->label_stateSpot->setText(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId::MotorId_Light_Spot)?"忙":"闲");
-    ui->label_stateShutter->setText(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId::MotorId_Shutter)?"忙":"闲");
-    ui->label_stateChinHoz->setText(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId::MotorId_Chin_Hoz)?"忙":"闲");
-    ui->label_stateChinVert->setText(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId::MotorId_Chin_Vert)?"忙":"闲");
+    ui->label_stateX->setText(m_statusData.isMotorBusy(MotorId::MotorId_X)?"忙":"闲");
+    ui->label_stateY->setText(m_statusData.isMotorBusy(MotorId::MotorId_Y)?"忙":"闲");
+    ui->label_stateFocus->setText(m_statusData.isMotorBusy(MotorId::MotorId_Focus)?"忙":"闲");
+    ui->label_stateColor->setText(m_statusData.isMotorBusy(MotorId::MotorId_Color)?"忙":"闲");
+    ui->label_stateSpot->setText(m_statusData.isMotorBusy(MotorId::MotorId_Light_Spot)?"忙":"闲");
+    ui->label_stateShutter->setText(m_statusData.isMotorBusy(MotorId::MotorId_Shutter)?"忙":"闲");
+    ui->label_stateChinHoz->setText(m_statusData.isMotorBusy(MotorId::MotorId_Chin_Hoz)?"忙":"闲");
+    ui->label_stateChinVert->setText(m_statusData.isMotorBusy(MotorId::MotorId_Chin_Vert)?"忙":"闲");
     ui->label_answerState->setText(m_statusData.answerpadStatus()?"按下":"松开");
     ui->label_eyeglassStatus->setText(m_statusData.eyeglassStatus()?"升起":"放下");
     ui->label_castLightDA->setText(QString(m_statusData.castLightDA()));
     ui->label_environmentDA->setText(QString(m_statusData.envLightDA()));
+
+    ui->label_posX->setText(QString::number(m_statusData.motorPosition(MotorId::MotorId_X)));
+    ui->label_posY->setText(QString::number(m_statusData.motorPosition(MotorId::MotorId_Y)));
+    ui->label_posFocus->setText(QString::number(m_statusData.motorPosition(MotorId::MotorId_Focus)));
+    ui->label_posColor->setText(QString::number(m_statusData.motorPosition(MotorId::MotorId_Color)));
+    ui->label_posSpot->setText(QString::number(m_statusData.motorPosition(MotorId::MotorId_Light_Spot)));
+    ui->label_posShutter->setText(QString::number(m_statusData.motorPosition(MotorId::MotorId_Shutter)));
+    ui->label_posChinHoz->setText(QString::number(m_statusData.motorPosition(MotorId::MotorId_Chin_Hoz)));
+    ui->label_posChinVert->setText(QString::number(m_statusData.motorPosition(MotorId::MotorId_Chin_Vert)));
 }
 
 
@@ -352,12 +387,11 @@ void MainWindow::refreshConnectionStatus(int status)
 {
     switch (status)
     {
-    case UsbDev::DevCtl::WorkStatus::WorkStatus_E_UnExpected:ui->label_connectionStatus->setText("连接异常");break;
-    case UsbDev::DevCtl::WorkStatus::WorkStatus_S_ConnectToDev:ui->label_connectionStatus->setText("正在连接");break;
-    case UsbDev::DevCtl::WorkStatus::WorkStatus_S_Disconnected:ui->label_connectionStatus->setText("连接断开");break;
-    case UsbDev::DevCtl::WorkStatus::WorkStatus_S_OK:ui->label_connectionStatus->setText("连接正常");break;
+        case UsbDev::DevCtl::WorkStatus::WorkStatus_E_UnExpected:ui->label_connectionStatus->setText("连接异常");break;
+        case UsbDev::DevCtl::WorkStatus::WorkStatus_S_ConnectToDev:ui->label_connectionStatus->setText("正在连接");break;
+        case UsbDev::DevCtl::WorkStatus::WorkStatus_S_Disconnected:ui->label_connectionStatus->setText("连接断开");break;
+        case UsbDev::DevCtl::WorkStatus::WorkStatus_S_OK:ui->label_connectionStatus->setText("连接正常");break;
     }
-    m_timer->start(1000);
 }
 
 //TODO
@@ -464,6 +498,12 @@ void MainWindow::on_comboBox_lightSelect_currentIndexChanged(int index)
 {
     ui->comboBox_lampNumber->setEnabled(index==1||index==2);
     index==7?ui->label_da_RGB->setText("RGB:"):ui->label_da_RGB->setText("DA:");
+    switch(index)
+    {
+    case 7:ui->label_da_RGB->setText("RGB:");break;
+    case 8:ui->label_da_RGB->setText("PWM:");break;
+    default:ui->label_da_RGB->setText("DA:");break;
+    }
     ui->spinBox_lightDAG->setEnabled(index==7);
     ui->spinBox_lightDAB->setEnabled(index==7);
 }
@@ -690,22 +730,7 @@ void MainWindow::on_comboBox_testFucntion_currentIndexChanged(int index)
 }
 
 
-void MainWindow::on_action_chooseDevice_triggered()
-{
 
-    auto* dialog=new UsbViewerQt(this);
-    dialog->setModal(true);
-    if(dialog->exec()==QDialog::Accepted)
-    {
-        VID=dialog->VID;
-        PID=dialog->PID;
-        if(m_devCtl!=NULL)
-        {
-            uninit();
-        }
-        init();
-    }
-}
 
 void MainWindow::on_tabWidget_currentChanged(int index)
 {

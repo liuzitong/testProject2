@@ -44,7 +44,7 @@ public:
     SingleTableData m_xyDistTableData;
 //    int* m_data;
     QSharedPointer<int> m_data;
-    const int dataLen=31*31*3*2+46+52*2;
+    const int dataLen=31*31*3*2+46+52*2;     //正副表，DB角度衰减表，DB参数表
 };
 
 #endif // MODELS_H

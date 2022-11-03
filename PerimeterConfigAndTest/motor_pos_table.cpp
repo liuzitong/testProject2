@@ -66,7 +66,6 @@ MotorPosTable::MotorPosTable(QWidget *parent):QTableView(parent)
 
 void MotorPosTable::setData(int *data)
 {
-    delete[] m_tableModel->m_modelData;
     m_tableModel->m_modelData=data;
 }
 

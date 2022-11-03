@@ -258,6 +258,7 @@ bool   DevCtl_Worker :: cmd_ReadProfile( bool req_emit )
         if ( ! ret ) { updateInfo("recv. profile data failed."); }
     }
     if ( ret ) {
+        updateInfo("recv. profile data succeeded.");
         updateIOInfo(QString("R:")+buffToQStr(reinterpret_cast<const char*>(buff),72));
         Profile profile( QByteArray::fromRawData( reinterpret_cast<const char*>(buff), sizeof(buff)));
         if ( ! profile.isEmpty()) { if ( req_emit ){ emit this->newProfile( profile );} }
@@ -286,6 +287,7 @@ bool   DevCtl_Worker :: cmd_ReadConfig( bool req_emit )
         if ( ! ret ) { updateInfo("recv. config data failed."); }
     }
     if ( ret ) {
+        updateInfo("recv. config data succeeded.");
         updateIOInfo(QString("Config R:")+buffToQStr(reinterpret_cast<const char*>(buffIn),1328));
         Config config( QByteArray::fromRawData( reinterpret_cast<const char*>(buffIn), sizeof(buffIn)));
         if ( ! config.isEmpty()) { if ( req_emit ){ emit this->newConfig(config); }}
@@ -358,21 +360,26 @@ MoveCache* DevCtl_Worker::cmd_ReadMoveCache()
 bool   DevCtl_Worker :: cmd_ReadStatusData()
 {
     if ( m_trg_called.loadAcquire() > 0 ) { m_trg_called.fetchAndSubOrdered(1); }
-    if ( ! this->isDeviceWork()) { updateRefreshInfo("no connection.");return false; }
-    updateRefreshInfo("读取状态.");
+    if ( ! this->isDeviceWork()) {
+        updateRefreshInfo("device not working not gonna read StatusData.");
+        return false;
+    }
+    updateRefreshInfo("ReadStatus.");
     unsigned char buff[512]={0}; bool ret = true;
     if ( ret ) {
-        buff[0] = 0x55; buff[1] = 0xf3;
-        updateRefreshIOInfo(QString("W:")+buffToQStr(reinterpret_cast<const char*>(buff),2));return false;
+        buff[0] = 0x5A; buff[1] = 0xF3;
+        updateRefreshIOInfo(QString("W:")+buffToQStr(reinterpret_cast<const char*>(buff),2));
         ret = this->cmdComm_bulkOutSync( buff, sizeof( buff ));
-        if ( ! ret  ) { updateRefreshInfo("send read status command failed."); }
+        if ( ! ret  ) {
+            updateRefreshInfo("send read status command failed.");
+        }
     }
     if ( ret ) {
         ret = this->cmdComm_bulkInSync( buff, sizeof( buff ));
         if ( ! ret ) { updateRefreshInfo("recv. status data failed."); }
     }
     if ( ret ) {
-        updateRefreshIOInfo(QString("R:")+buffToQStr(reinterpret_cast<const char*>(buff),2));
+        updateRefreshIOInfo(QString("R:")+buffToQStr(reinterpret_cast<const char*>(buff),64));
         StatusData sd( QByteArray::fromRawData( reinterpret_cast<const char*>(buff),sizeof(buff)));
         if ( ! sd.isEmpty()) {
             emit this->newStatusData( sd );
@@ -387,7 +394,7 @@ bool   DevCtl_Worker :: cmd_ReadStatusData()
 bool  DevCtl_Worker :: cmd_ReadFrameData()
 {
     if ( m_trg_called.loadAcquire() > 0 ) { m_trg_called.fetchAndSubOrdered(1); }
-    if ( ! this->isDeviceWork() || ! m_is_video_on || m_profile.isEmpty()) { updateRefreshInfo("no connection."); return false; }
+    if ( ! this->isDeviceWork() || ! m_is_video_on || m_profile.isEmpty()) { updateRefreshInfo("no camera."); return false; }
     updateRefreshInfo("读取视频帧.");
     bool ret = true;
     QSize sz = m_profile.videoSize();
@@ -495,9 +502,9 @@ bool  DevCtl_Worker :: cmd_TurnOffVideo()
 bool DevCtl_Worker::cmd_GeneralCmd(QByteArray ba, QString funcName,quint32 dataLen)
 {
     QString msg=buffToQStr(reinterpret_cast<const char*>(ba.data()),dataLen);
-    if ( ! this->isDeviceWork()) { updateInfo("no connection!");return false; }
     emit updateInfo(funcName);
     emit updateIOInfo(buffToQStr(reinterpret_cast<const char*>(ba.data()),dataLen));
+    if ( ! this->isDeviceWork()) { updateInfo("no connection!");return false; }
     bool ret = this->cmdComm_bulkOutSync((unsigned char*) ba.data(), ba.size() );
     if(ret)
     {

@@ -151,7 +151,8 @@ private:
     void staticCastTest(const CoordMotorPosFocalDistInfo& dot,int spotSlot ,int colorSlot,int db,int* sps,int durationTime,int shutterPos);
     void moveCastTest(const CoordSpacePosInfo& dotBegin,const CoordSpacePosInfo& dotEnd,int spotSlot ,int colorSlot,float stepLength,int db,int* sps);
     void init();
-    void uninit();
+    void initDevCtl();
+    void uninitDevCtl();
     int interpolation(int value[4],QPointF loc);
     int getFocusMotorPosByDist(int focalDist,int spotSlot);
     void refreshConfigUI();
