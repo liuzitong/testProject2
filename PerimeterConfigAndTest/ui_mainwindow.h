@@ -56,6 +56,33 @@ public:
     QHBoxLayout *horizontalLayout_12;
     QGroupBox *groupBox;
     QVBoxLayout *verticalLayout_3;
+    QTabWidget *tabWidget_5;
+    QWidget *tab_13;
+    QHBoxLayout *horizontalLayout_21;
+    QComboBox *comboBox_lightSelect_2;
+    QSpacerItem *horizontalSpacer_38;
+    QLabel *label_da_RGB_2;
+    QSpinBox *spinBox_lightDAR_2;
+    QCheckBox *checkBox;
+    QPushButton *pushButton_lightSwitch_2;
+    QWidget *tab_14;
+    QHBoxLayout *horizontalLayout_24;
+    QComboBox *comboBox_lightSelect_3;
+    QComboBox *comboBox_lampNumber_2;
+    QSpacerItem *horizontalSpacer_40;
+    QLabel *label_da_RGB_3;
+    QSpinBox *spinBox_lightDAR_3;
+    QCheckBox *checkBox_2;
+    QPushButton *pushButton_lightSwitch_3;
+    QWidget *tab_15;
+    QHBoxLayout *horizontalLayout_25;
+    QSpacerItem *horizontalSpacer_43;
+    QLabel *label_da_RGB_4;
+    QSpinBox *spinBox_lightDAR_4;
+    QSpinBox *spinBox_lightDAG_2;
+    QSpinBox *spinBox_lightDAB_2;
+    QCheckBox *checkBox_3;
+    QPushButton *pushButton_lightSwitch_4;
     QGroupBox *groupBox_23;
     QHBoxLayout *horizontalLayout_6;
     QComboBox *comboBox_lightSelect;
@@ -65,8 +92,8 @@ public:
     QSpinBox *spinBox_lightDAR;
     QSpinBox *spinBox_lightDAG;
     QSpinBox *spinBox_lightDAB;
-    QSpacerItem *horizontalSpacer_5;
     QPushButton *pushButton_lightSwitch;
+    QSpacerItem *horizontalSpacer_5;
     QGroupBox *groupBox_3;
     QVBoxLayout *verticalLayout_6;
     QGridLayout *gridLayout_4;
@@ -261,15 +288,14 @@ public:
     QSpacerItem *horizontalSpacer_8;
     QCheckBox *checkBox_spotConfigSync;
     QPushButton *pushButton_spotTest;
-    QGroupBox *groupBox_12;
-    QHBoxLayout *horizontalLayout_15;
+    QGroupBox *groupBox_4;
+    QHBoxLayout *horizontalLayout_13;
     QLabel *label_46;
     QSpinBox *spinBox_DbSetting;
     QLabel *label_82;
     QSpinBox *spinBox_DbColorPos;
     QLabel *label_83;
     QSpinBox *spinBox_DbSpotPos;
-    QSpacerItem *horizontalSpacer_17;
     QCheckBox *checkBox_DbConfigSync;
     QPushButton *pushButton_dbTest;
     QStackedWidget *stackedWidget;
@@ -277,17 +303,17 @@ public:
     QHBoxLayout *horizontalLayout_7;
     QGroupBox *groupBox_staticCastPos;
     QGridLayout *gridLayout_11;
+    QSpinBox *spinBox_YMotorPos_2;
+    QPushButton *pushButton_staticCastTest;
+    QLineEdit *lineEdit_coordY;
+    QLabel *label_72;
     QSpinBox *spinBox_XMotorPos_2;
     QLabel *label_22;
-    QLabel *label_72;
-    QCheckBox *checkBox_calcFocalDist;
-    QLineEdit *lineEdit_coordX;
-    QLabel *label_73;
     QSpacerItem *horizontalSpacer_19;
     QLabel *label_23;
-    QSpinBox *spinBox_YMotorPos_2;
-    QLineEdit *lineEdit_coordY;
-    QPushButton *pushButton_staticCastTest;
+    QLineEdit *lineEdit_coordX;
+    QCheckBox *checkBox_calcFocalDist;
+    QLabel *label_73;
     QWidget *page_2;
     QHBoxLayout *horizontalLayout_5;
     QGroupBox *groupBox_moveCastPos;
@@ -305,10 +331,10 @@ public:
     QGroupBox *groupBox_focalTest;
     QGridLayout *gridLayout_13;
     QSpinBox *spinBox_focalDist;
-    QSpacerItem *horizontalSpacer_39;
-    QLabel *label_37;
-    QPushButton *pushButton_focalTest;
     QSpinBox *spinBox_focalMotorPos_2;
+    QLabel *label_37;
+    QSpacerItem *horizontalSpacer_39;
+    QPushButton *pushButton_focalTest;
     QLabel *label_39;
     QGroupBox *groupBox_8;
     QHBoxLayout *horizontalLayout_4;
@@ -549,17 +575,206 @@ public:
         groupBox->setMinimumSize(QSize(380, 0));
         groupBox->setMaximumSize(QSize(380, 16777215));
         verticalLayout_3 = new QVBoxLayout(groupBox);
-        verticalLayout_3->setSpacing(3);
+        verticalLayout_3->setSpacing(0);
         verticalLayout_3->setContentsMargins(11, 11, 11, 11);
         verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
         verticalLayout_3->setContentsMargins(3, 3, 3, 3);
-        groupBox_23 = new QGroupBox(groupBox);
-        groupBox_23->setObjectName(QStringLiteral("groupBox_23"));
-        QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        tabWidget_5 = new QTabWidget(groupBox);
+        tabWidget_5->setObjectName(QStringLiteral("tabWidget_5"));
+        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Preferred);
         sizePolicy1.setHorizontalStretch(0);
         sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(groupBox_23->sizePolicy().hasHeightForWidth());
-        groupBox_23->setSizePolicy(sizePolicy1);
+        sizePolicy1.setHeightForWidth(tabWidget_5->sizePolicy().hasHeightForWidth());
+        tabWidget_5->setSizePolicy(sizePolicy1);
+        tab_13 = new QWidget();
+        tab_13->setObjectName(QStringLiteral("tab_13"));
+        horizontalLayout_21 = new QHBoxLayout(tab_13);
+        horizontalLayout_21->setSpacing(3);
+        horizontalLayout_21->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_21->setObjectName(QStringLiteral("horizontalLayout_21"));
+        horizontalLayout_21->setContentsMargins(3, 3, 3, 3);
+        comboBox_lightSelect_2 = new QComboBox(tab_13);
+        comboBox_lightSelect_2->setObjectName(QStringLiteral("comboBox_lightSelect_2"));
+        comboBox_lightSelect_2->setMinimumSize(QSize(90, 0));
+
+        horizontalLayout_21->addWidget(comboBox_lightSelect_2);
+
+        horizontalSpacer_38 = new QSpacerItem(66, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_21->addItem(horizontalSpacer_38);
+
+        label_da_RGB_2 = new QLabel(tab_13);
+        label_da_RGB_2->setObjectName(QStringLiteral("label_da_RGB_2"));
+        QSizePolicy sizePolicy2(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(label_da_RGB_2->sizePolicy().hasHeightForWidth());
+        label_da_RGB_2->setSizePolicy(sizePolicy2);
+        label_da_RGB_2->setMinimumSize(QSize(25, 0));
+        label_da_RGB_2->setMaximumSize(QSize(25, 16777215));
+
+        horizontalLayout_21->addWidget(label_da_RGB_2);
+
+        spinBox_lightDAR_2 = new QSpinBox(tab_13);
+        spinBox_lightDAR_2->setObjectName(QStringLiteral("spinBox_lightDAR_2"));
+        spinBox_lightDAR_2->setMinimumSize(QSize(40, 0));
+        spinBox_lightDAR_2->setMaximumSize(QSize(50, 16777215));
+        spinBox_lightDAR_2->setMinimum(0);
+        spinBox_lightDAR_2->setMaximum(65535);
+        spinBox_lightDAR_2->setValue(0);
+
+        horizontalLayout_21->addWidget(spinBox_lightDAR_2);
+
+        checkBox = new QCheckBox(tab_13);
+        checkBox->setObjectName(QStringLiteral("checkBox"));
+
+        horizontalLayout_21->addWidget(checkBox);
+
+        pushButton_lightSwitch_2 = new QPushButton(tab_13);
+        pushButton_lightSwitch_2->setObjectName(QStringLiteral("pushButton_lightSwitch_2"));
+        QSizePolicy sizePolicy3(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(pushButton_lightSwitch_2->sizePolicy().hasHeightForWidth());
+        pushButton_lightSwitch_2->setSizePolicy(sizePolicy3);
+        pushButton_lightSwitch_2->setMinimumSize(QSize(40, 0));
+        pushButton_lightSwitch_2->setMaximumSize(QSize(40, 16777215));
+
+        horizontalLayout_21->addWidget(pushButton_lightSwitch_2);
+
+        tabWidget_5->addTab(tab_13, QString());
+        tab_14 = new QWidget();
+        tab_14->setObjectName(QStringLiteral("tab_14"));
+        horizontalLayout_24 = new QHBoxLayout(tab_14);
+        horizontalLayout_24->setSpacing(3);
+        horizontalLayout_24->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_24->setObjectName(QStringLiteral("horizontalLayout_24"));
+        horizontalLayout_24->setContentsMargins(3, 3, 3, 3);
+        comboBox_lightSelect_3 = new QComboBox(tab_14);
+        comboBox_lightSelect_3->setObjectName(QStringLiteral("comboBox_lightSelect_3"));
+        comboBox_lightSelect_3->setMinimumSize(QSize(90, 0));
+
+        horizontalLayout_24->addWidget(comboBox_lightSelect_3);
+
+        comboBox_lampNumber_2 = new QComboBox(tab_14);
+        comboBox_lampNumber_2->setObjectName(QStringLiteral("comboBox_lampNumber_2"));
+        comboBox_lampNumber_2->setEnabled(true);
+        comboBox_lampNumber_2->setMaximumSize(QSize(35, 16777215));
+
+        horizontalLayout_24->addWidget(comboBox_lampNumber_2);
+
+        horizontalSpacer_40 = new QSpacerItem(35, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_24->addItem(horizontalSpacer_40);
+
+        label_da_RGB_3 = new QLabel(tab_14);
+        label_da_RGB_3->setObjectName(QStringLiteral("label_da_RGB_3"));
+        sizePolicy2.setHeightForWidth(label_da_RGB_3->sizePolicy().hasHeightForWidth());
+        label_da_RGB_3->setSizePolicy(sizePolicy2);
+        label_da_RGB_3->setMinimumSize(QSize(25, 0));
+        label_da_RGB_3->setMaximumSize(QSize(25, 16777215));
+
+        horizontalLayout_24->addWidget(label_da_RGB_3);
+
+        spinBox_lightDAR_3 = new QSpinBox(tab_14);
+        spinBox_lightDAR_3->setObjectName(QStringLiteral("spinBox_lightDAR_3"));
+        spinBox_lightDAR_3->setMinimumSize(QSize(40, 0));
+        spinBox_lightDAR_3->setMaximumSize(QSize(50, 16777215));
+        spinBox_lightDAR_3->setMinimum(0);
+        spinBox_lightDAR_3->setMaximum(65535);
+        spinBox_lightDAR_3->setValue(0);
+
+        horizontalLayout_24->addWidget(spinBox_lightDAR_3);
+
+        checkBox_2 = new QCheckBox(tab_14);
+        checkBox_2->setObjectName(QStringLiteral("checkBox_2"));
+
+        horizontalLayout_24->addWidget(checkBox_2);
+
+        pushButton_lightSwitch_3 = new QPushButton(tab_14);
+        pushButton_lightSwitch_3->setObjectName(QStringLiteral("pushButton_lightSwitch_3"));
+        sizePolicy3.setHeightForWidth(pushButton_lightSwitch_3->sizePolicy().hasHeightForWidth());
+        pushButton_lightSwitch_3->setSizePolicy(sizePolicy3);
+        pushButton_lightSwitch_3->setMinimumSize(QSize(40, 0));
+        pushButton_lightSwitch_3->setMaximumSize(QSize(40, 16777215));
+
+        horizontalLayout_24->addWidget(pushButton_lightSwitch_3);
+
+        tabWidget_5->addTab(tab_14, QString());
+        tab_15 = new QWidget();
+        tab_15->setObjectName(QStringLiteral("tab_15"));
+        horizontalLayout_25 = new QHBoxLayout(tab_15);
+        horizontalLayout_25->setSpacing(3);
+        horizontalLayout_25->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_25->setObjectName(QStringLiteral("horizontalLayout_25"));
+        horizontalLayout_25->setContentsMargins(3, 3, 3, 3);
+        horizontalSpacer_43 = new QSpacerItem(53, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_25->addItem(horizontalSpacer_43);
+
+        label_da_RGB_4 = new QLabel(tab_15);
+        label_da_RGB_4->setObjectName(QStringLiteral("label_da_RGB_4"));
+        sizePolicy2.setHeightForWidth(label_da_RGB_4->sizePolicy().hasHeightForWidth());
+        label_da_RGB_4->setSizePolicy(sizePolicy2);
+        label_da_RGB_4->setMinimumSize(QSize(25, 0));
+        label_da_RGB_4->setMaximumSize(QSize(25, 16777215));
+
+        horizontalLayout_25->addWidget(label_da_RGB_4);
+
+        spinBox_lightDAR_4 = new QSpinBox(tab_15);
+        spinBox_lightDAR_4->setObjectName(QStringLiteral("spinBox_lightDAR_4"));
+        spinBox_lightDAR_4->setMinimumSize(QSize(40, 0));
+        spinBox_lightDAR_4->setMaximumSize(QSize(50, 16777215));
+        spinBox_lightDAR_4->setMinimum(0);
+        spinBox_lightDAR_4->setMaximum(65535);
+        spinBox_lightDAR_4->setValue(0);
+
+        horizontalLayout_25->addWidget(spinBox_lightDAR_4);
+
+        spinBox_lightDAG_2 = new QSpinBox(tab_15);
+        spinBox_lightDAG_2->setObjectName(QStringLiteral("spinBox_lightDAG_2"));
+        spinBox_lightDAG_2->setEnabled(true);
+        spinBox_lightDAG_2->setMinimumSize(QSize(40, 0));
+        spinBox_lightDAG_2->setMaximumSize(QSize(50, 16777215));
+        spinBox_lightDAG_2->setMinimum(0);
+        spinBox_lightDAG_2->setMaximum(65535);
+        spinBox_lightDAG_2->setValue(0);
+
+        horizontalLayout_25->addWidget(spinBox_lightDAG_2);
+
+        spinBox_lightDAB_2 = new QSpinBox(tab_15);
+        spinBox_lightDAB_2->setObjectName(QStringLiteral("spinBox_lightDAB_2"));
+        spinBox_lightDAB_2->setEnabled(true);
+        spinBox_lightDAB_2->setMinimumSize(QSize(40, 0));
+        spinBox_lightDAB_2->setMaximumSize(QSize(50, 16777215));
+        spinBox_lightDAB_2->setMinimum(0);
+        spinBox_lightDAB_2->setMaximum(65535);
+        spinBox_lightDAB_2->setValue(0);
+
+        horizontalLayout_25->addWidget(spinBox_lightDAB_2);
+
+        checkBox_3 = new QCheckBox(tab_15);
+        checkBox_3->setObjectName(QStringLiteral("checkBox_3"));
+
+        horizontalLayout_25->addWidget(checkBox_3);
+
+        pushButton_lightSwitch_4 = new QPushButton(tab_15);
+        pushButton_lightSwitch_4->setObjectName(QStringLiteral("pushButton_lightSwitch_4"));
+        sizePolicy3.setHeightForWidth(pushButton_lightSwitch_4->sizePolicy().hasHeightForWidth());
+        pushButton_lightSwitch_4->setSizePolicy(sizePolicy3);
+        pushButton_lightSwitch_4->setMinimumSize(QSize(40, 0));
+        pushButton_lightSwitch_4->setMaximumSize(QSize(40, 16777215));
+
+        horizontalLayout_25->addWidget(pushButton_lightSwitch_4);
+
+        tabWidget_5->addTab(tab_15, QString());
+
+        verticalLayout_3->addWidget(tabWidget_5);
+
+        groupBox_23 = new QGroupBox(groupBox);
+        groupBox_23->setObjectName(QStringLiteral("groupBox_23"));
+        sizePolicy2.setHeightForWidth(groupBox_23->sizePolicy().hasHeightForWidth());
+        groupBox_23->setSizePolicy(sizePolicy2);
         groupBox_23->setMinimumSize(QSize(0, 0));
         groupBox_23->setMaximumSize(QSize(16777215, 16777215));
         horizontalLayout_6 = new QHBoxLayout(groupBox_23);
@@ -586,8 +801,8 @@ public:
 
         label_da_RGB = new QLabel(groupBox_23);
         label_da_RGB->setObjectName(QStringLiteral("label_da_RGB"));
-        sizePolicy1.setHeightForWidth(label_da_RGB->sizePolicy().hasHeightForWidth());
-        label_da_RGB->setSizePolicy(sizePolicy1);
+        sizePolicy2.setHeightForWidth(label_da_RGB->sizePolicy().hasHeightForWidth());
+        label_da_RGB->setSizePolicy(sizePolicy2);
         label_da_RGB->setMinimumSize(QSize(25, 0));
         label_da_RGB->setMaximumSize(QSize(25, 16777215));
 
@@ -625,29 +840,26 @@ public:
 
         horizontalLayout_6->addWidget(spinBox_lightDAB);
 
-        horizontalSpacer_5 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        horizontalLayout_6->addItem(horizontalSpacer_5);
-
         pushButton_lightSwitch = new QPushButton(groupBox_23);
         pushButton_lightSwitch->setObjectName(QStringLiteral("pushButton_lightSwitch"));
-        QSizePolicy sizePolicy2(QSizePolicy::Fixed, QSizePolicy::Fixed);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(pushButton_lightSwitch->sizePolicy().hasHeightForWidth());
-        pushButton_lightSwitch->setSizePolicy(sizePolicy2);
+        sizePolicy3.setHeightForWidth(pushButton_lightSwitch->sizePolicy().hasHeightForWidth());
+        pushButton_lightSwitch->setSizePolicy(sizePolicy3);
         pushButton_lightSwitch->setMinimumSize(QSize(40, 0));
         pushButton_lightSwitch->setMaximumSize(QSize(40, 16777215));
 
         horizontalLayout_6->addWidget(pushButton_lightSwitch);
+
+        horizontalSpacer_5 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_6->addItem(horizontalSpacer_5);
 
 
         verticalLayout_3->addWidget(groupBox_23);
 
         groupBox_3 = new QGroupBox(groupBox);
         groupBox_3->setObjectName(QStringLiteral("groupBox_3"));
-        sizePolicy1.setHeightForWidth(groupBox_3->sizePolicy().hasHeightForWidth());
-        groupBox_3->setSizePolicy(sizePolicy1);
+        sizePolicy2.setHeightForWidth(groupBox_3->sizePolicy().hasHeightForWidth());
+        groupBox_3->setSizePolicy(sizePolicy2);
         groupBox_3->setMinimumSize(QSize(0, 0));
         groupBox_3->setMaximumSize(QSize(16777215, 16777215));
         groupBox_3->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
@@ -750,11 +962,11 @@ public:
 
         groupBox_2 = new QGroupBox(groupBox);
         groupBox_2->setObjectName(QStringLiteral("groupBox_2"));
-        sizePolicy1.setHeightForWidth(groupBox_2->sizePolicy().hasHeightForWidth());
-        groupBox_2->setSizePolicy(sizePolicy1);
+        sizePolicy2.setHeightForWidth(groupBox_2->sizePolicy().hasHeightForWidth());
+        groupBox_2->setSizePolicy(sizePolicy2);
         groupBox_2->setMaximumSize(QSize(16777215, 16777215));
         verticalLayout_5 = new QVBoxLayout(groupBox_2);
-        verticalLayout_5->setSpacing(2);
+        verticalLayout_5->setSpacing(1);
         verticalLayout_5->setContentsMargins(11, 11, 11, 11);
         verticalLayout_5->setObjectName(QStringLiteral("verticalLayout_5"));
         verticalLayout_5->setContentsMargins(3, 3, 3, 3);
@@ -956,11 +1168,11 @@ public:
 
         groupBox_resetMotor = new QGroupBox(groupBox);
         groupBox_resetMotor->setObjectName(QStringLiteral("groupBox_resetMotor"));
-        QSizePolicy sizePolicy3(QSizePolicy::Preferred, QSizePolicy::Expanding);
-        sizePolicy3.setHorizontalStretch(0);
-        sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(groupBox_resetMotor->sizePolicy().hasHeightForWidth());
-        groupBox_resetMotor->setSizePolicy(sizePolicy3);
+        QSizePolicy sizePolicy4(QSizePolicy::Preferred, QSizePolicy::Expanding);
+        sizePolicy4.setHorizontalStretch(0);
+        sizePolicy4.setVerticalStretch(0);
+        sizePolicy4.setHeightForWidth(groupBox_resetMotor->sizePolicy().hasHeightForWidth());
+        groupBox_resetMotor->setSizePolicy(sizePolicy4);
         groupBox_resetMotor->setMaximumSize(QSize(16777215, 16777215));
         verticalLayout_15 = new QVBoxLayout(groupBox_resetMotor);
         verticalLayout_15->setSpacing(2);
@@ -1342,11 +1554,11 @@ public:
 
         groupBox_13 = new QGroupBox(groupBox);
         groupBox_13->setObjectName(QStringLiteral("groupBox_13"));
-        QSizePolicy sizePolicy4(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        sizePolicy4.setHorizontalStretch(0);
-        sizePolicy4.setVerticalStretch(0);
-        sizePolicy4.setHeightForWidth(groupBox_13->sizePolicy().hasHeightForWidth());
-        groupBox_13->setSizePolicy(sizePolicy4);
+        QSizePolicy sizePolicy5(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        sizePolicy5.setHorizontalStretch(0);
+        sizePolicy5.setVerticalStretch(0);
+        sizePolicy5.setHeightForWidth(groupBox_13->sizePolicy().hasHeightForWidth());
+        groupBox_13->setSizePolicy(sizePolicy5);
         groupBox_13->setMinimumSize(QSize(0, 0));
         groupBox_13->setMaximumSize(QSize(16777215, 16777215));
         gridLayout_6 = new QGridLayout(groupBox_13);
@@ -1459,13 +1671,13 @@ public:
 
         groupBox_15 = new QGroupBox(tab);
         groupBox_15->setObjectName(QStringLiteral("groupBox_15"));
-        QSizePolicy sizePolicy5(QSizePolicy::Minimum, QSizePolicy::Expanding);
-        sizePolicy5.setHorizontalStretch(0);
-        sizePolicy5.setVerticalStretch(0);
-        sizePolicy5.setHeightForWidth(groupBox_15->sizePolicy().hasHeightForWidth());
-        groupBox_15->setSizePolicy(sizePolicy5);
+        QSizePolicy sizePolicy6(QSizePolicy::Minimum, QSizePolicy::Expanding);
+        sizePolicy6.setHorizontalStretch(0);
+        sizePolicy6.setVerticalStretch(0);
+        sizePolicy6.setHeightForWidth(groupBox_15->sizePolicy().hasHeightForWidth());
+        groupBox_15->setSizePolicy(sizePolicy6);
         groupBox_15->setMinimumSize(QSize(0, 0));
-        groupBox_15->setMaximumSize(QSize(440, 16777215));
+        groupBox_15->setMaximumSize(QSize(450, 16777215));
         verticalLayout_9 = new QVBoxLayout(groupBox_15);
         verticalLayout_9->setSpacing(0);
         verticalLayout_9->setContentsMargins(11, 11, 11, 11);
@@ -1473,12 +1685,12 @@ public:
         verticalLayout_9->setContentsMargins(3, 3, 3, 3);
         groupBox_14 = new QGroupBox(groupBox_15);
         groupBox_14->setObjectName(QStringLiteral("groupBox_14"));
-        sizePolicy3.setHeightForWidth(groupBox_14->sizePolicy().hasHeightForWidth());
-        groupBox_14->setSizePolicy(sizePolicy3);
+        sizePolicy4.setHeightForWidth(groupBox_14->sizePolicy().hasHeightForWidth());
+        groupBox_14->setSizePolicy(sizePolicy4);
         groupBox_14->setMinimumSize(QSize(320, 0));
         groupBox_14->setMaximumSize(QSize(16777215, 16777215));
         verticalLayout_2 = new QVBoxLayout(groupBox_14);
-        verticalLayout_2->setSpacing(2);
+        verticalLayout_2->setSpacing(0);
         verticalLayout_2->setContentsMargins(11, 11, 11, 11);
         verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
         verticalLayout_2->setContentsMargins(2, 2, 2, 2);
@@ -1712,80 +1924,72 @@ public:
 
         verticalLayout_9->addWidget(groupBox_s);
 
-        groupBox_12 = new QGroupBox(groupBox_15);
-        groupBox_12->setObjectName(QStringLiteral("groupBox_12"));
-        QSizePolicy sizePolicy6(QSizePolicy::Preferred, QSizePolicy::Maximum);
-        sizePolicy6.setHorizontalStretch(0);
-        sizePolicy6.setVerticalStretch(0);
-        sizePolicy6.setHeightForWidth(groupBox_12->sizePolicy().hasHeightForWidth());
-        groupBox_12->setSizePolicy(sizePolicy6);
-        groupBox_12->setMinimumSize(QSize(0, 0));
-        horizontalLayout_15 = new QHBoxLayout(groupBox_12);
-        horizontalLayout_15->setSpacing(2);
-        horizontalLayout_15->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout_15->setObjectName(QStringLiteral("horizontalLayout_15"));
-        horizontalLayout_15->setContentsMargins(3, 3, 3, 3);
-        label_46 = new QLabel(groupBox_12);
+        groupBox_4 = new QGroupBox(groupBox_15);
+        groupBox_4->setObjectName(QStringLiteral("groupBox_4"));
+        groupBox_4->setMinimumSize(QSize(0, 40));
+        groupBox_4->setMaximumSize(QSize(16777215, 16777215));
+        horizontalLayout_13 = new QHBoxLayout(groupBox_4);
+        horizontalLayout_13->setSpacing(3);
+        horizontalLayout_13->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_13->setObjectName(QStringLiteral("horizontalLayout_13"));
+        horizontalLayout_13->setContentsMargins(3, 3, 3, 3);
+        label_46 = new QLabel(groupBox_4);
         label_46->setObjectName(QStringLiteral("label_46"));
         label_46->setMinimumSize(QSize(30, 0));
         label_46->setMaximumSize(QSize(35, 16777215));
 
-        horizontalLayout_15->addWidget(label_46);
+        horizontalLayout_13->addWidget(label_46);
 
-        spinBox_DbSetting = new QSpinBox(groupBox_12);
+        spinBox_DbSetting = new QSpinBox(groupBox_4);
         spinBox_DbSetting->setObjectName(QStringLiteral("spinBox_DbSetting"));
         spinBox_DbSetting->setMinimumSize(QSize(40, 0));
         spinBox_DbSetting->setMinimum(0);
         spinBox_DbSetting->setMaximum(51);
 
-        horizontalLayout_15->addWidget(spinBox_DbSetting);
+        horizontalLayout_13->addWidget(spinBox_DbSetting);
 
-        label_82 = new QLabel(groupBox_12);
+        label_82 = new QLabel(groupBox_4);
         label_82->setObjectName(QStringLiteral("label_82"));
         label_82->setMinimumSize(QSize(50, 0));
 
-        horizontalLayout_15->addWidget(label_82);
+        horizontalLayout_13->addWidget(label_82);
 
-        spinBox_DbColorPos = new QSpinBox(groupBox_12);
+        spinBox_DbColorPos = new QSpinBox(groupBox_4);
         spinBox_DbColorPos->setObjectName(QStringLiteral("spinBox_DbColorPos"));
         spinBox_DbColorPos->setMinimumSize(QSize(60, 0));
         spinBox_DbColorPos->setMinimum(-200000);
         spinBox_DbColorPos->setMaximum(200000);
 
-        horizontalLayout_15->addWidget(spinBox_DbColorPos);
+        horizontalLayout_13->addWidget(spinBox_DbColorPos);
 
-        label_83 = new QLabel(groupBox_12);
+        label_83 = new QLabel(groupBox_4);
         label_83->setObjectName(QStringLiteral("label_83"));
         label_83->setMinimumSize(QSize(50, 0));
 
-        horizontalLayout_15->addWidget(label_83);
+        horizontalLayout_13->addWidget(label_83);
 
-        spinBox_DbSpotPos = new QSpinBox(groupBox_12);
+        spinBox_DbSpotPos = new QSpinBox(groupBox_4);
         spinBox_DbSpotPos->setObjectName(QStringLiteral("spinBox_DbSpotPos"));
         spinBox_DbSpotPos->setMinimumSize(QSize(60, 0));
         spinBox_DbSpotPos->setMinimum(-200000);
         spinBox_DbSpotPos->setMaximum(200000);
 
-        horizontalLayout_15->addWidget(spinBox_DbSpotPos);
+        horizontalLayout_13->addWidget(spinBox_DbSpotPos);
 
-        horizontalSpacer_17 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        horizontalLayout_15->addItem(horizontalSpacer_17);
-
-        checkBox_DbConfigSync = new QCheckBox(groupBox_12);
+        checkBox_DbConfigSync = new QCheckBox(groupBox_4);
         checkBox_DbConfigSync->setObjectName(QStringLiteral("checkBox_DbConfigSync"));
         checkBox_DbConfigSync->setChecked(false);
 
-        horizontalLayout_15->addWidget(checkBox_DbConfigSync);
+        horizontalLayout_13->addWidget(checkBox_DbConfigSync);
 
-        pushButton_dbTest = new QPushButton(groupBox_12);
+        pushButton_dbTest = new QPushButton(groupBox_4);
         pushButton_dbTest->setObjectName(QStringLiteral("pushButton_dbTest"));
         pushButton_dbTest->setMaximumSize(QSize(40, 16777215));
 
-        horizontalLayout_15->addWidget(pushButton_dbTest);
+        horizontalLayout_13->addWidget(pushButton_dbTest);
 
 
-        verticalLayout_9->addWidget(groupBox_12);
+        verticalLayout_9->addWidget(groupBox_4);
 
         stackedWidget = new QStackedWidget(groupBox_15);
         stackedWidget->setObjectName(QStringLiteral("stackedWidget"));
@@ -1798,13 +2002,39 @@ public:
         horizontalLayout_7->setContentsMargins(0, 0, 0, 0);
         groupBox_staticCastPos = new QGroupBox(page);
         groupBox_staticCastPos->setObjectName(QStringLiteral("groupBox_staticCastPos"));
-        sizePolicy1.setHeightForWidth(groupBox_staticCastPos->sizePolicy().hasHeightForWidth());
-        groupBox_staticCastPos->setSizePolicy(sizePolicy1);
+        sizePolicy2.setHeightForWidth(groupBox_staticCastPos->sizePolicy().hasHeightForWidth());
+        groupBox_staticCastPos->setSizePolicy(sizePolicy2);
         gridLayout_11 = new QGridLayout(groupBox_staticCastPos);
         gridLayout_11->setSpacing(3);
         gridLayout_11->setContentsMargins(11, 11, 11, 11);
         gridLayout_11->setObjectName(QStringLiteral("gridLayout_11"));
         gridLayout_11->setContentsMargins(3, 0, 3, 0);
+        spinBox_YMotorPos_2 = new QSpinBox(groupBox_staticCastPos);
+        spinBox_YMotorPos_2->setObjectName(QStringLiteral("spinBox_YMotorPos_2"));
+        spinBox_YMotorPos_2->setMinimumSize(QSize(40, 0));
+        spinBox_YMotorPos_2->setMaximumSize(QSize(60, 16777215));
+        spinBox_YMotorPos_2->setMinimum(-200000);
+        spinBox_YMotorPos_2->setMaximum(200000);
+
+        gridLayout_11->addWidget(spinBox_YMotorPos_2, 1, 3, 1, 1);
+
+        pushButton_staticCastTest = new QPushButton(groupBox_staticCastPos);
+        pushButton_staticCastTest->setObjectName(QStringLiteral("pushButton_staticCastTest"));
+        pushButton_staticCastTest->setMaximumSize(QSize(40, 16777215));
+
+        gridLayout_11->addWidget(pushButton_staticCastTest, 0, 8, 1, 1);
+
+        lineEdit_coordY = new QLineEdit(groupBox_staticCastPos);
+        lineEdit_coordY->setObjectName(QStringLiteral("lineEdit_coordY"));
+        lineEdit_coordY->setMaximumSize(QSize(60, 16777215));
+
+        gridLayout_11->addWidget(lineEdit_coordY, 1, 1, 1, 1);
+
+        label_72 = new QLabel(groupBox_staticCastPos);
+        label_72->setObjectName(QStringLiteral("label_72"));
+
+        gridLayout_11->addWidget(label_72, 0, 2, 1, 1);
+
         spinBox_XMotorPos_2 = new QSpinBox(groupBox_staticCastPos);
         spinBox_XMotorPos_2->setObjectName(QStringLiteral("spinBox_XMotorPos_2"));
         spinBox_XMotorPos_2->setMinimumSize(QSize(40, 0));
@@ -1821,28 +2051,6 @@ public:
 
         gridLayout_11->addWidget(label_22, 0, 0, 1, 1);
 
-        label_72 = new QLabel(groupBox_staticCastPos);
-        label_72->setObjectName(QStringLiteral("label_72"));
-
-        gridLayout_11->addWidget(label_72, 0, 2, 1, 1);
-
-        checkBox_calcFocalDist = new QCheckBox(groupBox_staticCastPos);
-        checkBox_calcFocalDist->setObjectName(QStringLiteral("checkBox_calcFocalDist"));
-        checkBox_calcFocalDist->setChecked(true);
-
-        gridLayout_11->addWidget(checkBox_calcFocalDist, 0, 7, 1, 1);
-
-        lineEdit_coordX = new QLineEdit(groupBox_staticCastPos);
-        lineEdit_coordX->setObjectName(QStringLiteral("lineEdit_coordX"));
-        lineEdit_coordX->setMaximumSize(QSize(60, 16777215));
-
-        gridLayout_11->addWidget(lineEdit_coordX, 0, 1, 1, 1);
-
-        label_73 = new QLabel(groupBox_staticCastPos);
-        label_73->setObjectName(QStringLiteral("label_73"));
-
-        gridLayout_11->addWidget(label_73, 1, 2, 1, 1);
-
         horizontalSpacer_19 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         gridLayout_11->addItem(horizontalSpacer_19, 0, 4, 1, 1);
@@ -1854,26 +2062,22 @@ public:
 
         gridLayout_11->addWidget(label_23, 1, 0, 1, 1);
 
-        spinBox_YMotorPos_2 = new QSpinBox(groupBox_staticCastPos);
-        spinBox_YMotorPos_2->setObjectName(QStringLiteral("spinBox_YMotorPos_2"));
-        spinBox_YMotorPos_2->setMinimumSize(QSize(40, 0));
-        spinBox_YMotorPos_2->setMaximumSize(QSize(60, 16777215));
-        spinBox_YMotorPos_2->setMinimum(-200000);
-        spinBox_YMotorPos_2->setMaximum(200000);
+        lineEdit_coordX = new QLineEdit(groupBox_staticCastPos);
+        lineEdit_coordX->setObjectName(QStringLiteral("lineEdit_coordX"));
+        lineEdit_coordX->setMaximumSize(QSize(60, 16777215));
 
-        gridLayout_11->addWidget(spinBox_YMotorPos_2, 1, 3, 1, 1);
+        gridLayout_11->addWidget(lineEdit_coordX, 0, 1, 1, 1);
 
-        lineEdit_coordY = new QLineEdit(groupBox_staticCastPos);
-        lineEdit_coordY->setObjectName(QStringLiteral("lineEdit_coordY"));
-        lineEdit_coordY->setMaximumSize(QSize(60, 16777215));
+        checkBox_calcFocalDist = new QCheckBox(groupBox_staticCastPos);
+        checkBox_calcFocalDist->setObjectName(QStringLiteral("checkBox_calcFocalDist"));
+        checkBox_calcFocalDist->setChecked(true);
 
-        gridLayout_11->addWidget(lineEdit_coordY, 1, 1, 1, 1);
+        gridLayout_11->addWidget(checkBox_calcFocalDist, 0, 7, 1, 1);
 
-        pushButton_staticCastTest = new QPushButton(groupBox_staticCastPos);
-        pushButton_staticCastTest->setObjectName(QStringLiteral("pushButton_staticCastTest"));
-        pushButton_staticCastTest->setMaximumSize(QSize(40, 16777215));
+        label_73 = new QLabel(groupBox_staticCastPos);
+        label_73->setObjectName(QStringLiteral("label_73"));
 
-        gridLayout_11->addWidget(pushButton_staticCastTest, 0, 8, 1, 1);
+        gridLayout_11->addWidget(label_73, 1, 2, 1, 1);
 
 
         horizontalLayout_7->addWidget(groupBox_staticCastPos);
@@ -1964,8 +2168,11 @@ public:
 
         groupBox_focalTest = new QGroupBox(groupBox_15);
         groupBox_focalTest->setObjectName(QStringLiteral("groupBox_focalTest"));
-        sizePolicy6.setHeightForWidth(groupBox_focalTest->sizePolicy().hasHeightForWidth());
-        groupBox_focalTest->setSizePolicy(sizePolicy6);
+        QSizePolicy sizePolicy7(QSizePolicy::Preferred, QSizePolicy::Maximum);
+        sizePolicy7.setHorizontalStretch(0);
+        sizePolicy7.setVerticalStretch(0);
+        sizePolicy7.setHeightForWidth(groupBox_focalTest->sizePolicy().hasHeightForWidth());
+        groupBox_focalTest->setSizePolicy(sizePolicy7);
         groupBox_focalTest->setMinimumSize(QSize(0, 0));
         gridLayout_13 = new QGridLayout(groupBox_focalTest);
         gridLayout_13->setSpacing(3);
@@ -1981,23 +2188,6 @@ public:
 
         gridLayout_13->addWidget(spinBox_focalDist, 1, 1, 1, 1);
 
-        horizontalSpacer_39 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        gridLayout_13->addItem(horizontalSpacer_39, 1, 4, 1, 1);
-
-        label_37 = new QLabel(groupBox_focalTest);
-        label_37->setObjectName(QStringLiteral("label_37"));
-        label_37->setMinimumSize(QSize(50, 0));
-        label_37->setMaximumSize(QSize(50, 16777215));
-
-        gridLayout_13->addWidget(label_37, 1, 0, 1, 1);
-
-        pushButton_focalTest = new QPushButton(groupBox_focalTest);
-        pushButton_focalTest->setObjectName(QStringLiteral("pushButton_focalTest"));
-        pushButton_focalTest->setMaximumSize(QSize(40, 16777215));
-
-        gridLayout_13->addWidget(pushButton_focalTest, 1, 5, 1, 1);
-
         spinBox_focalMotorPos_2 = new QSpinBox(groupBox_focalTest);
         spinBox_focalMotorPos_2->setObjectName(QStringLiteral("spinBox_focalMotorPos_2"));
         spinBox_focalMotorPos_2->setMinimumSize(QSize(60, 0));
@@ -2006,6 +2196,23 @@ public:
         spinBox_focalMotorPos_2->setMaximum(200000);
 
         gridLayout_13->addWidget(spinBox_focalMotorPos_2, 1, 3, 1, 1);
+
+        label_37 = new QLabel(groupBox_focalTest);
+        label_37->setObjectName(QStringLiteral("label_37"));
+        label_37->setMinimumSize(QSize(50, 0));
+        label_37->setMaximumSize(QSize(50, 16777215));
+
+        gridLayout_13->addWidget(label_37, 1, 0, 1, 1);
+
+        horizontalSpacer_39 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        gridLayout_13->addItem(horizontalSpacer_39, 1, 4, 1, 1);
+
+        pushButton_focalTest = new QPushButton(groupBox_focalTest);
+        pushButton_focalTest->setObjectName(QStringLiteral("pushButton_focalTest"));
+        pushButton_focalTest->setMaximumSize(QSize(40, 16777215));
+
+        gridLayout_13->addWidget(pushButton_focalTest, 1, 5, 1, 1);
 
         label_39 = new QLabel(groupBox_focalTest);
         label_39->setObjectName(QStringLiteral("label_39"));
@@ -2017,8 +2224,8 @@ public:
 
         groupBox_8 = new QGroupBox(groupBox_15);
         groupBox_8->setObjectName(QStringLiteral("groupBox_8"));
-        sizePolicy1.setHeightForWidth(groupBox_8->sizePolicy().hasHeightForWidth());
-        groupBox_8->setSizePolicy(sizePolicy1);
+        sizePolicy2.setHeightForWidth(groupBox_8->sizePolicy().hasHeightForWidth());
+        groupBox_8->setSizePolicy(sizePolicy2);
         horizontalLayout_4 = new QHBoxLayout(groupBox_8);
         horizontalLayout_4->setSpacing(3);
         horizontalLayout_4->setContentsMargins(11, 11, 11, 11);
@@ -2166,6 +2373,8 @@ public:
 
         groupBox_6 = new QGroupBox(groupBox_15);
         groupBox_6->setObjectName(QStringLiteral("groupBox_6"));
+        sizePolicy2.setHeightForWidth(groupBox_6->sizePolicy().hasHeightForWidth());
+        groupBox_6->setSizePolicy(sizePolicy2);
         horizontalLayout_2 = new QHBoxLayout(groupBox_6);
         horizontalLayout_2->setSpacing(3);
         horizontalLayout_2->setContentsMargins(11, 11, 11, 11);
@@ -2212,8 +2421,8 @@ public:
         verticalLayout_21->setContentsMargins(0, 0, 0, 0);
         textBrowser_infoText = new QTextBrowser(tab_5);
         textBrowser_infoText->setObjectName(QStringLiteral("textBrowser_infoText"));
-        sizePolicy3.setHeightForWidth(textBrowser_infoText->sizePolicy().hasHeightForWidth());
-        textBrowser_infoText->setSizePolicy(sizePolicy3);
+        sizePolicy4.setHeightForWidth(textBrowser_infoText->sizePolicy().hasHeightForWidth());
+        textBrowser_infoText->setSizePolicy(sizePolicy4);
         textBrowser_infoText->setMinimumSize(QSize(0, 0));
 
         verticalLayout_21->addWidget(textBrowser_infoText);
@@ -2302,18 +2511,18 @@ public:
         horizontalLayout_58->setObjectName(QStringLiteral("horizontalLayout_58"));
         label_21 = new QLabel(groupBox_83);
         label_21->setObjectName(QStringLiteral("label_21"));
-        sizePolicy1.setHeightForWidth(label_21->sizePolicy().hasHeightForWidth());
-        label_21->setSizePolicy(sizePolicy1);
+        sizePolicy2.setHeightForWidth(label_21->sizePolicy().hasHeightForWidth());
+        label_21->setSizePolicy(sizePolicy2);
 
         horizontalLayout_58->addWidget(label_21);
 
         lineEdit_deviceSerialNo = new QLineEdit(groupBox_83);
         lineEdit_deviceSerialNo->setObjectName(QStringLiteral("lineEdit_deviceSerialNo"));
-        QSizePolicy sizePolicy7(QSizePolicy::Preferred, QSizePolicy::Fixed);
-        sizePolicy7.setHorizontalStretch(0);
-        sizePolicy7.setVerticalStretch(0);
-        sizePolicy7.setHeightForWidth(lineEdit_deviceSerialNo->sizePolicy().hasHeightForWidth());
-        lineEdit_deviceSerialNo->setSizePolicy(sizePolicy7);
+        QSizePolicy sizePolicy8(QSizePolicy::Preferred, QSizePolicy::Fixed);
+        sizePolicy8.setHorizontalStretch(0);
+        sizePolicy8.setVerticalStretch(0);
+        sizePolicy8.setHeightForWidth(lineEdit_deviceSerialNo->sizePolicy().hasHeightForWidth());
+        lineEdit_deviceSerialNo->setSizePolicy(sizePolicy8);
         lineEdit_deviceSerialNo->setMinimumSize(QSize(80, 0));
         lineEdit_deviceSerialNo->setMaximumSize(QSize(80, 16777215));
 
@@ -2328,11 +2537,8 @@ public:
 
         groupBox_84 = new QGroupBox(groupBox_83);
         groupBox_84->setObjectName(QStringLiteral("groupBox_84"));
-        QSizePolicy sizePolicy8(QSizePolicy::Expanding, QSizePolicy::Preferred);
-        sizePolicy8.setHorizontalStretch(0);
-        sizePolicy8.setVerticalStretch(0);
-        sizePolicy8.setHeightForWidth(groupBox_84->sizePolicy().hasHeightForWidth());
-        groupBox_84->setSizePolicy(sizePolicy8);
+        sizePolicy1.setHeightForWidth(groupBox_84->sizePolicy().hasHeightForWidth());
+        groupBox_84->setSizePolicy(sizePolicy1);
         verticalLayout_46 = new QVBoxLayout(groupBox_84);
         verticalLayout_46->setSpacing(6);
         verticalLayout_46->setContentsMargins(11, 11, 11, 11);
@@ -2348,8 +2554,8 @@ public:
 
         lineEdit_centralLightDA = new QLineEdit(groupBox_84);
         lineEdit_centralLightDA->setObjectName(QStringLiteral("lineEdit_centralLightDA"));
-        sizePolicy7.setHeightForWidth(lineEdit_centralLightDA->sizePolicy().hasHeightForWidth());
-        lineEdit_centralLightDA->setSizePolicy(sizePolicy7);
+        sizePolicy8.setHeightForWidth(lineEdit_centralLightDA->sizePolicy().hasHeightForWidth());
+        lineEdit_centralLightDA->setSizePolicy(sizePolicy8);
         lineEdit_centralLightDA->setMinimumSize(QSize(40, 0));
         lineEdit_centralLightDA->setMaximumSize(QSize(40, 16777215));
 
@@ -2372,8 +2578,8 @@ public:
 
         lineEdit_bigDiamond1DA = new QLineEdit(groupBox_84);
         lineEdit_bigDiamond1DA->setObjectName(QStringLiteral("lineEdit_bigDiamond1DA"));
-        sizePolicy7.setHeightForWidth(lineEdit_bigDiamond1DA->sizePolicy().hasHeightForWidth());
-        lineEdit_bigDiamond1DA->setSizePolicy(sizePolicy7);
+        sizePolicy8.setHeightForWidth(lineEdit_bigDiamond1DA->sizePolicy().hasHeightForWidth());
+        lineEdit_bigDiamond1DA->setSizePolicy(sizePolicy8);
         lineEdit_bigDiamond1DA->setMinimumSize(QSize(40, 0));
         lineEdit_bigDiamond1DA->setMaximumSize(QSize(40, 16777215));
 
@@ -2381,8 +2587,8 @@ public:
 
         lineEdit_bigDiamond2DA = new QLineEdit(groupBox_84);
         lineEdit_bigDiamond2DA->setObjectName(QStringLiteral("lineEdit_bigDiamond2DA"));
-        sizePolicy7.setHeightForWidth(lineEdit_bigDiamond2DA->sizePolicy().hasHeightForWidth());
-        lineEdit_bigDiamond2DA->setSizePolicy(sizePolicy7);
+        sizePolicy8.setHeightForWidth(lineEdit_bigDiamond2DA->sizePolicy().hasHeightForWidth());
+        lineEdit_bigDiamond2DA->setSizePolicy(sizePolicy8);
         lineEdit_bigDiamond2DA->setMinimumSize(QSize(40, 0));
         lineEdit_bigDiamond2DA->setMaximumSize(QSize(40, 16777215));
 
@@ -2390,8 +2596,8 @@ public:
 
         lineEdit_bigDiamond3DA = new QLineEdit(groupBox_84);
         lineEdit_bigDiamond3DA->setObjectName(QStringLiteral("lineEdit_bigDiamond3DA"));
-        sizePolicy7.setHeightForWidth(lineEdit_bigDiamond3DA->sizePolicy().hasHeightForWidth());
-        lineEdit_bigDiamond3DA->setSizePolicy(sizePolicy7);
+        sizePolicy8.setHeightForWidth(lineEdit_bigDiamond3DA->sizePolicy().hasHeightForWidth());
+        lineEdit_bigDiamond3DA->setSizePolicy(sizePolicy8);
         lineEdit_bigDiamond3DA->setMinimumSize(QSize(40, 0));
         lineEdit_bigDiamond3DA->setMaximumSize(QSize(40, 16777215));
 
@@ -2399,8 +2605,8 @@ public:
 
         lineEdit_bigDiamond4DA = new QLineEdit(groupBox_84);
         lineEdit_bigDiamond4DA->setObjectName(QStringLiteral("lineEdit_bigDiamond4DA"));
-        sizePolicy7.setHeightForWidth(lineEdit_bigDiamond4DA->sizePolicy().hasHeightForWidth());
-        lineEdit_bigDiamond4DA->setSizePolicy(sizePolicy7);
+        sizePolicy8.setHeightForWidth(lineEdit_bigDiamond4DA->sizePolicy().hasHeightForWidth());
+        lineEdit_bigDiamond4DA->setSizePolicy(sizePolicy8);
         lineEdit_bigDiamond4DA->setMinimumSize(QSize(40, 0));
         lineEdit_bigDiamond4DA->setMaximumSize(QSize(40, 16777215));
 
@@ -2423,8 +2629,8 @@ public:
 
         lineEdit_smallDiamond1DA = new QLineEdit(groupBox_84);
         lineEdit_smallDiamond1DA->setObjectName(QStringLiteral("lineEdit_smallDiamond1DA"));
-        sizePolicy7.setHeightForWidth(lineEdit_smallDiamond1DA->sizePolicy().hasHeightForWidth());
-        lineEdit_smallDiamond1DA->setSizePolicy(sizePolicy7);
+        sizePolicy8.setHeightForWidth(lineEdit_smallDiamond1DA->sizePolicy().hasHeightForWidth());
+        lineEdit_smallDiamond1DA->setSizePolicy(sizePolicy8);
         lineEdit_smallDiamond1DA->setMinimumSize(QSize(40, 0));
         lineEdit_smallDiamond1DA->setMaximumSize(QSize(40, 16777215));
 
@@ -2469,8 +2675,8 @@ public:
         verticalLayout_59->setObjectName(QStringLiteral("verticalLayout_59"));
         groupBox_85 = new QGroupBox(groupBox_83);
         groupBox_85->setObjectName(QStringLiteral("groupBox_85"));
-        sizePolicy8.setHeightForWidth(groupBox_85->sizePolicy().hasHeightForWidth());
-        groupBox_85->setSizePolicy(sizePolicy8);
+        sizePolicy1.setHeightForWidth(groupBox_85->sizePolicy().hasHeightForWidth());
+        groupBox_85->setSizePolicy(sizePolicy1);
         horizontalLayout_62 = new QHBoxLayout(groupBox_85);
         horizontalLayout_62->setSpacing(6);
         horizontalLayout_62->setContentsMargins(11, 11, 11, 11);
@@ -2522,8 +2728,8 @@ public:
 
         groupBox_86 = new QGroupBox(groupBox_83);
         groupBox_86->setObjectName(QStringLiteral("groupBox_86"));
-        sizePolicy8.setHeightForWidth(groupBox_86->sizePolicy().hasHeightForWidth());
-        groupBox_86->setSizePolicy(sizePolicy8);
+        sizePolicy1.setHeightForWidth(groupBox_86->sizePolicy().hasHeightForWidth());
+        groupBox_86->setSizePolicy(sizePolicy1);
         gridLayout_36 = new QGridLayout(groupBox_86);
         gridLayout_36->setSpacing(6);
         gridLayout_36->setContentsMargins(11, 11, 11, 11);
@@ -2574,8 +2780,8 @@ public:
 
         groupBox_81 = new QGroupBox(groupBox_83);
         groupBox_81->setObjectName(QStringLiteral("groupBox_81"));
-        sizePolicy8.setHeightForWidth(groupBox_81->sizePolicy().hasHeightForWidth());
-        groupBox_81->setSizePolicy(sizePolicy8);
+        sizePolicy1.setHeightForWidth(groupBox_81->sizePolicy().hasHeightForWidth());
+        groupBox_81->setSizePolicy(sizePolicy1);
         horizontalLayout_64 = new QHBoxLayout(groupBox_81);
         horizontalLayout_64->setSpacing(6);
         horizontalLayout_64->setContentsMargins(11, 11, 11, 11);
@@ -2612,8 +2818,8 @@ public:
 
         groupBox_82 = new QGroupBox(groupBox_83);
         groupBox_82->setObjectName(QStringLiteral("groupBox_82"));
-        sizePolicy8.setHeightForWidth(groupBox_82->sizePolicy().hasHeightForWidth());
-        groupBox_82->setSizePolicy(sizePolicy8);
+        sizePolicy1.setHeightForWidth(groupBox_82->sizePolicy().hasHeightForWidth());
+        groupBox_82->setSizePolicy(sizePolicy1);
         horizontalLayout_63 = new QHBoxLayout(groupBox_82);
         horizontalLayout_63->setSpacing(6);
         horizontalLayout_63->setContentsMargins(11, 11, 11, 11);
@@ -2690,8 +2896,8 @@ public:
 
         lineEdit_shutterOpen = new QLineEdit(groupBox_87);
         lineEdit_shutterOpen->setObjectName(QStringLiteral("lineEdit_shutterOpen"));
-        sizePolicy7.setHeightForWidth(lineEdit_shutterOpen->sizePolicy().hasHeightForWidth());
-        lineEdit_shutterOpen->setSizePolicy(sizePolicy7);
+        sizePolicy8.setHeightForWidth(lineEdit_shutterOpen->sizePolicy().hasHeightForWidth());
+        lineEdit_shutterOpen->setSizePolicy(sizePolicy8);
         lineEdit_shutterOpen->setMinimumSize(QSize(50, 0));
         lineEdit_shutterOpen->setMaximumSize(QSize(16777215, 16777215));
 
@@ -2827,8 +3033,8 @@ public:
 
         lineEdit_lightCorrectionX = new QLineEdit(groupBox_21);
         lineEdit_lightCorrectionX->setObjectName(QStringLiteral("lineEdit_lightCorrectionX"));
-        sizePolicy7.setHeightForWidth(lineEdit_lightCorrectionX->sizePolicy().hasHeightForWidth());
-        lineEdit_lightCorrectionX->setSizePolicy(sizePolicy7);
+        sizePolicy8.setHeightForWidth(lineEdit_lightCorrectionX->sizePolicy().hasHeightForWidth());
+        lineEdit_lightCorrectionX->setSizePolicy(sizePolicy8);
         lineEdit_lightCorrectionX->setMinimumSize(QSize(50, 0));
         lineEdit_lightCorrectionX->setMaximumSize(QSize(50, 16777215));
 
@@ -2836,8 +3042,8 @@ public:
 
         lineEdit_castLightDA = new QLineEdit(groupBox_21);
         lineEdit_castLightDA->setObjectName(QStringLiteral("lineEdit_castLightDA"));
-        sizePolicy7.setHeightForWidth(lineEdit_castLightDA->sizePolicy().hasHeightForWidth());
-        lineEdit_castLightDA->setSizePolicy(sizePolicy7);
+        sizePolicy8.setHeightForWidth(lineEdit_castLightDA->sizePolicy().hasHeightForWidth());
+        lineEdit_castLightDA->setSizePolicy(sizePolicy8);
         lineEdit_castLightDA->setMinimumSize(QSize(50, 0));
         lineEdit_castLightDA->setMaximumSize(QSize(50, 16777215));
 
@@ -2868,8 +3074,8 @@ public:
         verticalLayout_7->setObjectName(QStringLiteral("verticalLayout_7"));
         groupBox_18 = new QGroupBox(tab_3);
         groupBox_18->setObjectName(QStringLiteral("groupBox_18"));
-        sizePolicy8.setHeightForWidth(groupBox_18->sizePolicy().hasHeightForWidth());
-        groupBox_18->setSizePolicy(sizePolicy8);
+        sizePolicy1.setHeightForWidth(groupBox_18->sizePolicy().hasHeightForWidth());
+        groupBox_18->setSizePolicy(sizePolicy1);
         groupBox_18->setMinimumSize(QSize(0, 0));
         groupBox_18->setMaximumSize(QSize(16777215, 16777215));
         horizontalLayout_22 = new QHBoxLayout(groupBox_18);
@@ -2882,8 +3088,8 @@ public:
         horizontalLayout_16->setObjectName(QStringLiteral("horizontalLayout_16"));
         tableView_XYDistTable = new GenericTable(groupBox_18);
         tableView_XYDistTable->setObjectName(QStringLiteral("tableView_XYDistTable"));
-        sizePolicy1.setHeightForWidth(tableView_XYDistTable->sizePolicy().hasHeightForWidth());
-        tableView_XYDistTable->setSizePolicy(sizePolicy1);
+        sizePolicy2.setHeightForWidth(tableView_XYDistTable->sizePolicy().hasHeightForWidth());
+        tableView_XYDistTable->setSizePolicy(sizePolicy2);
         tableView_XYDistTable->setMinimumSize(QSize(123, 524));
         tableView_XYDistTable->setMaximumSize(QSize(123, 16777215));
         tableView_XYDistTable->horizontalHeader()->setCascadingSectionResizes(true);
@@ -2899,8 +3105,8 @@ public:
 
         tableView_focalPosTable = new GenericTable(groupBox_18);
         tableView_focalPosTable->setObjectName(QStringLiteral("tableView_focalPosTable"));
-        sizePolicy1.setHeightForWidth(tableView_focalPosTable->sizePolicy().hasHeightForWidth());
-        tableView_focalPosTable->setSizePolicy(sizePolicy1);
+        sizePolicy2.setHeightForWidth(tableView_focalPosTable->sizePolicy().hasHeightForWidth());
+        tableView_focalPosTable->setSizePolicy(sizePolicy2);
         tableView_focalPosTable->setMinimumSize(QSize(483, 524));
         tableView_focalPosTable->setMaximumSize(QSize(483, 16777215));
         tableView_focalPosTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -3226,6 +3432,7 @@ public:
         retranslateUi(MainWindow);
 
         tabWidget->setCurrentIndex(0);
+        tabWidget_5->setCurrentIndex(0);
         tabWidget_3->setCurrentIndex(0);
         comboBox_color->setCurrentIndex(0);
         comboBox_spotSize->setCurrentIndex(0);
@@ -3266,6 +3473,39 @@ public:
         action_saveLocalData->setToolTip(QApplication::translate("MainWindow", "\345\255\230\345\202\250\346\225\260\346\215\256\344\277\241\346\201\257\350\241\250\345\210\260\346\234\254\345\234\260", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
         groupBox->setTitle(QApplication::translate("MainWindow", "\347\224\265\346\234\272\345\222\214\347\201\257\345\205\211\346\265\213\350\257\225", Q_NULLPTR));
+        comboBox_lightSelect_2->clear();
+        comboBox_lightSelect_2->insertItems(0, QStringList()
+         << QApplication::translate("MainWindow", "\344\270\255\345\277\203\345\233\272\350\247\206", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "\351\273\204\350\211\262\350\203\214\346\231\257\347\201\257", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "\344\270\255\345\277\203\347\272\242\345\244\226\347\201\257", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "\350\276\271\347\274\230\347\272\242\345\244\226", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "\351\225\234\346\236\266\347\272\242\345\244\226", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "\346\212\225\345\260\204\345\205\211", Q_NULLPTR)
+        );
+        label_da_RGB_2->setText(QApplication::translate("MainWindow", "DA:", Q_NULLPTR));
+        checkBox->setText(QApplication::translate("MainWindow", "\345\220\214\346\255\245\351\205\215\347\275\256", Q_NULLPTR));
+        pushButton_lightSwitch_2->setText(QApplication::translate("MainWindow", "\346\265\213\350\257\225", Q_NULLPTR));
+        tabWidget_5->setTabText(tabWidget_5->indexOf(tab_13), QApplication::translate("MainWindow", "\344\270\255\345\277\203\345\233\272\350\247\206\347\255\211", Q_NULLPTR));
+        comboBox_lightSelect_3->clear();
+        comboBox_lightSelect_3->insertItems(0, QStringList()
+         << QApplication::translate("MainWindow", "\345\244\247\350\217\261\345\275\242", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "\345\260\217\350\217\261\345\275\242", Q_NULLPTR)
+        );
+        comboBox_lampNumber_2->clear();
+        comboBox_lampNumber_2->insertItems(0, QStringList()
+         << QApplication::translate("MainWindow", "1", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "2", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "3", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "4", Q_NULLPTR)
+        );
+        label_da_RGB_3->setText(QApplication::translate("MainWindow", "DA:", Q_NULLPTR));
+        checkBox_2->setText(QApplication::translate("MainWindow", "\345\220\214\346\255\245\351\205\215\347\275\256", Q_NULLPTR));
+        pushButton_lightSwitch_3->setText(QApplication::translate("MainWindow", "\346\265\213\350\257\225", Q_NULLPTR));
+        tabWidget_5->setTabText(tabWidget_5->indexOf(tab_14), QApplication::translate("MainWindow", "\345\244\247\345\260\217\350\217\261\345\275\242", Q_NULLPTR));
+        label_da_RGB_4->setText(QApplication::translate("MainWindow", "RGB:", Q_NULLPTR));
+        checkBox_3->setText(QApplication::translate("MainWindow", "\345\220\214\346\255\245\351\205\215\347\275\256", Q_NULLPTR));
+        pushButton_lightSwitch_4->setText(QApplication::translate("MainWindow", "\346\265\213\350\257\225", Q_NULLPTR));
+        tabWidget_5->setTabText(tabWidget_5->indexOf(tab_15), QApplication::translate("MainWindow", "\347\231\275\350\211\262\350\203\214\346\231\257\345\205\211", Q_NULLPTR));
         groupBox_23->setTitle(QApplication::translate("MainWindow", "\347\201\257\345\205\211\346\216\247\345\210\266", Q_NULLPTR));
         comboBox_lightSelect->clear();
         comboBox_lightSelect->insertItems(0, QStringList()
@@ -3435,19 +3675,19 @@ public:
         label_44->setText(QApplication::translate("MainWindow", "\347\224\265\346\234\272\344\275\215\347\275\256:", Q_NULLPTR));
         checkBox_spotConfigSync->setText(QApplication::translate("MainWindow", "\345\220\214\346\255\245\351\205\215\347\275\256", Q_NULLPTR));
         pushButton_spotTest->setText(QApplication::translate("MainWindow", "\346\265\213\350\257\225", Q_NULLPTR));
-        groupBox_12->setTitle(QApplication::translate("MainWindow", "DB", Q_NULLPTR));
+        groupBox_4->setTitle(QApplication::translate("MainWindow", "DB", Q_NULLPTR));
         label_46->setText(QApplication::translate("MainWindow", "\345\244\247\345\260\217:", Q_NULLPTR));
         label_82->setText(QApplication::translate("MainWindow", "\351\242\234\350\211\262\344\275\215\347\275\256:", Q_NULLPTR));
         label_83->setText(QApplication::translate("MainWindow", "\345\205\211\346\226\221\344\275\215\347\275\256:", Q_NULLPTR));
         checkBox_DbConfigSync->setText(QApplication::translate("MainWindow", "\345\220\214\346\255\245\351\205\215\347\275\256", Q_NULLPTR));
         pushButton_dbTest->setText(QApplication::translate("MainWindow", "\346\265\213\350\257\225", Q_NULLPTR));
         groupBox_staticCastPos->setTitle(QApplication::translate("MainWindow", "\351\235\231\346\200\201\346\212\225\345\260\204\344\275\215\347\275\256", Q_NULLPTR));
-        label_22->setText(QApplication::translate("MainWindow", "X\345\235\220\346\240\207:", Q_NULLPTR));
+        pushButton_staticCastTest->setText(QApplication::translate("MainWindow", "\346\265\213\350\257\225", Q_NULLPTR));
         label_72->setText(QApplication::translate("MainWindow", "\347\224\265\346\234\272\344\275\215\347\275\256:", Q_NULLPTR));
+        label_22->setText(QApplication::translate("MainWindow", "X\345\235\220\346\240\207:", Q_NULLPTR));
+        label_23->setText(QApplication::translate("MainWindow", "Y\345\235\220\346\240\207:", Q_NULLPTR));
         checkBox_calcFocalDist->setText(QApplication::translate("MainWindow", "\347\256\227\345\207\272\347\204\246\350\267\235", Q_NULLPTR));
         label_73->setText(QApplication::translate("MainWindow", "\347\224\265\346\234\272\344\275\215\347\275\256:", Q_NULLPTR));
-        label_23->setText(QApplication::translate("MainWindow", "Y\345\235\220\346\240\207:", Q_NULLPTR));
-        pushButton_staticCastTest->setText(QApplication::translate("MainWindow", "\346\265\213\350\257\225", Q_NULLPTR));
         groupBox_moveCastPos->setTitle(QApplication::translate("MainWindow", "\347\247\273\345\212\250\346\212\225\345\260\204\344\275\215\347\275\256", Q_NULLPTR));
         label_41->setText(QApplication::translate("MainWindow", "\350\265\267\347\202\271X\345\235\220\346\240\207:", Q_NULLPTR));
         label_42->setText(QApplication::translate("MainWindow", "\347\273\210\347\202\271X\345\235\220\346\240\207:", Q_NULLPTR));

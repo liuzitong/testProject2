@@ -478,20 +478,32 @@ void MainWindow::on_pushButton_chinMoveRight_released()
     m_devCtl->moveChinMotors(speed,value,UsbDev::DevCtl::MoveMethod::Abosolute);
 }
 
-void MainWindow::on_pushButton_lightSwitch_clicked()
+void MainWindow::on_pushButton_light1_clicked()
 {
-    UsbDev::DevCtl::LampId lampId=(UsbDev::DevCtl::LampId)ui->comboBox_lightSelect->currentIndex();
-    if(lampId!=UsbDev::DevCtl::LampId::LampId_whiteBackground)
+    int index=ui->comboBox_lightSelect->currentIndex();
+    int id;
+    switch (index)
     {
-        m_devCtl->setLamp(lampId,ui->comboBox_lampNumber->currentIndex(),ui->spinBox_lightDAR->value());
+    case 0:id=index;
+    case 1:case 2:case 3:case 4:case 5:id=index+2;
     }
-    else
-    {
-        int r=ui->spinBox_lightDAR->value();
-        int g=ui->spinBox_lightDAG->value();
-        int b=ui->spinBox_lightDAB->value();
-        m_devCtl->setWhiteLamp(r,g,b);
-    }
+
+    m_devCtl->setLamp(UsbDev::DevCtl::LampId(id),ui->comboBox_lampNumber->currentIndex(),ui->spinBox_lightDAR->value());
+
+}
+
+void MainWindow::on_pushButton_light2_clicked()
+{
+    UsbDev::DevCtl::LampId lampId=(UsbDev::DevCtl::LampId)(ui->comboBox_lightSelect->currentIndex()+1);
+    m_devCtl->setLamp(lampId,ui->comboBox_lampNumber->currentIndex(),ui->spinBox_lightDAR_2->value());
+}
+
+void MainWindow::on_pushButton_light3_clicked()
+{
+    int r=ui->spinBox_lightDAR->value();
+    int g=ui->spinBox_lightDAG->value();
+    int b=ui->spinBox_lightDAB->value();
+    m_devCtl->setWhiteLamp(r,g,b);
 }
 
 void MainWindow::on_comboBox_lightSelect_currentIndexChanged(int index)

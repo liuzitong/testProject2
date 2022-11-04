@@ -87,7 +87,7 @@ private slots:
 
     void on_pushButton_chinMoveRight_released();
 
-    void on_pushButton_lightSwitch_clicked();
+    void on_pushButton_light1_clicked();
 
     void on_comboBox_lightSelect_currentIndexChanged(int index);
 
@@ -138,7 +138,6 @@ private slots:
     void on_checkBox_startRefreshInfo_stateChanged(int arg1);
 
     void on_checkBox_RefreshIO_stateChanged(int arg1);
-
 
 
 private:
