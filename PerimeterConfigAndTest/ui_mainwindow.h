@@ -59,41 +59,30 @@ public:
     QTabWidget *tabWidget_5;
     QWidget *tab_13;
     QHBoxLayout *horizontalLayout_21;
-    QComboBox *comboBox_lightSelect_2;
+    QComboBox *comboBox_lightSelect_1;
     QSpacerItem *horizontalSpacer_38;
     QLabel *label_da_RGB_2;
-    QSpinBox *spinBox_lightDAR_2;
-    QCheckBox *checkBox;
-    QPushButton *pushButton_lightSwitch_2;
+    QSpinBox *spinBox_centerLightAndOtherDA;
+    QCheckBox *checkBox_centerLightAndOtherDASync;
+    QPushButton *pushButton_light1;
     QWidget *tab_14;
     QHBoxLayout *horizontalLayout_24;
-    QComboBox *comboBox_lightSelect_3;
-    QComboBox *comboBox_lampNumber_2;
+    QComboBox *comboBox_lightSelect_2;
+    QComboBox *comboBox_lampIndex;
     QSpacerItem *horizontalSpacer_40;
     QLabel *label_da_RGB_3;
-    QSpinBox *spinBox_lightDAR_3;
-    QCheckBox *checkBox_2;
-    QPushButton *pushButton_lightSwitch_3;
+    QSpinBox *spinBox_bigAndSmallDiamondDA;
+    QCheckBox *checkBox_spinBox_bigAndSmallDiamondDASync;
+    QPushButton *pushButton_light2;
     QWidget *tab_15;
     QHBoxLayout *horizontalLayout_25;
-    QSpacerItem *horizontalSpacer_43;
     QLabel *label_da_RGB_4;
-    QSpinBox *spinBox_lightDAR_4;
-    QSpinBox *spinBox_lightDAG_2;
-    QSpinBox *spinBox_lightDAB_2;
-    QCheckBox *checkBox_3;
-    QPushButton *pushButton_lightSwitch_4;
-    QGroupBox *groupBox_23;
-    QHBoxLayout *horizontalLayout_6;
-    QComboBox *comboBox_lightSelect;
-    QComboBox *comboBox_lampNumber;
-    QSpacerItem *horizontalSpacer_18;
-    QLabel *label_da_RGB;
-    QSpinBox *spinBox_lightDAR;
-    QSpinBox *spinBox_lightDAG;
-    QSpinBox *spinBox_lightDAB;
-    QPushButton *pushButton_lightSwitch;
-    QSpacerItem *horizontalSpacer_5;
+    QSpinBox *spinBox_lightR;
+    QSpinBox *spinBox_lightG;
+    QSpinBox *spinBox_lightB;
+    QSpacerItem *horizontalSpacer_43;
+    QCheckBox *checkBox_whiteLightDASync;
+    QPushButton *pushButton_light3;
     QGroupBox *groupBox_3;
     QVBoxLayout *verticalLayout_6;
     QGridLayout *gridLayout_4;
@@ -593,11 +582,11 @@ public:
         horizontalLayout_21->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_21->setObjectName(QStringLiteral("horizontalLayout_21"));
         horizontalLayout_21->setContentsMargins(3, 3, 3, 3);
-        comboBox_lightSelect_2 = new QComboBox(tab_13);
-        comboBox_lightSelect_2->setObjectName(QStringLiteral("comboBox_lightSelect_2"));
-        comboBox_lightSelect_2->setMinimumSize(QSize(90, 0));
+        comboBox_lightSelect_1 = new QComboBox(tab_13);
+        comboBox_lightSelect_1->setObjectName(QStringLiteral("comboBox_lightSelect_1"));
+        comboBox_lightSelect_1->setMinimumSize(QSize(90, 0));
 
-        horizontalLayout_21->addWidget(comboBox_lightSelect_2);
+        horizontalLayout_21->addWidget(comboBox_lightSelect_1);
 
         horizontalSpacer_38 = new QSpacerItem(66, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
@@ -615,32 +604,32 @@ public:
 
         horizontalLayout_21->addWidget(label_da_RGB_2);
 
-        spinBox_lightDAR_2 = new QSpinBox(tab_13);
-        spinBox_lightDAR_2->setObjectName(QStringLiteral("spinBox_lightDAR_2"));
-        spinBox_lightDAR_2->setMinimumSize(QSize(40, 0));
-        spinBox_lightDAR_2->setMaximumSize(QSize(50, 16777215));
-        spinBox_lightDAR_2->setMinimum(0);
-        spinBox_lightDAR_2->setMaximum(65535);
-        spinBox_lightDAR_2->setValue(0);
+        spinBox_centerLightAndOtherDA = new QSpinBox(tab_13);
+        spinBox_centerLightAndOtherDA->setObjectName(QStringLiteral("spinBox_centerLightAndOtherDA"));
+        spinBox_centerLightAndOtherDA->setMinimumSize(QSize(40, 0));
+        spinBox_centerLightAndOtherDA->setMaximumSize(QSize(50, 16777215));
+        spinBox_centerLightAndOtherDA->setMinimum(0);
+        spinBox_centerLightAndOtherDA->setMaximum(65535);
+        spinBox_centerLightAndOtherDA->setValue(0);
 
-        horizontalLayout_21->addWidget(spinBox_lightDAR_2);
+        horizontalLayout_21->addWidget(spinBox_centerLightAndOtherDA);
 
-        checkBox = new QCheckBox(tab_13);
-        checkBox->setObjectName(QStringLiteral("checkBox"));
+        checkBox_centerLightAndOtherDASync = new QCheckBox(tab_13);
+        checkBox_centerLightAndOtherDASync->setObjectName(QStringLiteral("checkBox_centerLightAndOtherDASync"));
 
-        horizontalLayout_21->addWidget(checkBox);
+        horizontalLayout_21->addWidget(checkBox_centerLightAndOtherDASync);
 
-        pushButton_lightSwitch_2 = new QPushButton(tab_13);
-        pushButton_lightSwitch_2->setObjectName(QStringLiteral("pushButton_lightSwitch_2"));
+        pushButton_light1 = new QPushButton(tab_13);
+        pushButton_light1->setObjectName(QStringLiteral("pushButton_light1"));
         QSizePolicy sizePolicy3(QSizePolicy::Fixed, QSizePolicy::Fixed);
         sizePolicy3.setHorizontalStretch(0);
         sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(pushButton_lightSwitch_2->sizePolicy().hasHeightForWidth());
-        pushButton_lightSwitch_2->setSizePolicy(sizePolicy3);
-        pushButton_lightSwitch_2->setMinimumSize(QSize(40, 0));
-        pushButton_lightSwitch_2->setMaximumSize(QSize(40, 16777215));
+        sizePolicy3.setHeightForWidth(pushButton_light1->sizePolicy().hasHeightForWidth());
+        pushButton_light1->setSizePolicy(sizePolicy3);
+        pushButton_light1->setMinimumSize(QSize(40, 0));
+        pushButton_light1->setMaximumSize(QSize(40, 16777215));
 
-        horizontalLayout_21->addWidget(pushButton_lightSwitch_2);
+        horizontalLayout_21->addWidget(pushButton_light1);
 
         tabWidget_5->addTab(tab_13, QString());
         tab_14 = new QWidget();
@@ -650,18 +639,18 @@ public:
         horizontalLayout_24->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_24->setObjectName(QStringLiteral("horizontalLayout_24"));
         horizontalLayout_24->setContentsMargins(3, 3, 3, 3);
-        comboBox_lightSelect_3 = new QComboBox(tab_14);
-        comboBox_lightSelect_3->setObjectName(QStringLiteral("comboBox_lightSelect_3"));
-        comboBox_lightSelect_3->setMinimumSize(QSize(90, 0));
+        comboBox_lightSelect_2 = new QComboBox(tab_14);
+        comboBox_lightSelect_2->setObjectName(QStringLiteral("comboBox_lightSelect_2"));
+        comboBox_lightSelect_2->setMinimumSize(QSize(90, 0));
 
-        horizontalLayout_24->addWidget(comboBox_lightSelect_3);
+        horizontalLayout_24->addWidget(comboBox_lightSelect_2);
 
-        comboBox_lampNumber_2 = new QComboBox(tab_14);
-        comboBox_lampNumber_2->setObjectName(QStringLiteral("comboBox_lampNumber_2"));
-        comboBox_lampNumber_2->setEnabled(true);
-        comboBox_lampNumber_2->setMaximumSize(QSize(35, 16777215));
+        comboBox_lampIndex = new QComboBox(tab_14);
+        comboBox_lampIndex->setObjectName(QStringLiteral("comboBox_lampIndex"));
+        comboBox_lampIndex->setEnabled(true);
+        comboBox_lampIndex->setMaximumSize(QSize(35, 16777215));
 
-        horizontalLayout_24->addWidget(comboBox_lampNumber_2);
+        horizontalLayout_24->addWidget(comboBox_lampIndex);
 
         horizontalSpacer_40 = new QSpacerItem(35, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
@@ -676,29 +665,29 @@ public:
 
         horizontalLayout_24->addWidget(label_da_RGB_3);
 
-        spinBox_lightDAR_3 = new QSpinBox(tab_14);
-        spinBox_lightDAR_3->setObjectName(QStringLiteral("spinBox_lightDAR_3"));
-        spinBox_lightDAR_3->setMinimumSize(QSize(40, 0));
-        spinBox_lightDAR_3->setMaximumSize(QSize(50, 16777215));
-        spinBox_lightDAR_3->setMinimum(0);
-        spinBox_lightDAR_3->setMaximum(65535);
-        spinBox_lightDAR_3->setValue(0);
+        spinBox_bigAndSmallDiamondDA = new QSpinBox(tab_14);
+        spinBox_bigAndSmallDiamondDA->setObjectName(QStringLiteral("spinBox_bigAndSmallDiamondDA"));
+        spinBox_bigAndSmallDiamondDA->setMinimumSize(QSize(40, 0));
+        spinBox_bigAndSmallDiamondDA->setMaximumSize(QSize(50, 16777215));
+        spinBox_bigAndSmallDiamondDA->setMinimum(0);
+        spinBox_bigAndSmallDiamondDA->setMaximum(65535);
+        spinBox_bigAndSmallDiamondDA->setValue(0);
 
-        horizontalLayout_24->addWidget(spinBox_lightDAR_3);
+        horizontalLayout_24->addWidget(spinBox_bigAndSmallDiamondDA);
 
-        checkBox_2 = new QCheckBox(tab_14);
-        checkBox_2->setObjectName(QStringLiteral("checkBox_2"));
+        checkBox_spinBox_bigAndSmallDiamondDASync = new QCheckBox(tab_14);
+        checkBox_spinBox_bigAndSmallDiamondDASync->setObjectName(QStringLiteral("checkBox_spinBox_bigAndSmallDiamondDASync"));
 
-        horizontalLayout_24->addWidget(checkBox_2);
+        horizontalLayout_24->addWidget(checkBox_spinBox_bigAndSmallDiamondDASync);
 
-        pushButton_lightSwitch_3 = new QPushButton(tab_14);
-        pushButton_lightSwitch_3->setObjectName(QStringLiteral("pushButton_lightSwitch_3"));
-        sizePolicy3.setHeightForWidth(pushButton_lightSwitch_3->sizePolicy().hasHeightForWidth());
-        pushButton_lightSwitch_3->setSizePolicy(sizePolicy3);
-        pushButton_lightSwitch_3->setMinimumSize(QSize(40, 0));
-        pushButton_lightSwitch_3->setMaximumSize(QSize(40, 16777215));
+        pushButton_light2 = new QPushButton(tab_14);
+        pushButton_light2->setObjectName(QStringLiteral("pushButton_light2"));
+        sizePolicy3.setHeightForWidth(pushButton_light2->sizePolicy().hasHeightForWidth());
+        pushButton_light2->setSizePolicy(sizePolicy3);
+        pushButton_light2->setMinimumSize(QSize(40, 0));
+        pushButton_light2->setMaximumSize(QSize(40, 16777215));
 
-        horizontalLayout_24->addWidget(pushButton_lightSwitch_3);
+        horizontalLayout_24->addWidget(pushButton_light2);
 
         tabWidget_5->addTab(tab_14, QString());
         tab_15 = new QWidget();
@@ -708,10 +697,6 @@ public:
         horizontalLayout_25->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_25->setObjectName(QStringLiteral("horizontalLayout_25"));
         horizontalLayout_25->setContentsMargins(3, 3, 3, 3);
-        horizontalSpacer_43 = new QSpacerItem(53, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        horizontalLayout_25->addItem(horizontalSpacer_43);
-
         label_da_RGB_4 = new QLabel(tab_15);
         label_da_RGB_4->setObjectName(QStringLiteral("label_da_RGB_4"));
         sizePolicy2.setHeightForWidth(label_da_RGB_4->sizePolicy().hasHeightForWidth());
@@ -721,140 +706,59 @@ public:
 
         horizontalLayout_25->addWidget(label_da_RGB_4);
 
-        spinBox_lightDAR_4 = new QSpinBox(tab_15);
-        spinBox_lightDAR_4->setObjectName(QStringLiteral("spinBox_lightDAR_4"));
-        spinBox_lightDAR_4->setMinimumSize(QSize(40, 0));
-        spinBox_lightDAR_4->setMaximumSize(QSize(50, 16777215));
-        spinBox_lightDAR_4->setMinimum(0);
-        spinBox_lightDAR_4->setMaximum(65535);
-        spinBox_lightDAR_4->setValue(0);
+        spinBox_lightR = new QSpinBox(tab_15);
+        spinBox_lightR->setObjectName(QStringLiteral("spinBox_lightR"));
+        spinBox_lightR->setMinimumSize(QSize(40, 0));
+        spinBox_lightR->setMaximumSize(QSize(50, 16777215));
+        spinBox_lightR->setMinimum(0);
+        spinBox_lightR->setMaximum(65535);
+        spinBox_lightR->setValue(0);
 
-        horizontalLayout_25->addWidget(spinBox_lightDAR_4);
+        horizontalLayout_25->addWidget(spinBox_lightR);
 
-        spinBox_lightDAG_2 = new QSpinBox(tab_15);
-        spinBox_lightDAG_2->setObjectName(QStringLiteral("spinBox_lightDAG_2"));
-        spinBox_lightDAG_2->setEnabled(true);
-        spinBox_lightDAG_2->setMinimumSize(QSize(40, 0));
-        spinBox_lightDAG_2->setMaximumSize(QSize(50, 16777215));
-        spinBox_lightDAG_2->setMinimum(0);
-        spinBox_lightDAG_2->setMaximum(65535);
-        spinBox_lightDAG_2->setValue(0);
+        spinBox_lightG = new QSpinBox(tab_15);
+        spinBox_lightG->setObjectName(QStringLiteral("spinBox_lightG"));
+        spinBox_lightG->setEnabled(true);
+        spinBox_lightG->setMinimumSize(QSize(40, 0));
+        spinBox_lightG->setMaximumSize(QSize(50, 16777215));
+        spinBox_lightG->setMinimum(0);
+        spinBox_lightG->setMaximum(65535);
+        spinBox_lightG->setValue(0);
 
-        horizontalLayout_25->addWidget(spinBox_lightDAG_2);
+        horizontalLayout_25->addWidget(spinBox_lightG);
 
-        spinBox_lightDAB_2 = new QSpinBox(tab_15);
-        spinBox_lightDAB_2->setObjectName(QStringLiteral("spinBox_lightDAB_2"));
-        spinBox_lightDAB_2->setEnabled(true);
-        spinBox_lightDAB_2->setMinimumSize(QSize(40, 0));
-        spinBox_lightDAB_2->setMaximumSize(QSize(50, 16777215));
-        spinBox_lightDAB_2->setMinimum(0);
-        spinBox_lightDAB_2->setMaximum(65535);
-        spinBox_lightDAB_2->setValue(0);
+        spinBox_lightB = new QSpinBox(tab_15);
+        spinBox_lightB->setObjectName(QStringLiteral("spinBox_lightB"));
+        spinBox_lightB->setEnabled(true);
+        spinBox_lightB->setMinimumSize(QSize(40, 0));
+        spinBox_lightB->setMaximumSize(QSize(50, 16777215));
+        spinBox_lightB->setMinimum(0);
+        spinBox_lightB->setMaximum(65535);
+        spinBox_lightB->setValue(0);
 
-        horizontalLayout_25->addWidget(spinBox_lightDAB_2);
+        horizontalLayout_25->addWidget(spinBox_lightB);
 
-        checkBox_3 = new QCheckBox(tab_15);
-        checkBox_3->setObjectName(QStringLiteral("checkBox_3"));
+        horizontalSpacer_43 = new QSpacerItem(53, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        horizontalLayout_25->addWidget(checkBox_3);
+        horizontalLayout_25->addItem(horizontalSpacer_43);
 
-        pushButton_lightSwitch_4 = new QPushButton(tab_15);
-        pushButton_lightSwitch_4->setObjectName(QStringLiteral("pushButton_lightSwitch_4"));
-        sizePolicy3.setHeightForWidth(pushButton_lightSwitch_4->sizePolicy().hasHeightForWidth());
-        pushButton_lightSwitch_4->setSizePolicy(sizePolicy3);
-        pushButton_lightSwitch_4->setMinimumSize(QSize(40, 0));
-        pushButton_lightSwitch_4->setMaximumSize(QSize(40, 16777215));
+        checkBox_whiteLightDASync = new QCheckBox(tab_15);
+        checkBox_whiteLightDASync->setObjectName(QStringLiteral("checkBox_whiteLightDASync"));
 
-        horizontalLayout_25->addWidget(pushButton_lightSwitch_4);
+        horizontalLayout_25->addWidget(checkBox_whiteLightDASync);
+
+        pushButton_light3 = new QPushButton(tab_15);
+        pushButton_light3->setObjectName(QStringLiteral("pushButton_light3"));
+        sizePolicy3.setHeightForWidth(pushButton_light3->sizePolicy().hasHeightForWidth());
+        pushButton_light3->setSizePolicy(sizePolicy3);
+        pushButton_light3->setMinimumSize(QSize(40, 0));
+        pushButton_light3->setMaximumSize(QSize(40, 16777215));
+
+        horizontalLayout_25->addWidget(pushButton_light3);
 
         tabWidget_5->addTab(tab_15, QString());
 
         verticalLayout_3->addWidget(tabWidget_5);
-
-        groupBox_23 = new QGroupBox(groupBox);
-        groupBox_23->setObjectName(QStringLiteral("groupBox_23"));
-        sizePolicy2.setHeightForWidth(groupBox_23->sizePolicy().hasHeightForWidth());
-        groupBox_23->setSizePolicy(sizePolicy2);
-        groupBox_23->setMinimumSize(QSize(0, 0));
-        groupBox_23->setMaximumSize(QSize(16777215, 16777215));
-        horizontalLayout_6 = new QHBoxLayout(groupBox_23);
-        horizontalLayout_6->setSpacing(0);
-        horizontalLayout_6->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout_6->setObjectName(QStringLiteral("horizontalLayout_6"));
-        horizontalLayout_6->setContentsMargins(3, 3, 3, 3);
-        comboBox_lightSelect = new QComboBox(groupBox_23);
-        comboBox_lightSelect->setObjectName(QStringLiteral("comboBox_lightSelect"));
-        comboBox_lightSelect->setMinimumSize(QSize(90, 0));
-
-        horizontalLayout_6->addWidget(comboBox_lightSelect);
-
-        comboBox_lampNumber = new QComboBox(groupBox_23);
-        comboBox_lampNumber->setObjectName(QStringLiteral("comboBox_lampNumber"));
-        comboBox_lampNumber->setEnabled(false);
-        comboBox_lampNumber->setMaximumSize(QSize(35, 16777215));
-
-        horizontalLayout_6->addWidget(comboBox_lampNumber);
-
-        horizontalSpacer_18 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        horizontalLayout_6->addItem(horizontalSpacer_18);
-
-        label_da_RGB = new QLabel(groupBox_23);
-        label_da_RGB->setObjectName(QStringLiteral("label_da_RGB"));
-        sizePolicy2.setHeightForWidth(label_da_RGB->sizePolicy().hasHeightForWidth());
-        label_da_RGB->setSizePolicy(sizePolicy2);
-        label_da_RGB->setMinimumSize(QSize(25, 0));
-        label_da_RGB->setMaximumSize(QSize(25, 16777215));
-
-        horizontalLayout_6->addWidget(label_da_RGB);
-
-        spinBox_lightDAR = new QSpinBox(groupBox_23);
-        spinBox_lightDAR->setObjectName(QStringLiteral("spinBox_lightDAR"));
-        spinBox_lightDAR->setMinimumSize(QSize(40, 0));
-        spinBox_lightDAR->setMaximumSize(QSize(50, 16777215));
-        spinBox_lightDAR->setMinimum(0);
-        spinBox_lightDAR->setMaximum(65535);
-        spinBox_lightDAR->setValue(0);
-
-        horizontalLayout_6->addWidget(spinBox_lightDAR);
-
-        spinBox_lightDAG = new QSpinBox(groupBox_23);
-        spinBox_lightDAG->setObjectName(QStringLiteral("spinBox_lightDAG"));
-        spinBox_lightDAG->setEnabled(false);
-        spinBox_lightDAG->setMinimumSize(QSize(40, 0));
-        spinBox_lightDAG->setMaximumSize(QSize(50, 16777215));
-        spinBox_lightDAG->setMinimum(0);
-        spinBox_lightDAG->setMaximum(65535);
-        spinBox_lightDAG->setValue(0);
-
-        horizontalLayout_6->addWidget(spinBox_lightDAG);
-
-        spinBox_lightDAB = new QSpinBox(groupBox_23);
-        spinBox_lightDAB->setObjectName(QStringLiteral("spinBox_lightDAB"));
-        spinBox_lightDAB->setEnabled(false);
-        spinBox_lightDAB->setMinimumSize(QSize(40, 0));
-        spinBox_lightDAB->setMaximumSize(QSize(50, 16777215));
-        spinBox_lightDAB->setMinimum(0);
-        spinBox_lightDAB->setMaximum(65535);
-        spinBox_lightDAB->setValue(0);
-
-        horizontalLayout_6->addWidget(spinBox_lightDAB);
-
-        pushButton_lightSwitch = new QPushButton(groupBox_23);
-        pushButton_lightSwitch->setObjectName(QStringLiteral("pushButton_lightSwitch"));
-        sizePolicy3.setHeightForWidth(pushButton_lightSwitch->sizePolicy().hasHeightForWidth());
-        pushButton_lightSwitch->setSizePolicy(sizePolicy3);
-        pushButton_lightSwitch->setMinimumSize(QSize(40, 0));
-        pushButton_lightSwitch->setMaximumSize(QSize(40, 16777215));
-
-        horizontalLayout_6->addWidget(pushButton_lightSwitch);
-
-        horizontalSpacer_5 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        horizontalLayout_6->addItem(horizontalSpacer_5);
-
-
-        verticalLayout_3->addWidget(groupBox_23);
 
         groupBox_3 = new QGroupBox(groupBox);
         groupBox_3->setObjectName(QStringLiteral("groupBox_3"));
@@ -3473,8 +3377,8 @@ public:
         action_saveLocalData->setToolTip(QApplication::translate("MainWindow", "\345\255\230\345\202\250\346\225\260\346\215\256\344\277\241\346\201\257\350\241\250\345\210\260\346\234\254\345\234\260", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
         groupBox->setTitle(QApplication::translate("MainWindow", "\347\224\265\346\234\272\345\222\214\347\201\257\345\205\211\346\265\213\350\257\225", Q_NULLPTR));
-        comboBox_lightSelect_2->clear();
-        comboBox_lightSelect_2->insertItems(0, QStringList()
+        comboBox_lightSelect_1->clear();
+        comboBox_lightSelect_1->insertItems(0, QStringList()
          << QApplication::translate("MainWindow", "\344\270\255\345\277\203\345\233\272\350\247\206", Q_NULLPTR)
          << QApplication::translate("MainWindow", "\351\273\204\350\211\262\350\203\214\346\231\257\347\201\257", Q_NULLPTR)
          << QApplication::translate("MainWindow", "\344\270\255\345\277\203\347\272\242\345\244\226\347\201\257", Q_NULLPTR)
@@ -3483,51 +3387,29 @@ public:
          << QApplication::translate("MainWindow", "\346\212\225\345\260\204\345\205\211", Q_NULLPTR)
         );
         label_da_RGB_2->setText(QApplication::translate("MainWindow", "DA:", Q_NULLPTR));
-        checkBox->setText(QApplication::translate("MainWindow", "\345\220\214\346\255\245\351\205\215\347\275\256", Q_NULLPTR));
-        pushButton_lightSwitch_2->setText(QApplication::translate("MainWindow", "\346\265\213\350\257\225", Q_NULLPTR));
+        checkBox_centerLightAndOtherDASync->setText(QApplication::translate("MainWindow", "\345\220\214\346\255\245\351\205\215\347\275\256", Q_NULLPTR));
+        pushButton_light1->setText(QApplication::translate("MainWindow", "\346\265\213\350\257\225", Q_NULLPTR));
         tabWidget_5->setTabText(tabWidget_5->indexOf(tab_13), QApplication::translate("MainWindow", "\344\270\255\345\277\203\345\233\272\350\247\206\347\255\211", Q_NULLPTR));
-        comboBox_lightSelect_3->clear();
-        comboBox_lightSelect_3->insertItems(0, QStringList()
+        comboBox_lightSelect_2->clear();
+        comboBox_lightSelect_2->insertItems(0, QStringList()
          << QApplication::translate("MainWindow", "\345\244\247\350\217\261\345\275\242", Q_NULLPTR)
          << QApplication::translate("MainWindow", "\345\260\217\350\217\261\345\275\242", Q_NULLPTR)
         );
-        comboBox_lampNumber_2->clear();
-        comboBox_lampNumber_2->insertItems(0, QStringList()
+        comboBox_lampIndex->clear();
+        comboBox_lampIndex->insertItems(0, QStringList()
          << QApplication::translate("MainWindow", "1", Q_NULLPTR)
          << QApplication::translate("MainWindow", "2", Q_NULLPTR)
          << QApplication::translate("MainWindow", "3", Q_NULLPTR)
          << QApplication::translate("MainWindow", "4", Q_NULLPTR)
         );
         label_da_RGB_3->setText(QApplication::translate("MainWindow", "DA:", Q_NULLPTR));
-        checkBox_2->setText(QApplication::translate("MainWindow", "\345\220\214\346\255\245\351\205\215\347\275\256", Q_NULLPTR));
-        pushButton_lightSwitch_3->setText(QApplication::translate("MainWindow", "\346\265\213\350\257\225", Q_NULLPTR));
+        checkBox_spinBox_bigAndSmallDiamondDASync->setText(QApplication::translate("MainWindow", "\345\220\214\346\255\245\351\205\215\347\275\256", Q_NULLPTR));
+        pushButton_light2->setText(QApplication::translate("MainWindow", "\346\265\213\350\257\225", Q_NULLPTR));
         tabWidget_5->setTabText(tabWidget_5->indexOf(tab_14), QApplication::translate("MainWindow", "\345\244\247\345\260\217\350\217\261\345\275\242", Q_NULLPTR));
         label_da_RGB_4->setText(QApplication::translate("MainWindow", "RGB:", Q_NULLPTR));
-        checkBox_3->setText(QApplication::translate("MainWindow", "\345\220\214\346\255\245\351\205\215\347\275\256", Q_NULLPTR));
-        pushButton_lightSwitch_4->setText(QApplication::translate("MainWindow", "\346\265\213\350\257\225", Q_NULLPTR));
+        checkBox_whiteLightDASync->setText(QApplication::translate("MainWindow", "\345\220\214\346\255\245\351\205\215\347\275\256", Q_NULLPTR));
+        pushButton_light3->setText(QApplication::translate("MainWindow", "\346\265\213\350\257\225", Q_NULLPTR));
         tabWidget_5->setTabText(tabWidget_5->indexOf(tab_15), QApplication::translate("MainWindow", "\347\231\275\350\211\262\350\203\214\346\231\257\345\205\211", Q_NULLPTR));
-        groupBox_23->setTitle(QApplication::translate("MainWindow", "\347\201\257\345\205\211\346\216\247\345\210\266", Q_NULLPTR));
-        comboBox_lightSelect->clear();
-        comboBox_lightSelect->insertItems(0, QStringList()
-         << QApplication::translate("MainWindow", "\344\270\255\345\277\203\345\233\272\350\247\206", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "\345\244\247\350\217\261\345\275\242", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "\345\260\217\350\217\261\345\275\242", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "\351\273\204\350\211\262\350\203\214\346\231\257\347\201\257", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "\344\270\255\345\277\203\347\272\242\345\244\226\347\201\257", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "\350\276\271\347\274\230\347\272\242\345\244\226", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "\351\225\234\346\236\266\347\272\242\345\244\226", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "\347\231\275\350\211\262\350\203\214\346\231\257\347\201\257", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "\345\210\272\346\277\200\347\201\257", Q_NULLPTR)
-        );
-        comboBox_lampNumber->clear();
-        comboBox_lampNumber->insertItems(0, QStringList()
-         << QApplication::translate("MainWindow", "1", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "2", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "3", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "4", Q_NULLPTR)
-        );
-        label_da_RGB->setText(QApplication::translate("MainWindow", "DA:", Q_NULLPTR));
-        pushButton_lightSwitch->setText(QApplication::translate("MainWindow", "\346\265\213\350\257\225", Q_NULLPTR));
         groupBox_3->setTitle(QApplication::translate("MainWindow", "\350\205\256\346\211\230\347\224\265\346\234\272", Q_NULLPTR));
         label->setText(QApplication::translate("MainWindow", "\346\260\264\345\271\263\347\224\265\346\234\272\344\275\215\347\275\256:", Q_NULLPTR));
         label_2->setText(QApplication::translate("MainWindow", "\351\200\237\345\272\246:", Q_NULLPTR));

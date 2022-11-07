@@ -244,9 +244,18 @@ int MainWindow::getFocusMotorPosByDist(int focalDist,int spotSlot)
     return focalMotorPos;
 }
 
+void MainWindow::initConfigUI()
+{
+    ui->comboBox_lightSelect_1->currentIndexChanged(0);
+    ui->comboBox_lightSelect_2->currentIndexChanged(0);
+    ui->spinBox_lightR->setValue(m_config.whiteBackgroundLampDAPtr()[0]);
+    ui->spinBox_lightG->setValue(m_config.whiteBackgroundLampDAPtr()[1]);
+    ui->spinBox_lightB->setValue(m_config.whiteBackgroundLampDAPtr()[2]);
+}
+
+
 void MainWindow::refreshConfigUI()
 {
-    bool ok;
     ui->spinBox_shutterOpenPos->setValue(m_config.shutterOpenPosRef());
     ui->lineEdit_deviceSerialNo->setText(QString::number(m_config.deviceIDRef()));
     ui->lineEdit_centralLightDA->setText(QString::number(m_config.centerFixationLampDARef()));
@@ -275,7 +284,7 @@ void MainWindow::refreshConfigUI()
     ui->lineEdit_centerY->setText(QString::number(m_config.mainTableCenterYRef()));
     ui->lineEdit_secondaryCenterX->setText(QString::number(m_config.secondaryTableCenterXRef()));
     ui->lineEdit_secondaryCenterY->setText(QString::number(m_config.secondaryTableCenterYRef()));
-    ui->lineEdit_castLightDA->setText(QString::number(m_config.maximunProjectionLightADPresetRef()));
+    ui->lineEdit_castLightDA->setText(QString::number(m_config.castLightADPresetRef()));
     ui->lineEdit_lightCorrectionFocus->setText(QString::number(m_config.focalLengthMotorPosForLightCorrectionRef()));
     ui->lineEdit_lightCorrectionX->setText(QString::number(m_config.xMotorPosForLightCorrectionRef()));
     ui->lineEdit_lightCorrectionY->setText(QString::number(m_config.yMotorPosForLightCorrectionRef()));
@@ -317,7 +326,7 @@ void MainWindow::refreshConfigDataByUI()
     m_config.mainTableCenterYRef()=ui->lineEdit_centerY->text().toInt(&ok);
     m_config.secondaryTableCenterXRef()=ui->lineEdit_secondaryCenterX->text().toInt(&ok);
     m_config.secondaryTableCenterYRef()=ui->lineEdit_secondaryCenterY->text().toInt(&ok);
-    m_config.maximunProjectionLightADPresetRef()=ui->lineEdit_castLightDA->text().toInt(&ok);
+    m_config.castLightADPresetRef()=ui->lineEdit_castLightDA->text().toInt(&ok);
     m_config.focalLengthMotorPosForLightCorrectionRef()=ui->lineEdit_lightCorrectionFocus->text().toInt(&ok);
     m_config.xMotorPosForLightCorrectionRef()=ui->lineEdit_lightCorrectionX->text().toInt(&ok);
     m_config.yMotorPosForLightCorrectionRef()=ui->lineEdit_lightCorrectionY->text().toInt(&ok);
@@ -480,7 +489,7 @@ void MainWindow::on_pushButton_chinMoveRight_released()
 
 void MainWindow::on_pushButton_light1_clicked()
 {
-    int index=ui->comboBox_lightSelect->currentIndex();
+    int index=ui->comboBox_lightSelect_1->currentIndex();
     int id;
     switch (index)
     {
@@ -488,37 +497,37 @@ void MainWindow::on_pushButton_light1_clicked()
     case 1:case 2:case 3:case 4:case 5:id=index+2;
     }
 
-    m_devCtl->setLamp(UsbDev::DevCtl::LampId(id),ui->comboBox_lampNumber->currentIndex(),ui->spinBox_lightDAR->value());
+    m_devCtl->setLamp(UsbDev::DevCtl::LampId(id),0,ui->spinBox_centerLightAndOtherDA->value());
 
 }
 
 void MainWindow::on_pushButton_light2_clicked()
 {
-    UsbDev::DevCtl::LampId lampId=(UsbDev::DevCtl::LampId)(ui->comboBox_lightSelect->currentIndex()+1);
-    m_devCtl->setLamp(lampId,ui->comboBox_lampNumber->currentIndex(),ui->spinBox_lightDAR_2->value());
+    UsbDev::DevCtl::LampId lampId=(UsbDev::DevCtl::LampId)(ui->comboBox_lightSelect_2->currentIndex()+1);
+    m_devCtl->setLamp(lampId,ui->comboBox_lampIndex->currentIndex(),ui->spinBox_bigAndSmallDiamondDA->value());
 }
 
 void MainWindow::on_pushButton_light3_clicked()
 {
-    int r=ui->spinBox_lightDAR->value();
-    int g=ui->spinBox_lightDAG->value();
-    int b=ui->spinBox_lightDAB->value();
+    int r=ui->spinBox_lightR->value();
+    int g=ui->spinBox_lightG->value();
+    int b=ui->spinBox_lightB->value();
     m_devCtl->setWhiteLamp(r,g,b);
 }
 
-void MainWindow::on_comboBox_lightSelect_currentIndexChanged(int index)
-{
-    ui->comboBox_lampNumber->setEnabled(index==1||index==2);
-    index==7?ui->label_da_RGB->setText("RGB:"):ui->label_da_RGB->setText("DA:");
-    switch(index)
-    {
-    case 7:ui->label_da_RGB->setText("RGB:");break;
-    case 8:ui->label_da_RGB->setText("PWM:");break;
-    default:ui->label_da_RGB->setText("DA:");break;
-    }
-    ui->spinBox_lightDAG->setEnabled(index==7);
-    ui->spinBox_lightDAB->setEnabled(index==7);
-}
+//void MainWindow::on_comboBox_lightSelect_currentIndexChanged(int index)
+//{
+//    ui->comboBox_lampNumber->setEnabled(index==1||index==2);
+//    index==7?ui->label_da_RGB->setText("RGB:"):ui->label_da_RGB->setText("DA:");
+//    switch(index)
+//    {
+//    case 7:ui->label_da_RGB->setText("RGB:");break;
+//    case 8:ui->label_da_RGB->setText("PWM:");break;
+//    default:ui->label_da_RGB->setText("DA:");break;
+//    }
+//    ui->spinBox_lightDAG->setEnabled(index==7);
+//    ui->spinBox_lightDAB->setEnabled(index==7);
+//}
 
 void MainWindow::on_pushButton_testStart_clicked()
 {
@@ -840,6 +849,7 @@ void MainWindow::readLocalConfig(QString filePath)
         file.flush();
         file.close();
     }
+    initConfigUI();
     refreshConfigUI();
 }
 
@@ -852,6 +862,98 @@ void MainWindow::on_action_downloadConfig_triggered()
 {
     memcpy(m_config.dataPtr(),m_devCtl->config().dataPtr(),m_config.dataLen());
     refreshConfigUI();
+}
+
+void MainWindow::on_spinBox_centerLightAndOtherDA_valueChanged(int arg1)
+{
+    if(ui->checkBox_centerLightAndOtherDASync->isChecked())
+    {
+        int index=ui->comboBox_lightSelect_1->currentIndex();
+        switch (index)
+        {
+        case 0:m_config.centerFixationLampDARef()=arg1;break;
+        case 1:m_config.yellowBackgroundLampDARef()=arg1;break;
+        case 2:m_config.centerInfraredLampDARef()=arg1;break;
+        case 3:m_config.borderInfraredLampDARef()=arg1;break;
+        case 4:m_config.eyeglassFrameLampDARef()=arg1;break;
+        case 5:m_config.castLightADPresetRef()=arg1;break;
+        }
+        refreshConfigUI();
+    }
+}
+
+void MainWindow::on_spinBox_bigAndSmallDiamondDA_valueChanged(int arg1)
+{
+    if(ui->checkBox_spinBox_bigAndSmallDiamondDASync->isChecked())
+    {
+        int index=ui->comboBox_lightSelect_2->currentIndex();
+        int index2=ui->comboBox_lampIndex->currentIndex();
+        switch (index)
+        {
+        case 0:m_config.bigDiamondfixationLampDAPtr()[index2]=arg1;break;
+        case 1:m_config.smallDiamondFixationLampDAPtr()[index2]=arg1;break;
+        }
+        refreshConfigUI();
+    }
+}
+
+void MainWindow::on_spinBox_lightR_valueChanged(int arg1)
+{
+    if(ui->checkBox_whiteLightDASync->isChecked())
+        m_config.whiteBackgroundLampDAPtr()[0]=arg1;
+    refreshConfigUI();
+}
+
+void MainWindow::on_spinBox_lightG_valueChanged(int arg1)
+{
+    if(ui->checkBox_whiteLightDASync->isChecked())
+        m_config.whiteBackgroundLampDAPtr()[1]=arg1;
+    refreshConfigUI();
+}
+
+void MainWindow::on_spinBox_lightB_valueChanged(int arg1)
+{
+    if(ui->checkBox_whiteLightDASync->isChecked())
+        m_config.whiteBackgroundLampDAPtr()[2]=arg1;
+    refreshConfigUI();
+}
+
+void MainWindow::on_comboBox_lightSelect_1_currentIndexChanged(int index)
+{
+
+//    int index=ui->comboBox_lightSelect_1->currentIndex();
+    int value;
+    switch (index)
+    {
+    case 0:value=m_config.centerFixationLampDARef();break;
+    case 1:value=m_config.yellowBackgroundLampDARef();break;
+    case 2:value=m_config.centerInfraredLampDARef();break;
+    case 3:value=m_config.borderInfraredLampDARef();break;
+    case 4:value=m_config.eyeglassFrameLampDARef();break;
+    case 5:value=m_config.castLightADPresetRef();break;
+    }
+    ui->spinBox_centerLightAndOtherDA->setValue(value);
+    refreshConfigUI();
+
+}
+
+void MainWindow::on_comboBox_lightSelect_2_currentIndexChanged(int index)
+{
+    ui->comboBox_lampIndex->setCurrentIndex(0);
+    ui->comboBox_lampIndex->currentIndexChanged(0);
+}
+
+void MainWindow::on_comboBox_lampIndex_currentIndexChanged(int index)
+{
+    int bigOrsmall=ui->comboBox_lightSelect_2->currentIndex();
+    if(bigOrsmall==0)
+    {
+        ui->spinBox_bigAndSmallDiamondDA->setValue(m_config.bigDiamondfixationLampDAPtr()[index]);
+    }
+    else
+    {
+        ui->spinBox_bigAndSmallDiamondDA->setValue(m_config.smallDiamondFixationLampDAPtr()[index]);
+    }
 }
 
 void MainWindow::on_pushButton_readCache_clicked()
@@ -1018,6 +1120,7 @@ void MainWindow::fillXYMotorAndFocalInfoByXYCoord()
 bool MainWindow::getXYMotorPosAndFocalDistFromCoord(const CoordSpacePosInfo& coordSpacePosInfo,CoordMotorPosFocalDistInfo& coordMotorPosFocalDistInfo)
 {
     static bool isMainDotInfoTable=true;
+    //从-90到9,有15格,所以要加15
     int x1=floor(coordSpacePosInfo.coordX/6.0f)+15;int x2=ceil(coordSpacePosInfo.coordX/6.0f)+15;
     int y1=floor(coordSpacePosInfo.coordY/6.0f)+15;int y2=ceil(coordSpacePosInfo.coordY/6.0f)+15;
     auto data=m_localTableData;

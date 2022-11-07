@@ -34,8 +34,6 @@ private:signals:
     void updateInfo(QString str);
 
 private slots:
-//    void saveConfig();
-
     void showDevInfo(QString);
     void showDevRefreshInfo(QString str);
     void refreshStatus();
@@ -58,6 +56,22 @@ private slots:
     void on_action_updateConfigToLower_triggered();
 
     void on_action_downloadConfig_triggered();
+
+    void on_spinBox_centerLightAndOtherDA_valueChanged(int arg1);
+
+    void on_spinBox_bigAndSmallDiamondDA_valueChanged(int arg1);
+
+    void on_spinBox_lightR_valueChanged(int arg1);
+
+    void on_spinBox_lightG_valueChanged(int arg1);
+
+    void on_spinBox_lightB_valueChanged(int arg1);
+
+    void on_comboBox_lightSelect_1_currentIndexChanged(int index);
+
+    void on_comboBox_lightSelect_2_currentIndexChanged(int index);
+
+    void on_comboBox_lampIndex_currentIndexChanged(int index);
 
     void on_pushButton_relativeMoveChin_clicked();
 
@@ -89,7 +103,9 @@ private slots:
 
     void on_pushButton_light1_clicked();
 
-    void on_comboBox_lightSelect_currentIndexChanged(int index);
+    void on_pushButton_light2_clicked();
+
+    void on_pushButton_light3_clicked();
 
     void on_comboBox_color_currentIndexChanged(int index);
 
@@ -140,12 +156,15 @@ private slots:
     void on_checkBox_RefreshIO_stateChanged(int arg1);
 
 
+
 private:
     void initData();
     void initTable();
     void moveChinMotors(UsbDev::DevCtl::MoveMethod);
     void move5Motors(UsbDev::DevCtl::MoveMethod);
     void fillXYMotorAndFocalInfoByXYCoord();
+
+    //获取XY电机位置还有焦距
     bool getXYMotorPosAndFocalDistFromCoord(const CoordSpacePosInfo& coordSpacePosInfo,CoordMotorPosFocalDistInfo& coordMotorPosFocalDistInfo);
     void staticCastTest(const CoordMotorPosFocalDistInfo& dot,int spotSlot ,int colorSlot,int db,int* sps,int durationTime,int shutterPos);
     void moveCastTest(const CoordSpacePosInfo& dotBegin,const CoordSpacePosInfo& dotEnd,int spotSlot ,int colorSlot,float stepLength,int db,int* sps);
@@ -154,6 +173,7 @@ private:
     void uninitDevCtl();
     int interpolation(int value[4],QPointF loc);
     int getFocusMotorPosByDist(int focalDist,int spotSlot);
+    void initConfigUI();
     void refreshConfigUI();
     void refreshConfigDataByUI();
     Ui::MainWindow *ui;
