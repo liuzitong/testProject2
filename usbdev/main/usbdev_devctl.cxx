@@ -249,7 +249,7 @@ bool   DevCtl_Worker :: cmd_ReadProfile( bool req_emit )
     unsigned char buff[512]={0}; bool ret = true;
     if ( ret ) {
         buff[0] = 0x5a; buff[1] = 0xf0;
-        updateIOInfo(QString("W:")+buffToQStr(reinterpret_cast<const char*>(buff),2));return  false;
+        updateIOInfo(QString("W:")+buffToQStr(reinterpret_cast<const char*>(buff),2));
         ret = this->cmdComm_bulkOutSync( buff, sizeof( buff ) );
         if ( ! ret ) { updateInfo("send read profile command failed."); }
     }

@@ -250,7 +250,7 @@ public:
     QHBoxLayout *horizontalLayout_9;
     QSpacerItem *horizontalSpacer;
     QLabel *label_38;
-    QLabel *label_49;
+    QLabel *label_videoSize;
     QLabel *label_20;
     QSpinBox *spinBox_speedChinMove;
     QPushButton *pushButton_cameraSwitch;
@@ -1665,12 +1665,12 @@ public:
 
         horizontalLayout_9->addWidget(label_38);
 
-        label_49 = new QLabel(groupBox_14);
-        label_49->setObjectName(QStringLiteral("label_49"));
-        label_49->setMinimumSize(QSize(45, 0));
-        label_49->setMaximumSize(QSize(45, 16777215));
+        label_videoSize = new QLabel(groupBox_14);
+        label_videoSize->setObjectName(QStringLiteral("label_videoSize"));
+        label_videoSize->setMinimumSize(QSize(45, 0));
+        label_videoSize->setMaximumSize(QSize(45, 16777215));
 
-        horizontalLayout_9->addWidget(label_49);
+        horizontalLayout_9->addWidget(label_videoSize);
 
         label_20 = new QLabel(groupBox_14);
         label_20->setObjectName(QStringLiteral("label_20"));
@@ -2146,7 +2146,7 @@ public:
         spinBox_shutterOpenDuration->setObjectName(QStringLiteral("spinBox_shutterOpenDuration"));
         spinBox_shutterOpenDuration->setMinimumSize(QSize(60, 0));
         spinBox_shutterOpenDuration->setMinimum(0);
-        spinBox_shutterOpenDuration->setMaximum(10000);
+        spinBox_shutterOpenDuration->setMaximum(65535);
         spinBox_shutterOpenDuration->setValue(200);
 
         horizontalLayout_4->addWidget(spinBox_shutterOpenDuration);
@@ -2340,6 +2340,10 @@ public:
 
         checkBox_IO = new QCheckBox(tab_5);
         checkBox_IO->setObjectName(QStringLiteral("checkBox_IO"));
+        checkBox_IO->setIconSize(QSize(16, 12));
+        checkBox_IO->setCheckable(true);
+        checkBox_IO->setChecked(false);
+        checkBox_IO->setTristate(true);
 
         horizontalLayout_19->addWidget(checkBox_IO);
 
@@ -2369,12 +2373,14 @@ public:
 
         checkBox_startRefreshInfo = new QCheckBox(tab_6);
         checkBox_startRefreshInfo->setObjectName(QStringLiteral("checkBox_startRefreshInfo"));
+        checkBox_startRefreshInfo->setTristate(false);
 
         horizontalLayout_20->addWidget(checkBox_startRefreshInfo);
 
         checkBox_RefreshIO = new QCheckBox(tab_6);
         checkBox_RefreshIO->setObjectName(QStringLiteral("checkBox_RefreshIO"));
         checkBox_RefreshIO->setEnabled(false);
+        checkBox_RefreshIO->setTristate(false);
 
         horizontalLayout_20->addWidget(checkBox_RefreshIO);
 
@@ -3525,7 +3531,7 @@ public:
         pushButton_chinMoveDown->setText(QApplication::translate("MainWindow", "\344\270\213", Q_NULLPTR));
         pushButton_chinMoveRight->setText(QApplication::translate("MainWindow", "\345\217\263", Q_NULLPTR));
         label_38->setText(QApplication::translate("MainWindow", "\350\247\206\351\242\221\345\260\272\345\257\270:", Q_NULLPTR));
-        label_49->setText(QApplication::translate("MainWindow", "320x240", Q_NULLPTR));
+        label_videoSize->setText(QString());
         label_20->setText(QApplication::translate("MainWindow", "\350\205\256\346\211\230\347\247\273\345\212\250\351\200\237\345\272\246:", Q_NULLPTR));
         pushButton_cameraSwitch->setText(QApplication::translate("MainWindow", "\346\221\204\345\203\217\345\244\264 \345\274\200/\345\205\263", Q_NULLPTR));
         groupBox_7->setTitle(QApplication::translate("MainWindow", "\351\242\234\350\211\262", Q_NULLPTR));

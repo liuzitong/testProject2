@@ -69,7 +69,7 @@ public:
     qint32& mainTableCenterYRef();
     qint32& secondaryTableCenterXRef();
     qint32& secondaryTableCenterYRef();
-    qint32& maximunProjectionLightADPresetRef();
+    qint32& castLightADPresetRef();
     qint32& focalLengthMotorPosForLightCorrectionRef();
     qint32& xMotorPosForLightCorrectionRef();
     qint32& yMotorPosForLightCorrectionRef();

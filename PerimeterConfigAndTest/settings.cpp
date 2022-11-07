@@ -39,6 +39,10 @@ Settings::Settings()
     m_PID = m_rootObj.value("PID").toString();
     m_VID = m_rootObj.value("VID").toString();
 
+    m_updateIOInfo=m_rootObj.value("updateIOInfo").toBool();
+    m_updateRefreshInfo=m_rootObj.value("updateRefreshInfo").toBool();
+    m_updateRefreshIOInfo=m_rootObj.value("updateRefreshIOInfo").toBool();
+
     localConfig=m_rootObj.value("localConfig").toString();
     localData=m_rootObj.value("localData").toString();
 

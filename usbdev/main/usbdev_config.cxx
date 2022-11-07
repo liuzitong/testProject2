@@ -345,7 +345,7 @@ qint32&       Config :: secondaryTableCenterXRef()
 qint32&       Config :: secondaryTableCenterYRef()
 { return T_PrivPtr( m_obj )->secondaryTableCenterYCorrectionRef(); }
 
-qint32&       Config :: maximunProjectionLightADPresetRef()
+qint32&       Config :: castLightADPresetRef()
 { return T_PrivPtr( m_obj )->maximunProjectionLightADPresetRef(); }
 
 qint32&       Config :: focalLengthMotorPosForLightCorrectionRef()

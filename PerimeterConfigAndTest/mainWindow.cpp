@@ -109,6 +109,11 @@ void MainWindow::initDevCtl()
     connect(m_devCtl,&UsbDev::DevCtl::newFrameData,this,&MainWindow::refreshVideo);
     connect(m_devCtl,&UsbDev::DevCtl::newProfile,this,&MainWindow::updateProfile);
     connect(m_devCtl,&UsbDev::DevCtl::newConfig,this,[&](){showDevInfo("new Config updated");});
+
+    ui->checkBox_IO->setChecked(m_settings.m_updateIOInfo);
+    ui->checkBox_startRefreshInfo->setChecked(m_settings.m_updateRefreshIOInfo);
+    ui->checkBox_RefreshIO->setChecked(m_settings.m_updateRefreshIOInfo);
+
     connect(this,&MainWindow::updateInfo,this,&MainWindow::showDevInfo);
 }
 
@@ -376,7 +381,7 @@ void MainWindow::refreshStatus()
 void MainWindow::refreshVideo()
 {
     QSize size;
-    m_profile.isEmpty()?size={320,240}:size=m_profile.videoSize();
+    m_profile.isEmpty()?size={0,0}:size=m_profile.videoSize();
     int dataSize=size.width()*size.height();
     if(pixData==NULL){pixData=new quint8[dataSize];}
     m_frameData=m_devCtl->takeNextPendingFrameData();
@@ -408,20 +413,22 @@ void MainWindow::updateProfile()
 {
     using x=UsbDev::DevCtl;
     showDevInfo("Profile Got.");
-    auto profile=m_devCtl->profile();
-    ui->label_xMotorRange->setText(QString("%1-%2").arg(QString::number(profile.motorRange(x::MotorId_X).first)).arg(QString::number(profile.motorRange(x::MotorId_X).second)));
-    ui->label_yMotorRange->setText(QString("%1-%2").arg(QString::number(profile.motorRange(x::MotorId_Y).first)).arg(QString::number(profile.motorRange(x::MotorId_Y).second)));
-    ui->label_spotMotorRange->setText(QString("%1-%2").arg(QString::number(profile.motorRange(x::MotorId_Light_Spot).first)).arg(QString::number(profile.motorRange(x::MotorId_Light_Spot).second)));
-    ui->label_shutterMotorRange->setText(QString("%1-%2").arg(QString::number(profile.motorRange(x::MotorId_Shutter).first)).arg(QString::number(profile.motorRange(x::MotorId_Shutter).second)));
-    ui->label_focalMotorRange->setText(QString("%1-%2").arg(QString::number(profile.motorRange(x::MotorId_Focus).first)).arg(QString::number(profile.motorRange(x::MotorId_Focus).second)));
-    ui->label_colorMotorRange->setText(QString("%1-%2").arg(QString::number(profile.motorRange(x::MotorId_Color).first)).arg(QString::number(profile.motorRange(x::MotorId_Color).second)));
-    ui->label_chinHozMotorRange->setText(QString("%1-%2").arg(QString::number(profile.motorRange(x::MotorId_Chin_Hoz).first)).arg(QString::number(profile.motorRange(x::MotorId_Chin_Hoz).second)));
-    ui->label_chinVertMotorRange->setText(QString("%1-%2").arg(QString::number(profile.motorRange(x::MotorId_Chin_Vert).first)).arg(QString::number(profile.motorRange(x::MotorId_Chin_Vert).second)));
+    m_profile=m_devCtl->profile();
+    ui->label_xMotorRange->setText(QString("%1-%2").arg(QString::number(m_profile.motorRange(x::MotorId_X).first)).arg(QString::number(m_profile.motorRange(x::MotorId_X).second)));
+    ui->label_yMotorRange->setText(QString("%1-%2").arg(QString::number(m_profile.motorRange(x::MotorId_Y).first)).arg(QString::number(m_profile.motorRange(x::MotorId_Y).second)));
+    ui->label_spotMotorRange->setText(QString("%1-%2").arg(QString::number(m_profile.motorRange(x::MotorId_Light_Spot).first)).arg(QString::number(m_profile.motorRange(x::MotorId_Light_Spot).second)));
+    ui->label_shutterMotorRange->setText(QString("%1-%2").arg(QString::number(m_profile.motorRange(x::MotorId_Shutter).first)).arg(QString::number(m_profile.motorRange(x::MotorId_Shutter).second)));
+    ui->label_focalMotorRange->setText(QString("%1-%2").arg(QString::number(m_profile.motorRange(x::MotorId_Focus).first)).arg(QString::number(m_profile.motorRange(x::MotorId_Focus).second)));
+    ui->label_colorMotorRange->setText(QString("%1-%2").arg(QString::number(m_profile.motorRange(x::MotorId_Color).first)).arg(QString::number(m_profile.motorRange(x::MotorId_Color).second)));
+    ui->label_chinHozMotorRange->setText(QString("%1-%2").arg(QString::number(m_profile.motorRange(x::MotorId_Chin_Hoz).first)).arg(QString::number(m_profile.motorRange(x::MotorId_Chin_Hoz).second)));
+    ui->label_chinVertMotorRange->setText(QString("%1-%2").arg(QString::number(m_profile.motorRange(x::MotorId_Chin_Vert).first)).arg(QString::number(m_profile.motorRange(x::MotorId_Chin_Vert).second)));
+    ui->label_videoSize->setText(QString("%1x%2").arg(QString::number(m_profile.videoSize().width())).arg(QString::number(m_profile.videoSize().height())));
 }
 
 void MainWindow::on_pushButton_cameraSwitch_clicked()
 {
     if(!m_statusData.isEmpty())
+//        m_devCtl->setFrontVideo(true);
         m_devCtl->setFrontVideo(!m_statusData.cameraStatus());
     else
         showDevInfo("empty status");
