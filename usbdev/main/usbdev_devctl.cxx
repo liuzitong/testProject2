@@ -431,7 +431,7 @@ bool  DevCtl_Worker :: cmd_ReadFrameData()
 bool  DevCtl_Worker :: cmd_TurnOnVideo()
 {
     if ( ! this->isDeviceWork()) { updateInfo("no connection!");return false; }
-    if ( m_is_video_on ) { return true; }
+//    if ( m_is_video_on ) { return true; }
     bool ret = true;
     updateInfo("打开摄像头.");
     if ( ret ) { // turn on EP2
@@ -464,7 +464,7 @@ bool  DevCtl_Worker :: cmd_TurnOnVideo()
 bool  DevCtl_Worker :: cmd_TurnOffVideo()
 {
     if ( ! this->isDeviceWork()) { updateInfo("no connection!");return false; }
-    if ( ! m_is_video_on ) { return true; }
+//    if ( ! m_is_video_on ) { return true; }
     bool ret = true;
     updateInfo("关闭摄像头.");
     if ( ret ) { // turn off video

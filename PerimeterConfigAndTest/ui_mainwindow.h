@@ -1168,13 +1168,13 @@ public:
         gridLayout_8->setContentsMargins(3, 3, 3, 3);
         label_xMotorRange = new QLabel(groupBox_16);
         label_xMotorRange->setObjectName(QStringLiteral("label_xMotorRange"));
-        label_xMotorRange->setMinimumSize(QSize(70, 0));
+        label_xMotorRange->setMinimumSize(QSize(105, 0));
 
         gridLayout_8->addWidget(label_xMotorRange, 0, 1, 1, 1);
 
         label_focalMotorRange = new QLabel(groupBox_16);
         label_focalMotorRange->setObjectName(QStringLiteral("label_focalMotorRange"));
-        label_focalMotorRange->setMinimumSize(QSize(70, 0));
+        label_focalMotorRange->setMinimumSize(QSize(105, 0));
 
         gridLayout_8->addWidget(label_focalMotorRange, 0, 3, 1, 1);
 
@@ -1231,6 +1231,9 @@ public:
 
         label_68 = new QLabel(groupBox_16);
         label_68->setObjectName(QStringLiteral("label_68"));
+        sizePolicy1.setHeightForWidth(label_68->sizePolicy().hasHeightForWidth());
+        label_68->setSizePolicy(sizePolicy1);
+        label_68->setMinimumSize(QSize(80, 0));
 
         gridLayout_8->addWidget(label_68, 2, 2, 1, 1);
 
@@ -3465,8 +3468,8 @@ public:
         label_52->setText(QApplication::translate("MainWindow", "x\347\224\265\346\234\272:", Q_NULLPTR));
         label_shutterMotorRange->setText(QString());
         label_62->setText(QApplication::translate("MainWindow", "\345\205\211\346\226\221\347\224\265\346\234\272:", Q_NULLPTR));
-        label_65->setText(QApplication::translate("MainWindow", "\350\205\256\346\211\230\347\253\226\345\220\221\347\224\265\346\234\272", Q_NULLPTR));
-        label_68->setText(QApplication::translate("MainWindow", "\350\205\256\346\211\230\346\260\264\345\271\263\347\224\265\346\234\272", Q_NULLPTR));
+        label_65->setText(QApplication::translate("MainWindow", "\350\205\256\346\211\230\347\253\226\345\220\221\347\224\265\346\234\272:", Q_NULLPTR));
+        label_68->setText(QApplication::translate("MainWindow", "\350\205\256\346\211\230\346\260\264\345\271\263\347\224\265\346\234\272:", Q_NULLPTR));
         label_54->setText(QApplication::translate("MainWindow", "y\347\224\265\346\234\272:", Q_NULLPTR));
         label_56->setText(QApplication::translate("MainWindow", "\351\242\234\350\211\262\347\224\265\346\234\272:", Q_NULLPTR));
         label_chinHozMotorRange->setText(QString());

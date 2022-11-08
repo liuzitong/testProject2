@@ -351,9 +351,17 @@ void MainWindow::refreshStatus()
 {
     using MotorId=UsbDev::DevCtl::MotorId;
     spdlog::info("refreshStatus");
+    m_statusData=m_devCtl->takeNextPendingStatusData();
+
+    static bool firstStatus=true;
+    bool stat=m_statusData.cameraStatus();
+    if(stat&&firstStatus)
+    {
+        m_devCtl->setFrontVideo(false);
+    }
+    firstStatus=false;
     m_timer->start(1000);
     ui->label_connectionStatus->setText("保持连接");
-    m_statusData=m_devCtl->takeNextPendingStatusData();
     ui->label_stateX->setText(m_statusData.isMotorBusy(MotorId::MotorId_X)?"忙":"闲");
     ui->label_stateY->setText(m_statusData.isMotorBusy(MotorId::MotorId_Y)?"忙":"闲");
     ui->label_stateFocus->setText(m_statusData.isMotorBusy(MotorId::MotorId_Focus)?"忙":"闲");
@@ -375,11 +383,22 @@ void MainWindow::refreshStatus()
     ui->label_posShutter->setText(QString::number(m_statusData.motorPosition(MotorId::MotorId_Shutter)));
     ui->label_posChinHoz->setText(QString::number(m_statusData.motorPosition(MotorId::MotorId_Chin_Hoz)));
     ui->label_posChinVert->setText(QString::number(m_statusData.motorPosition(MotorId::MotorId_Chin_Vert)));
+
+
+
+
 }
 
 
 void MainWindow::refreshVideo()
 {
+//    if(m_videoTimer==NULL)
+//    {
+//        m_videoTimer=new QTimer;
+//        m_videoTimer->setInterval(1000);
+//        m_videoTimer->start();
+//        connect(m_videoTimer,&QTimer::timeout,[&](){m_videoCount++;});
+//    }
     QSize size;
     m_profile.isEmpty()?size={0,0}:size=m_profile.videoSize();
     int dataSize=size.width()*size.height();
@@ -388,6 +407,13 @@ void MainWindow::refreshVideo()
     memcpy(pixData+20,m_frameData.rawData().data(),dataSize-20);
     memset(pixData,pixData[20],20);
     QImage image(pixData,size.width(),size.height(),QImage::Format::Format_Grayscale8);
+//    if(m_videoCount>0)
+//    {
+//        m_videoCount--;
+//        QString fileName;
+//        fileName="./image/"+QString::number(m_frameData.timeStamp())+".bmp";
+//        image.save(fileName);
+//    }
     QPainter painter(ui->openGLWidget);
     QPixmap pix;
     pix.convertFromImage(image);
@@ -428,7 +454,6 @@ void MainWindow::updateProfile()
 void MainWindow::on_pushButton_cameraSwitch_clicked()
 {
     if(!m_statusData.isEmpty())
-//        m_devCtl->setFrontVideo(true);
         m_devCtl->setFrontVideo(!m_statusData.cameraStatus());
     else
         showDevInfo("empty status");

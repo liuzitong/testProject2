@@ -1377,7 +1377,7 @@
                <widget class="QLabel" name="label_xMotorRange">
                 <property name="minimumSize">
                  <size>
-                  <width>70</width>
+                  <width>105</width>
                   <height>0</height>
                  </size>
                 </property>
@@ -1390,7 +1390,7 @@
                <widget class="QLabel" name="label_focalMotorRange">
                 <property name="minimumSize">
                  <size>
-                  <width>70</width>
+                  <width>105</width>
                   <height>0</height>
                  </size>
                 </property>
@@ -1494,14 +1494,26 @@
               <item row="3" column="2">
                <widget class="QLabel" name="label_65">
                 <property name="text">
-                 <string>腮托竖向电机</string>
+                 <string>腮托竖向电机:</string>
                 </property>
                </widget>
               </item>
               <item row="2" column="2">
                <widget class="QLabel" name="label_68">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>80</width>
+                  <height>0</height>
+                 </size>
+                </property>
                 <property name="text">
-                 <string>腮托水平电机</string>
+                 <string>腮托水平电机:</string>
                 </property>
                </widget>
               </item>

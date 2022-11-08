@@ -198,6 +198,9 @@ private:
     void readLocalData(QString filePath);
     void readLocalConfig(QString filePath);
 
+//    QTimer* m_videoTimer=NULL;
+//    int m_videoCount=0;
+
 
 };
 

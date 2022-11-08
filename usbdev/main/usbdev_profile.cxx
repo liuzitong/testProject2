@@ -1,4 +1,4 @@
-#ifndef USBDEV_PROFILE_CXX
+﻿#ifndef USBDEV_PROFILE_CXX
 #define USBDEV_PROFILE_CXX
 
 #include <QString>
@@ -6,6 +6,7 @@
 #include "usbdev/common/usbdev_pimplprivtemp.hpp"
 #include <QMetaType>
 #include <QStringList>
+#include <QDebug>
 
 namespace UsbDev {
 
@@ -47,12 +48,12 @@ public :
     inline auto VideoSizeRef()             -> QSize&                   { return m_front_video_size; }
     inline auto xMotorRangeRef()           -> QPair<qint32,qint32>&    { return m_x_motor_range; }
     inline auto yMotorRangeRef()           -> QPair<qint32,qint32>&    { return m_y_motor_range; }
-    inline auto focusMotorRangeRef()       -> QPair<qint32,qint32>&    { return m_y_motor_range; }
-    inline auto colorMotorRangeRef()       -> QPair<qint32,qint32>&    { return m_y_motor_range; }
-    inline auto lightSpotMotorRangeRef()   -> QPair<qint32,qint32>&    { return m_y_motor_range; }
-    inline auto shutterMoterRangeRef()     -> QPair<qint32,qint32>&    { return m_y_motor_range; }
-    inline auto xChinMotorRangeRef()       -> QPair<qint32,qint32>&    { return m_y_motor_range; }
-    inline auto yChinMotorRangeRef()       -> QPair<qint32,qint32>&    { return m_y_motor_range; }
+    inline auto focusMotorRangeRef()       -> QPair<qint32,qint32>&    { return m_focus_motor_range; }
+    inline auto colorMotorRangeRef()       -> QPair<qint32,qint32>&    { return m_color_motor_range; }
+    inline auto lightSpotMotorRangeRef()   -> QPair<qint32,qint32>&    { return m_light_spot_motor_range; }
+    inline auto shutterMoterRangeRef()     -> QPair<qint32,qint32>&    { return m_shutter_motor_range; }
+    inline auto xChinMotorRangeRef()       -> QPair<qint32,qint32>&    { return m_x_chin_motor_range; }
+    inline auto yChinMotorRangeRef()       -> QPair<qint32,qint32>&    { return m_y_chin_motor_range; }
 };
 
 ProfilePriv :: ~ProfilePriv ( ) { }
@@ -172,6 +173,12 @@ Profile :: Profile ( const QByteArray &ba )
     priv->shutterMoterRangeRef()            ={gReadData_Le_I32(&buff[48]),gReadData_Le_I32(&buff[52])};
     priv->xChinMotorRangeRef()              ={gReadData_Le_I32(&buff[56]),gReadData_Le_I32(&buff[60])};
     priv->yChinMotorRangeRef()              ={gReadData_Le_I32(&buff[64]),gReadData_Le_I32(&buff[68])};
+
+//    QString str;
+//    for(int i=0;i<72;i++)
+//    {
+//        str+=QString::number(i)+":"+QString::number(buff[i],16)+" ";
+//    }
     m_obj = d;
 }
 
