@@ -214,24 +214,30 @@ public:
     QLabel *label_stateChinVert;
     QGroupBox *groupBox_13;
     QGridLayout *gridLayout_6;
+    QLabel *label_33;
     QLabel *label_VID;
+    QLabel *label_92;
+    QLabel *label_answerState_3;
+    QLabel *label_35;
+    QLabel *label_connectionStatus_2;
     QLabel *label_36;
-    QLabel *label_castLightDA;
+    QLabel *label_PID;
+    QLabel *label_91;
+    QLabel *label_answerState_2;
     QLabel *label_34;
     QLabel *label_connectionStatus;
+    QLabel *label_63;
+    QLabel *label_environmentDA;
+    QLabel *label_69;
+    QLabel *label_answerState;
+    QLabel *label_50;
+    QLabel *label_devType;
+    QLabel *label_67;
+    QLabel *label_castLightDA;
+    QLabel *label_66;
     QLabel *label_eyeglassStatus;
     QLabel *label_60;
-    QLabel *label_69;
     QLabel *label_devVer;
-    QLabel *label_environmentDA;
-    QLabel *label_67;
-    QLabel *label_answerState;
-    QLabel *label_33;
-    QLabel *label_66;
-    QLabel *label_devType;
-    QLabel *label_PID;
-    QLabel *label_63;
-    QLabel *label_50;
     QGroupBox *groupBox_15;
     QVBoxLayout *verticalLayout_9;
     QGroupBox *groupBox_14;
@@ -1472,25 +1478,60 @@ public:
         gridLayout_6->setSpacing(6);
         gridLayout_6->setContentsMargins(11, 11, 11, 11);
         gridLayout_6->setObjectName(QStringLiteral("gridLayout_6"));
-        gridLayout_6->setHorizontalSpacing(2);
-        gridLayout_6->setVerticalSpacing(3);
-        gridLayout_6->setContentsMargins(3, 3, 3, 3);
+        label_33 = new QLabel(groupBox_13);
+        label_33->setObjectName(QStringLiteral("label_33"));
+        label_33->setMaximumSize(QSize(100, 16777215));
+
+        gridLayout_6->addWidget(label_33, 0, 0, 1, 1);
+
         label_VID = new QLabel(groupBox_13);
         label_VID->setObjectName(QStringLiteral("label_VID"));
         label_VID->setMaximumSize(QSize(30, 16777215));
 
         gridLayout_6->addWidget(label_VID, 0, 1, 1, 1);
 
+        label_92 = new QLabel(groupBox_13);
+        label_92->setObjectName(QStringLiteral("label_92"));
+        label_92->setMaximumSize(QSize(16777215, 16777215));
+
+        gridLayout_6->addWidget(label_92, 0, 2, 1, 1);
+
+        label_answerState_3 = new QLabel(groupBox_13);
+        label_answerState_3->setObjectName(QStringLiteral("label_answerState_3"));
+
+        gridLayout_6->addWidget(label_answerState_3, 0, 3, 1, 1);
+
+        label_35 = new QLabel(groupBox_13);
+        label_35->setObjectName(QStringLiteral("label_35"));
+
+        gridLayout_6->addWidget(label_35, 0, 4, 1, 1);
+
+        label_connectionStatus_2 = new QLabel(groupBox_13);
+        label_connectionStatus_2->setObjectName(QStringLiteral("label_connectionStatus_2"));
+
+        gridLayout_6->addWidget(label_connectionStatus_2, 0, 5, 1, 1);
+
         label_36 = new QLabel(groupBox_13);
         label_36->setObjectName(QStringLiteral("label_36"));
         label_36->setMaximumSize(QSize(100, 16777215));
 
-        gridLayout_6->addWidget(label_36, 0, 2, 1, 1);
+        gridLayout_6->addWidget(label_36, 1, 0, 1, 1);
 
-        label_castLightDA = new QLabel(groupBox_13);
-        label_castLightDA->setObjectName(QStringLiteral("label_castLightDA"));
+        label_PID = new QLabel(groupBox_13);
+        label_PID->setObjectName(QStringLiteral("label_PID"));
 
-        gridLayout_6->addWidget(label_castLightDA, 1, 3, 1, 1);
+        gridLayout_6->addWidget(label_PID, 1, 1, 1, 1);
+
+        label_91 = new QLabel(groupBox_13);
+        label_91->setObjectName(QStringLiteral("label_91"));
+        label_91->setMaximumSize(QSize(16777215, 16777215));
+
+        gridLayout_6->addWidget(label_91, 1, 2, 1, 1);
+
+        label_answerState_2 = new QLabel(groupBox_13);
+        label_answerState_2->setObjectName(QStringLiteral("label_answerState_2"));
+
+        gridLayout_6->addWidget(label_answerState_2, 1, 3, 1, 1);
 
         label_34 = new QLabel(groupBox_13);
         label_34->setObjectName(QStringLiteral("label_34"));
@@ -1502,73 +1543,67 @@ public:
 
         gridLayout_6->addWidget(label_connectionStatus, 1, 5, 1, 1);
 
-        label_eyeglassStatus = new QLabel(groupBox_13);
-        label_eyeglassStatus->setObjectName(QStringLiteral("label_eyeglassStatus"));
+        label_63 = new QLabel(groupBox_13);
+        label_63->setObjectName(QStringLiteral("label_63"));
+        label_63->setMaximumSize(QSize(16777215, 16777215));
 
-        gridLayout_6->addWidget(label_eyeglassStatus, 2, 3, 1, 1);
+        gridLayout_6->addWidget(label_63, 2, 0, 1, 1);
 
-        label_60 = new QLabel(groupBox_13);
-        label_60->setObjectName(QStringLiteral("label_60"));
+        label_environmentDA = new QLabel(groupBox_13);
+        label_environmentDA->setObjectName(QStringLiteral("label_environmentDA"));
 
-        gridLayout_6->addWidget(label_60, 2, 4, 1, 1);
+        gridLayout_6->addWidget(label_environmentDA, 2, 1, 1, 1);
 
         label_69 = new QLabel(groupBox_13);
         label_69->setObjectName(QStringLiteral("label_69"));
         label_69->setMaximumSize(QSize(16777215, 16777215));
 
-        gridLayout_6->addWidget(label_69, 2, 0, 1, 1);
-
-        label_devVer = new QLabel(groupBox_13);
-        label_devVer->setObjectName(QStringLiteral("label_devVer"));
-
-        gridLayout_6->addWidget(label_devVer, 2, 5, 1, 1);
-
-        label_environmentDA = new QLabel(groupBox_13);
-        label_environmentDA->setObjectName(QStringLiteral("label_environmentDA"));
-
-        gridLayout_6->addWidget(label_environmentDA, 1, 1, 1, 1);
-
-        label_67 = new QLabel(groupBox_13);
-        label_67->setObjectName(QStringLiteral("label_67"));
-
-        gridLayout_6->addWidget(label_67, 1, 2, 1, 1);
+        gridLayout_6->addWidget(label_69, 2, 2, 1, 1);
 
         label_answerState = new QLabel(groupBox_13);
         label_answerState->setObjectName(QStringLiteral("label_answerState"));
 
-        gridLayout_6->addWidget(label_answerState, 2, 1, 1, 1);
-
-        label_33 = new QLabel(groupBox_13);
-        label_33->setObjectName(QStringLiteral("label_33"));
-        label_33->setMaximumSize(QSize(100, 16777215));
-
-        gridLayout_6->addWidget(label_33, 0, 0, 1, 1);
-
-        label_66 = new QLabel(groupBox_13);
-        label_66->setObjectName(QStringLiteral("label_66"));
-
-        gridLayout_6->addWidget(label_66, 2, 2, 1, 1);
-
-        label_devType = new QLabel(groupBox_13);
-        label_devType->setObjectName(QStringLiteral("label_devType"));
-
-        gridLayout_6->addWidget(label_devType, 0, 5, 1, 1);
-
-        label_PID = new QLabel(groupBox_13);
-        label_PID->setObjectName(QStringLiteral("label_PID"));
-
-        gridLayout_6->addWidget(label_PID, 0, 3, 1, 1);
-
-        label_63 = new QLabel(groupBox_13);
-        label_63->setObjectName(QStringLiteral("label_63"));
-        label_63->setMaximumSize(QSize(16777215, 16777215));
-
-        gridLayout_6->addWidget(label_63, 1, 0, 1, 1);
+        gridLayout_6->addWidget(label_answerState, 2, 3, 1, 1);
 
         label_50 = new QLabel(groupBox_13);
         label_50->setObjectName(QStringLiteral("label_50"));
 
-        gridLayout_6->addWidget(label_50, 0, 4, 1, 1);
+        gridLayout_6->addWidget(label_50, 2, 4, 1, 1);
+
+        label_devType = new QLabel(groupBox_13);
+        label_devType->setObjectName(QStringLiteral("label_devType"));
+
+        gridLayout_6->addWidget(label_devType, 2, 5, 1, 1);
+
+        label_67 = new QLabel(groupBox_13);
+        label_67->setObjectName(QStringLiteral("label_67"));
+
+        gridLayout_6->addWidget(label_67, 3, 0, 1, 1);
+
+        label_castLightDA = new QLabel(groupBox_13);
+        label_castLightDA->setObjectName(QStringLiteral("label_castLightDA"));
+
+        gridLayout_6->addWidget(label_castLightDA, 3, 1, 1, 1);
+
+        label_66 = new QLabel(groupBox_13);
+        label_66->setObjectName(QStringLiteral("label_66"));
+
+        gridLayout_6->addWidget(label_66, 3, 2, 1, 1);
+
+        label_eyeglassStatus = new QLabel(groupBox_13);
+        label_eyeglassStatus->setObjectName(QStringLiteral("label_eyeglassStatus"));
+
+        gridLayout_6->addWidget(label_eyeglassStatus, 3, 3, 1, 1);
+
+        label_60 = new QLabel(groupBox_13);
+        label_60->setObjectName(QStringLiteral("label_60"));
+
+        gridLayout_6->addWidget(label_60, 3, 4, 1, 1);
+
+        label_devVer = new QLabel(groupBox_13);
+        label_devVer->setObjectName(QStringLiteral("label_devVer"));
+
+        gridLayout_6->addWidget(label_devVer, 3, 5, 1, 1);
 
 
         verticalLayout_3->addWidget(groupBox_13);
@@ -3509,24 +3544,30 @@ public:
         label_stateChinVert->setText(QApplication::translate("MainWindow", "\351\227\262", Q_NULLPTR));
         tabWidget_3->setTabText(tabWidget_3->indexOf(tab_7), QApplication::translate("MainWindow", "\347\224\265\346\234\272\347\212\266\346\200\201", Q_NULLPTR));
         groupBox_13->setTitle(QApplication::translate("MainWindow", "\345\205\266\345\256\203\347\212\266\346\200\201", Q_NULLPTR));
+        label_33->setText(QApplication::translate("MainWindow", "VID:", Q_NULLPTR));
         label_VID->setText(QString());
+        label_92->setText(QApplication::translate("MainWindow", "\347\274\223\345\255\230\347\212\266\346\200\201:", Q_NULLPTR));
+        label_answerState_3->setText(QApplication::translate("MainWindow", "\345\235\207\345\217\257\347\224\250", Q_NULLPTR));
+        label_35->setText(QApplication::translate("MainWindow", "\347\212\266\346\200\201\345\272\217\345\217\267:", Q_NULLPTR));
+        label_connectionStatus_2->setText(QApplication::translate("MainWindow", "0", Q_NULLPTR));
         label_36->setText(QApplication::translate("MainWindow", "PID:", Q_NULLPTR));
-        label_castLightDA->setText(QApplication::translate("MainWindow", "0", Q_NULLPTR));
+        label_PID->setText(QString());
+        label_91->setText(QApplication::translate("MainWindow", "\346\221\204\345\203\217\345\244\264\347\212\266\346\200\201:", Q_NULLPTR));
+        label_answerState_2->setText(QApplication::translate("MainWindow", "\345\274\200/\345\205\263", Q_NULLPTR));
         label_34->setText(QApplication::translate("MainWindow", "\350\277\236\346\216\245\347\212\266\346\200\201:", Q_NULLPTR));
         label_connectionStatus->setText(QApplication::translate("MainWindow", "\346\234\252\350\277\236\346\216\245", Q_NULLPTR));
+        label_63->setText(QApplication::translate("MainWindow", "\347\216\257\345\242\203\345\205\211DA:", Q_NULLPTR));
+        label_environmentDA->setText(QApplication::translate("MainWindow", "0", Q_NULLPTR));
+        label_69->setText(QApplication::translate("MainWindow", "\345\272\224\347\255\224\345\231\250\347\212\266\346\200\201:", Q_NULLPTR));
+        label_answerState->setText(QApplication::translate("MainWindow", "\346\235\276\345\274\200", Q_NULLPTR));
+        label_50->setText(QApplication::translate("MainWindow", "\347\261\273\345\236\213:", Q_NULLPTR));
+        label_devType->setText(QApplication::translate("MainWindow", "\346\212\225\345\260\204", Q_NULLPTR));
+        label_67->setText(QApplication::translate("MainWindow", "\346\212\225\345\260\204\345\205\211DA:", Q_NULLPTR));
+        label_castLightDA->setText(QApplication::translate("MainWindow", "0", Q_NULLPTR));
+        label_66->setText(QApplication::translate("MainWindow", "\351\225\234\346\236\266\347\212\266\346\200\201:", Q_NULLPTR));
         label_eyeglassStatus->setText(QApplication::translate("MainWindow", "\346\224\276\344\270\213", Q_NULLPTR));
         label_60->setText(QApplication::translate("MainWindow", "\347\211\210\346\234\254:", Q_NULLPTR));
-        label_69->setText(QApplication::translate("MainWindow", "\345\272\224\347\255\224\345\231\250\347\212\266\346\200\201:", Q_NULLPTR));
         label_devVer->setText(QApplication::translate("MainWindow", "0x00", Q_NULLPTR));
-        label_environmentDA->setText(QApplication::translate("MainWindow", "0", Q_NULLPTR));
-        label_67->setText(QApplication::translate("MainWindow", "\346\212\225\345\260\204\345\205\211DA:", Q_NULLPTR));
-        label_answerState->setText(QApplication::translate("MainWindow", "\346\235\276\345\274\200", Q_NULLPTR));
-        label_33->setText(QApplication::translate("MainWindow", "VID:", Q_NULLPTR));
-        label_66->setText(QApplication::translate("MainWindow", "\351\225\234\346\236\266\347\212\266\346\200\201:", Q_NULLPTR));
-        label_devType->setText(QApplication::translate("MainWindow", "\346\212\225\345\260\204", Q_NULLPTR));
-        label_PID->setText(QString());
-        label_63->setText(QApplication::translate("MainWindow", "\347\216\257\345\242\203\345\205\211DA:", Q_NULLPTR));
-        label_50->setText(QApplication::translate("MainWindow", "\347\261\273\345\236\213:", Q_NULLPTR));
         groupBox_15->setTitle(QApplication::translate("MainWindow", "\345\212\237\350\203\275\346\265\213\350\257\225", Q_NULLPTR));
         groupBox_14->setTitle(QApplication::translate("MainWindow", "\346\221\204\345\203\217\345\244\264", Q_NULLPTR));
         pushButton_chinMoveLeft->setText(QApplication::translate("MainWindow", "\345\267\246", Q_NULLPTR));
