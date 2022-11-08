@@ -1,0 +1,21 @@
+{
+    "VID": "ffff",
+    "PID": "b0b0",
+    "localConfig": "./data/config.dat",
+    "localData": "./data/data.dat",
+
+    "updateIOInfo":true,
+    "updateRefreshInfo":false,
+    "updateRefreshIOInfo":false,
+
+
+    "spotSizeToSlot": [
+        {"spotSize": "1","Slot": 2},
+        {"spotSize": "4","Slot": 5}
+    ],
+    "colorToSlot": [
+        {"Color": "R","Slot": 2},
+        {"Color": "G","Slot": 4},
+        {"Color": "B","Slot": 5}
+    ]
+}
