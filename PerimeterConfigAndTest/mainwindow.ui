@@ -2221,14 +2221,8 @@
                  </spacer>
                 </item>
                 <item>
-                 <widget class="QOpenGLWidget" name="openGLWidget">
+                 <widget class="GL_Image" name="video" native="true">
                   <property name="minimumSize">
-                   <size>
-                    <width>320</width>
-                    <height>240</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
                    <size>
                     <width>320</width>
                     <height>240</height>
@@ -6166,7 +6160,13 @@
   <customwidget>
    <class>GenericTable</class>
    <extends>QTableView</extends>
-   <header location="global">generic_table.h</header>
+   <header>generic_table.h</header>
+  </customwidget>
+  <customwidget>
+   <class>GL_Image</class>
+   <extends>QWidget</extends>
+   <header location="global">gl_image.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

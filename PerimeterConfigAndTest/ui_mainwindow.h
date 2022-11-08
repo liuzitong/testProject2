@@ -22,7 +22,6 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
-#include <QtWidgets/QOpenGLWidget>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QRadioButton>
 #include <QtWidgets/QSpacerItem>
@@ -34,7 +33,8 @@
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
-#include <generic_table.h>
+#include <gl_image.h>
+#include "generic_table.h"
 #include "motor_pos_table.h"
 
 QT_BEGIN_NAMESPACE
@@ -244,7 +244,7 @@ public:
     QVBoxLayout *verticalLayout_2;
     QHBoxLayout *horizontalLayout_57;
     QSpacerItem *horizontalSpacer_81;
-    QOpenGLWidget *openGLWidget;
+    GL_Image *video;
     QSpacerItem *horizontalSpacer_82;
     QHBoxLayout *horizontalLayout_10;
     QSpacerItem *horizontalSpacer_3;
@@ -1643,12 +1643,11 @@ public:
 
         horizontalLayout_57->addItem(horizontalSpacer_81);
 
-        openGLWidget = new QOpenGLWidget(groupBox_14);
-        openGLWidget->setObjectName(QStringLiteral("openGLWidget"));
-        openGLWidget->setMinimumSize(QSize(320, 240));
-        openGLWidget->setMaximumSize(QSize(320, 240));
+        video = new GL_Image(groupBox_14);
+        video->setObjectName(QStringLiteral("video"));
+        video->setMinimumSize(QSize(320, 240));
 
-        horizontalLayout_57->addWidget(openGLWidget);
+        horizontalLayout_57->addWidget(video);
 
         horizontalSpacer_82 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 

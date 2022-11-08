@@ -15,6 +15,7 @@
 #include <settings.h>
 #include <table_model.h>
 #include <tuple>
+#include "gl_image.h"
 
 namespace Ui {
 class MainWindow;
@@ -195,6 +196,7 @@ private:
     Settings m_settings;
     quint8* pixData=NULL;
     int m_width,m_height;
+
     void readLocalData(QString filePath);
     void readLocalConfig(QString filePath);
 

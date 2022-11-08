@@ -67,6 +67,11 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->label_connectionStatus->setText("连接断开");
     });
     init();
+
+//    m_gl_image=new GL_Image(this);
+//    m_gl_image->setMinimumHeight(240);
+//    m_gl_image->setMinimumWidth(320);
+//    ui->horizontalLayout_GL->addWidget(m_gl_image);
 }
 
 void MainWindow::on_action_chooseDevice_triggered()
@@ -406,7 +411,7 @@ void MainWindow::refreshVideo()
     m_frameData=m_devCtl->takeNextPendingFrameData();
     memcpy(pixData+20,m_frameData.rawData().data(),dataSize-20);
     memset(pixData,pixData[20],20);
-    QImage image(pixData,size.width(),size.height(),QImage::Format::Format_Grayscale8);
+    QImage image=QImage(pixData,size.width(),size.height(),QImage::Format::Format_Grayscale8);
 //    if(m_videoCount>0)
 //    {
 //        m_videoCount--;
@@ -414,13 +419,14 @@ void MainWindow::refreshVideo()
 //        fileName="./image/"+QString::number(m_frameData.timeStamp())+".bmp";
 //        image.save(fileName);
 //    }
-    QPainter painter(ui->openGLWidget);
-    QPixmap pix;
-    pix.convertFromImage(image);
-    painter.drawPixmap(0,0,pix.width(), pix.height(),pix);
-    update();
-    auto str=QString("frame time stamp:")+QString::number(m_frameData.timeStamp());
-    emit updateRefreshInfo(str);
+//    QPainter painter(m_gl_image);
+//    QPixmap pix;
+//    pix.convertFromImage(m_image);
+//    painter.drawPixmap(0,0,pix.width(), pix.height(),pix);
+//    update();
+//    auto str=QString("frame time stamp:")+QString::number(m_frameData.timeStamp());
+//    emit updateRefreshInfo(str);
+    ui->video->setImageData(image);
 }
 
 void MainWindow::refreshConnectionStatus(int status)

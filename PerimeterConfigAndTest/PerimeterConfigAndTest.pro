@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui concurrent
+QT       += core gui concurrent opengl
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -15,7 +15,7 @@ TEMPLATE = app
 # any feature of Qt which has been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
-DEFINES += QT_DEPRECATED_WARNINGS
+DEFINES += QT_DEPRECATED_WARNINGS USE_OPENGL
 
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -45,7 +45,8 @@ SOURCES += \
     generic_table.cpp \
     RbTableHeaderView.cpp \
     settings.cpp \
-    models.cpp
+    models.cpp \
+    gl_image.cpp
 
 
 HEADERS += \
@@ -55,7 +56,8 @@ HEADERS += \
     generic_table.h \
     RbTableHeaderView.h \
     settings.h \
-    models.h
+    models.h \
+    gl_image.h
 
 FORMS += \
     mainwindow.ui \
@@ -66,6 +68,9 @@ CONFIG( debug, debug|release ) {
 } else {
     LIBS += User32.lib
 }
+
+
+win32: LIBS += OpenGL32.lib GlU32.lib
 include($$PWD/../usbdev-build/usbdev/usbdev.pri )
 include($$PWD/UsbViewer/UsbViewerQt.pri)
 
