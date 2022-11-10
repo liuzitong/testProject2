@@ -99,6 +99,7 @@ void MainWindow::init()
     initDevCtl();
     on_comboBox_color_currentIndexChanged(1);
     on_comboBox_spotSize_currentIndexChanged(1);
+    on_spinBox_DbSetting_valueChanged(0);
 
 }
 
@@ -375,10 +376,20 @@ void MainWindow::refreshStatus()
     ui->label_stateShutter->setText(m_statusData.isMotorBusy(MotorId::MotorId_Shutter)?"忙":"闲");
     ui->label_stateChinHoz->setText(m_statusData.isMotorBusy(MotorId::MotorId_Chin_Hoz)?"忙":"闲");
     ui->label_stateChinVert->setText(m_statusData.isMotorBusy(MotorId::MotorId_Chin_Vert)?"忙":"闲");
-    ui->label_answerState->setText(m_statusData.answerpadStatus()?"按下":"松开");
-    ui->label_eyeglassStatus->setText(m_statusData.eyeglassStatus()?"升起":"放下");
+
     ui->label_castLightDA->setText(QString(m_statusData.castLightDA()));
     ui->label_environmentDA->setText(QString(m_statusData.envLightDA()));
+
+    ui->label_cameraStatus->setText(m_statusData.cameraStatus()?"开启":"关闭");
+    QString cacheStr;
+    if(!(m_statusData.cacheNormalFlag()||m_statusData.cacheNormalFlag())) cacheStr="都不可用";
+    else if(m_statusData.cacheNormalFlag()&&(!m_statusData.cacheNormalFlag())) cacheStr="静态可用";
+    else if((!m_statusData.cacheNormalFlag())&&m_statusData.cacheNormalFlag()) cacheStr="移动可用";
+    else if(m_statusData.cacheNormalFlag()&&m_statusData.cacheNormalFlag()) cacheStr="都可用";
+    ui->label_cacheStatus->setText(cacheStr);
+    ui->label_answerpadStatus->setText(m_statusData.answerpadStatus()?"按下":"松开");
+    ui->label_eyeglassStatus->setText(m_statusData.eyeglassStatus()?"升起":"放下");
+    ui->label_status_serialNo->setText(QString::number(m_statusData.serialNO()));
 
     ui->label_posX->setText(QString::number(m_statusData.motorPosition(MotorId::MotorId_X)));
     ui->label_posY->setText(QString::number(m_statusData.motorPosition(MotorId::MotorId_Y)));
@@ -388,9 +399,6 @@ void MainWindow::refreshStatus()
     ui->label_posShutter->setText(QString::number(m_statusData.motorPosition(MotorId::MotorId_Shutter)));
     ui->label_posChinHoz->setText(QString::number(m_statusData.motorPosition(MotorId::MotorId_Chin_Hoz)));
     ui->label_posChinVert->setText(QString::number(m_statusData.motorPosition(MotorId::MotorId_Chin_Vert)));
-
-
-
 
 }
 
@@ -455,6 +463,11 @@ void MainWindow::updateProfile()
     ui->label_chinHozMotorRange->setText(QString("%1-%2").arg(QString::number(m_profile.motorRange(x::MotorId_Chin_Hoz).first)).arg(QString::number(m_profile.motorRange(x::MotorId_Chin_Hoz).second)));
     ui->label_chinVertMotorRange->setText(QString("%1-%2").arg(QString::number(m_profile.motorRange(x::MotorId_Chin_Vert).first)).arg(QString::number(m_profile.motorRange(x::MotorId_Chin_Vert).second)));
     ui->label_videoSize->setText(QString("%1x%2").arg(QString::number(m_profile.videoSize().width())).arg(QString::number(m_profile.videoSize().height())));
+
+    if(m_profile.devType()==0x8800) ui->label_devType->setText("布点");
+    else if(m_profile.devType()==0x0088) ui->label_devType->setText("投射");
+    else ui->label_devType->setText("未知");
+    ui->label_devVer->setText(QString::number(m_profile.devVersion(),16));
 }
 
 void MainWindow::on_pushButton_cameraSwitch_clicked()
@@ -682,7 +695,7 @@ void MainWindow::on_spinBox_spotMotorPos_2_valueChanged(int arg1)
     if(ui->checkBox_spotConfigSync->isChecked())
     {
         int spotSlot=ui->spinBox_spotSlot->value();
-        m_config.switchColorMotorPosPtr()[spotSlot]=arg1;
+        m_config.switchLightSpotMotorPosPtr()[spotSlot]=arg1;
     }
 }
 
@@ -1211,11 +1224,12 @@ bool MainWindow::getXYMotorPosAndFocalDistFromCoord(const CoordSpacePosInfo& coo
 
 void MainWindow::staticCastTest(const CoordMotorPosFocalDistInfo& coordMotorPosFocalDistInfo,int spotSlot ,int colorSlot,int db,int* sps,int durationTime,int shutterPos)
 {
-    if(m_config.isEmpty()) {showDevInfo("empty config"); return;}
-    while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_X)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Y)||
-          m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Color)||
-          m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Light_Spot)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Shutter))
-    {QCoreApplication::processEvents();}
+//    以后加上
+//    if(m_config.isEmpty()) {showDevInfo("empty config"); return;}
+//    while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_X)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Y)||
+//          m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Color)||
+//          m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Light_Spot)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Shutter))
+//    {QCoreApplication::processEvents();}
 
     //移动焦距电机到调节位置
     quint8 spsArr[5]={0};
@@ -1227,6 +1241,8 @@ void MainWindow::staticCastTest(const CoordMotorPosFocalDistInfo& coordMotorPosF
         posArr[2]=m_config.focusPosForSpotAndColorChangeRef();
         m_devCtl->move5Motors(spsArr,posArr);
     }
+
+
 
 
     //调整颜色和光斑
