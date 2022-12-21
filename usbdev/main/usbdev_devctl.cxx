@@ -197,6 +197,7 @@ void   DevCtl_Worker :: trigger_di( )
     } else {
         QMetaObject::invokeMethod( this, "cmd_ReadFrameData", Qt::QueuedConnection );
     }
+
 }
 
 // ============================================================================
@@ -393,35 +394,35 @@ bool   DevCtl_Worker :: cmd_ReadStatusData()
 // ============================================================================
 bool  DevCtl_Worker :: cmd_ReadFrameData()
 {
+    static int count=0;
     if ( m_trg_called.loadAcquire() > 0 ) { m_trg_called.fetchAndSubOrdered(1); }
     if ( ! this->isDeviceWork() || ! m_is_video_on || m_profile.isEmpty()) { updateRefreshInfo("no camera."); return false; }
-    updateRefreshInfo("读取视频帧.");
+    updateRefreshInfo("读取视频帧:"+QString::number(count));
     bool ret = true;
     QSize sz = m_profile.videoSize();
     QByteArray ba( sz.height()*sz.width(), 0 );
     ret = this->cmdComm_strInSync( reinterpret_cast<unsigned char*>( ba.data()), ba.size());
     if ( ret ) {
         updateRefreshIOInfo(QString("R:")+buffToQStr(reinterpret_cast<const char*>(ba.data()),20));
+//        count++;
+//        if(count%100==0)
+//        {
+//            QFile file(QString(R"(./videoData/)")+QString::number(count));
+//            file.open(QIODevice::ReadWrite);
+//            file.write(ba);
+//            file.close();
+//            QImage img((uchar*)ba.data(),640,480,QImage::Format::Format_Grayscale8);
+//            img.save(QString(R"(./videoData/)")+QString::number(count)+".bmp");
+//        }
         FrameData fd( ba );
         emit this->newFrameData( fd );
+
     }
     else
     {
         updateRefreshInfo("recv frame data failed.");
     }
     return ret;
-
-
-//    static int i=0;
-//    if ( m_trg_called.loadAcquire() > 0 ) { m_trg_called.fetchAndSubOrdered(1); }
-//    updateRefreshInfo("读取视频帧.");
-//    i%=256;
-//    i++;
-//    QByteArray ba(320*240, i );
-//    FrameData fd( ba );
-//    emit this->newFrameData( fd );
-//    return true;
-
 
 }
 
@@ -698,7 +699,7 @@ void  DevCtlPriv :: ensureTimer( bool sw )
             QxPack::IcRmtObjCreator::createObjInThread (
                 m_t_tmr, []( void *)->QObject*{
                     QTimer *tmr = usbdev_new_qobj( QTimer );
-                    tmr->setInterval( 3 );
+                    tmr->setInterval( 500/60 );
                     tmr->setSingleShot( false );
                     return tmr;
                 },this
@@ -740,6 +741,7 @@ void  DevCtlPriv :: ensureWorker( bool sw )
         QObject::connect( m_wkr, SIGNAL(updateIOInfo(QString)), this, SIGNAL(updateIOInfo(QString)));
         QObject::connect( m_wkr, SIGNAL(updateRefreshInfo(QString)), this, SIGNAL(updateRefreshInfo(QString)));
         QObject::connect( m_wkr, SIGNAL(updateRefreshIOInfo(QString)), this, SIGNAL(updateRefreshIOInfo(QString)));
+        //这里导致CPU占用高,注释掉之后,CPU占用为0.
         if ( m_trg_tmr != Q_NULLPTR ) { // connect the trigger function
            QObject::connect( m_trg_tmr, SIGNAL(timeout()), m_wkr, SLOT(trigger_di()), Qt::DirectConnection );
         }

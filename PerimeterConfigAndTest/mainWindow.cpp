@@ -23,8 +23,10 @@
 #include <QFileDialog>
 #include "windows.h"
 #include <QDir>
-
+#include<QElapsedTimer>
 #pragma execution_character_set("utf-8")
+
+//#define MOVERETRY 3;
 
 #define SET_BLOCKING_VALUE(obj,value)       \
 {                                           \
@@ -97,9 +99,7 @@ void MainWindow::init()
     initData();
     initTable();
     initDevCtl();
-    on_comboBox_color_currentIndexChanged(1);
-    on_comboBox_spotSize_currentIndexChanged(1);
-    on_spinBox_DbSetting_valueChanged(0);
+    initWidget();
 
 }
 
@@ -137,19 +137,20 @@ void MainWindow::initTable()
 {
     m_colorPosTableModel=new TableModel();
     m_colorPosTableModel->m_column=1;
-    m_colorPosTableModel->m_row=6;
+    m_colorPosTableModel->m_row=5;
     m_colorPosTableModel->m_hozHeader<<"步数";
-    m_colorPosTableModel->m_vertHeader<<"全透";
+//    m_colorPosTableModel->m_vertHeader<<"全透";
     m_colorPosTableModel->m_modelData=m_config.switchColorMotorPosPtr();
     ui->tableView_colorSlotPos->setModel(m_colorPosTableModel);
     ui->tableView_colorSlotPos->setCornerName("颜色");
     ui->tableView_colorSlotPos->verticalHeader()->setVisible(true);
+    m_colorPosTableModel->m_vertHeader<<"1"<<"2"<<"3"<<"4"<<"5";
 
     m_spotPosTableModel=new TableModel();
     m_spotPosTableModel->m_column=1;
-    m_spotPosTableModel->m_row=8;
+    m_spotPosTableModel->m_row=6;
     m_spotPosTableModel->m_hozHeader<<"步数";
-    m_spotPosTableModel->m_vertHeader<<"全透";
+    m_spotPosTableModel->m_vertHeader<<"1"<<"2"<<"3"<<"4"<<"5"<<"6";
 
     m_spotPosTableModel->m_modelData=m_config.switchLightSpotMotorPosPtr();
     ui->tableView_spotSlotPos->setModel(m_spotPosTableModel);
@@ -166,9 +167,9 @@ void MainWindow::initTable()
     ui->tableView_XYDistTable->verticalHeader()->setVisible(false);
 
     m_spotDistFocalPosModel=new TableModel();
-    m_spotDistFocalPosModel->m_column=7;
+    m_spotDistFocalPosModel->m_column=6;
     m_spotDistFocalPosModel->m_row=25;
-    m_spotDistFocalPosModel->m_hozHeader<<"光斑1"<<"光斑2"<<"光斑3"<<"光斑4"<<"光斑5"<<"光斑6"<<"光斑7";
+    m_spotDistFocalPosModel->m_hozHeader<<"光斑1"<<"光斑2"<<"光斑3"<<"光斑4"<<"光斑5"<<"光斑6";
     for(int i=80;i<=320;i+=10){m_spotDistFocalPosModel->m_vertHeader<<QString::number(i);}
     m_spotDistFocalPosModel->m_modelData=(int*)m_config.focalLengthMotorPosMappingPtr();
     ui->tableView_focalPosTable->setModel(m_spotDistFocalPosModel);
@@ -187,9 +188,9 @@ void MainWindow::initTable()
 
     m_diamondCenterSpotFocalPosTableModel=new TableModel();
     m_diamondCenterSpotFocalPosTableModel->m_column=1;
-    m_diamondCenterSpotFocalPosTableModel->m_row=7;
+    m_diamondCenterSpotFocalPosTableModel->m_row=6;
     m_diamondCenterSpotFocalPosTableModel->m_hozHeader<<"焦距步";
-    for(int i=1;i<=7;i++){m_diamondCenterSpotFocalPosTableModel->m_vertHeader<<QString::number(i);}
+    for(int i=1;i<=6;i++){m_diamondCenterSpotFocalPosTableModel->m_vertHeader<<QString::number(i);}
     m_diamondCenterSpotFocalPosTableModel->m_modelData=m_config.focalLengthMotorPosForDiamondCenterTestPtr();
     ui->tableView_diamondFocalPosTable->setModel(m_diamondCenterSpotFocalPosTableModel);
     ui->tableView_diamondFocalPosTable->setCornerName("光斑");
@@ -232,6 +233,31 @@ void MainWindow::uninitDevCtl()
     disconnect(m_devCtl,&UsbDev::DevCtl::newStatusData,this,&MainWindow::refreshStatus);
     disconnect(m_devCtl,&UsbDev::DevCtl::newFrameData,this,&MainWindow::refreshVideo);
     delete m_devCtl;
+}
+
+void MainWindow::initWidget()
+{
+    for(auto &v:m_settings.m_colorToSlot)
+    {
+//        if(v.first==text)
+//        {
+//            ui->spinBox_colorSlot->setValue(v.second);
+//        }
+        ui->comboBox_color->addItem(v.first);
+    }
+    for(auto &v:m_settings.m_spotSizeToSlot)
+    {
+//        if(v.first==text)
+//        {
+//            ui->spinBox_colorSlot->setValue(v.second);
+//        }
+        ui->comboBox_spotSize->addItem(v.first);
+    }
+    ui->comboBox_color->setCurrentIndex(0);
+    ui->comboBox_spotSize->setCurrentIndex(0);
+    on_spinBox_colorSlot_valueChanged(ui->spinBox_colorSlot->value());
+    on_spinBox_spotSlot_valueChanged(ui->spinBox_spotSlot->value());
+    on_spinBox_DbSetting_valueChanged(0);
 }
 
 int MainWindow::interpolation(int value[], QPointF loc)
@@ -654,7 +680,7 @@ void MainWindow::on_spinBox_colorSlot_valueChanged(int arg1)
     }
 
     if(!findColor) ui->comboBox_color->setCurrentText("--");
-    SET_BLOCKING_VALUE(ui->spinBox_colorMotorPos_2,m_config.switchColorMotorPosPtr()[arg1]);
+    SET_BLOCKING_VALUE(ui->spinBox_colorMotorPos_2,m_config.switchColorMotorPosPtr()[arg1-1]);
 }
 
 void MainWindow::on_spinBox_colorMotorPos_2_valueChanged(int arg1)
@@ -738,7 +764,16 @@ void MainWindow::on_pushButton_colorTest_clicked()
     int motorPos[5]{0};
     sps[3]=ui->spinBox_colorMotorSpeed_2->value();
     motorPos[3]=ui->spinBox_colorMotorPos_2->value();
-    m_devCtl->move5Motors(sps,motorPos);
+    QElapsedTimer mstimer;
+    do
+    {
+        mstimer.restart();
+        m_devCtl->move5Motors(sps,motorPos);
+        while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId::MotorId_Color)||(mstimer.nsecsElapsed()/1000000<500))
+        {
+            QCoreApplication::processEvents();
+        }
+    }while(qAbs(m_statusData.motorPosition(UsbDev::DevCtl::MotorId::MotorId_Color)-motorPos[3])>500);//防止没移动到
 }
 
 void MainWindow::on_pushButton_spotTest_clicked()

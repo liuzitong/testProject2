@@ -76,7 +76,7 @@ public:
     int& xMotorPosForDiamondCenterTestRef();
     int& yMotorPosForDiamondCenterTestRef();
     int* focalLengthMotorPosForDiamondCenterTestPtr();
-    int(*focalLengthMotorPosMappingPtr())[7];
+    int(*focalLengthMotorPosMappingPtr())[6];
     int(*DbPosMappingPtr())[2];
 //    int* DbAngleDampingPtr();
     int* stepTimePtr();

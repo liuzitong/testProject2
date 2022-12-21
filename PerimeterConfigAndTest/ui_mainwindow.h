@@ -1750,7 +1750,8 @@ public:
 
         comboBox_color = new QComboBox(groupBox_7);
         comboBox_color->setObjectName(QStringLiteral("comboBox_color"));
-        comboBox_color->setMaximumSize(QSize(40, 16777215));
+        comboBox_color->setMinimumSize(QSize(50, 0));
+        comboBox_color->setMaximumSize(QSize(60, 16777215));
 
         horizontalLayout_3->addWidget(comboBox_color);
 
@@ -1762,8 +1763,9 @@ public:
         spinBox_colorSlot = new QSpinBox(groupBox_7);
         spinBox_colorSlot->setObjectName(QStringLiteral("spinBox_colorSlot"));
         spinBox_colorSlot->setMinimumSize(QSize(40, 0));
-        spinBox_colorSlot->setMinimum(0);
-        spinBox_colorSlot->setMaximum(6);
+        spinBox_colorSlot->setMinimum(1);
+        spinBox_colorSlot->setMaximum(5);
+        spinBox_colorSlot->setValue(1);
 
         horizontalLayout_3->addWidget(spinBox_colorSlot);
 
@@ -1814,7 +1816,8 @@ public:
 
         comboBox_spotSize = new QComboBox(groupBox_s);
         comboBox_spotSize->setObjectName(QStringLiteral("comboBox_spotSize"));
-        comboBox_spotSize->setMaximumSize(QSize(40, 16777215));
+        comboBox_spotSize->setMinimumSize(QSize(50, 0));
+        comboBox_spotSize->setMaximumSize(QSize(60, 16777215));
         comboBox_spotSize->setEditable(false);
 
         horizontalLayout->addWidget(comboBox_spotSize);
@@ -1827,8 +1830,9 @@ public:
         spinBox_spotSlot = new QSpinBox(groupBox_s);
         spinBox_spotSlot->setObjectName(QStringLiteral("spinBox_spotSlot"));
         spinBox_spotSlot->setMinimumSize(QSize(40, 0));
-        spinBox_spotSlot->setMinimum(0);
-        spinBox_spotSlot->setMaximum(8);
+        spinBox_spotSlot->setMinimum(1);
+        spinBox_spotSlot->setMaximum(6);
+        spinBox_spotSlot->setValue(1);
 
         horizontalLayout->addWidget(spinBox_spotSlot);
 
@@ -3381,8 +3385,8 @@ public:
         tabWidget->setCurrentIndex(0);
         tabWidget_5->setCurrentIndex(0);
         tabWidget_3->setCurrentIndex(0);
-        comboBox_color->setCurrentIndex(0);
-        comboBox_spotSize->setCurrentIndex(0);
+        comboBox_color->setCurrentIndex(-1);
+        comboBox_spotSize->setCurrentIndex(-1);
         stackedWidget->setCurrentIndex(0);
         tabWidget_2->setCurrentIndex(0);
 
@@ -3579,29 +3583,12 @@ public:
         pushButton_cameraSwitch->setText(QApplication::translate("MainWindow", "\346\221\204\345\203\217\345\244\264 \345\274\200/\345\205\263", Q_NULLPTR));
         groupBox_7->setTitle(QApplication::translate("MainWindow", "\351\242\234\350\211\262", Q_NULLPTR));
         label_17->setText(QApplication::translate("MainWindow", "\351\242\234\350\211\262:", Q_NULLPTR));
-        comboBox_color->clear();
-        comboBox_color->insertItems(0, QStringList()
-         << QApplication::translate("MainWindow", "R", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "G", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "B", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "--", Q_NULLPTR)
-        );
         label_18->setText(QApplication::translate("MainWindow", "\345\255\224\344\275\215:", Q_NULLPTR));
         label_71->setText(QApplication::translate("MainWindow", "\347\224\265\346\234\272\344\275\215\347\275\256:", Q_NULLPTR));
         checkBox_colorConfigSync->setText(QApplication::translate("MainWindow", "\345\220\214\346\255\245\351\205\215\347\275\256", Q_NULLPTR));
         pushButton_colorTest->setText(QApplication::translate("MainWindow", "\346\265\213\350\257\225", Q_NULLPTR));
         groupBox_s->setTitle(QApplication::translate("MainWindow", "\345\205\211\346\226\221", Q_NULLPTR));
         label_16->setText(QApplication::translate("MainWindow", "\345\260\272\345\257\270:", Q_NULLPTR));
-        comboBox_spotSize->clear();
-        comboBox_spotSize->insertItems(0, QStringList()
-         << QApplication::translate("MainWindow", "1", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "2", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "3", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "4", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "5", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "6", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "--", Q_NULLPTR)
-        );
         label_19->setText(QApplication::translate("MainWindow", "\345\255\224\344\275\215:", Q_NULLPTR));
         label_44->setText(QApplication::translate("MainWindow", "\347\224\265\346\234\272\344\275\215\347\275\256:", Q_NULLPTR));
         checkBox_spotConfigSync->setText(QApplication::translate("MainWindow", "\345\220\214\346\255\245\351\205\215\347\275\256", Q_NULLPTR));

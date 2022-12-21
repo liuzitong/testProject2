@@ -39,8 +39,8 @@ private:
                                         m_eyeglass_frame_lamp_DA,
                                         m_environment_light_alarm_DA[2],
                                         m_pupil_grey_threshold_DA[2];
-    qint32                              m_switch_color_motor_Pos[6],
-                                        m_switch_light_spot_Pos[8],
+    qint32                              m_switch_color_motor_Pos[5],
+                                        m_switch_light_spot_Pos[6],
                                         m_focus_Pos_for_sport_and_color_change,
                                         m_shutter_open_Pos,
                                         m_main_table_center_x_correction,
@@ -53,8 +53,8 @@ private:
                                         m_focal_length_motor_Pos_for_light_correction,
                                         m_x_motor_Pos_for_diamond_center_test,
                                         m_y_motor_Pos_for_diamond_center_test,
-                                        m_focal_length_motor_Pos_for_diamond_center_test[7],                  //7光斑
-                                        m_focal_length_motor_Pos_mapping[25][7],                              //25距离,7光斑
+                                        m_focal_length_motor_Pos_for_diamond_center_test[6],                  //6光斑
+                                        m_focal_length_motor_Pos_mapping[25][6],                              //25距离,6光斑
                                         m_Db_Pos_mapping[52][2],                                              //0~51DB,颜色电机,光斑电机
                                         m_step_time[7];                                                       //7种速度对应的每步时间
    float                                m_step_length;                                                        //步长以角度为单位
@@ -90,7 +90,7 @@ public :
     inline auto xMotorPosForDiamondCenterTestRef()                  -> qint32&      {return m_x_motor_Pos_for_diamond_center_test;}
     inline auto yMotorPosForDiamondCenterTestRef()                  -> qint32&      {return m_y_motor_Pos_for_diamond_center_test;}
     inline auto focalLengthMotorPosForDiamondCenterTestPtr()        -> int*         {return m_focal_length_motor_Pos_for_diamond_center_test;}
-    inline auto focalLengthMotorPosMappingPtr()                     -> int(*)[7]    {return m_focal_length_motor_Pos_mapping;}
+    inline auto focalLengthMotorPosMappingPtr()                     -> int(*)[6]    {return m_focal_length_motor_Pos_mapping;}
     inline auto DbPosMappingPtr()                                   -> int(*)[2]    {return m_Db_Pos_mapping;}
     inline auto stepTimePtr()                                       -> int*         {return m_step_time;}
     inline auto stepLengthRef()                                     -> float&       {return m_step_length;}
@@ -367,7 +367,7 @@ int&       Config :: yMotorPosForDiamondCenterTestRef()
 int*       Config :: focalLengthMotorPosForDiamondCenterTestPtr()
 { return T_PrivPtr( m_obj )->focalLengthMotorPosForDiamondCenterTestPtr(); }
 
-int(*       Config :: focalLengthMotorPosMappingPtr())[7]
+int(*       Config :: focalLengthMotorPosMappingPtr())[6]
 { return T_PrivPtr( m_obj )->focalLengthMotorPosMappingPtr(); }
 
 int(*       Config :: DbPosMappingPtr())[2]

@@ -156,8 +156,6 @@ private slots:
 
     void on_checkBox_RefreshIO_stateChanged(int arg1);
 
-
-
 private:
     void initData();
     void initTable();
@@ -172,6 +170,7 @@ private:
     void init();
     void initDevCtl();
     void uninitDevCtl();
+    void initWidget();
     int interpolation(int value[4],QPointF loc);
     int getFocusMotorPosByDist(int focalDist,int spotSlot);
     void initConfigUI();

@@ -7,15 +7,21 @@
     "updateIOInfo":true,
     "updateRefreshInfo":false,
     "updateRefreshIOInfo":false,
-
+    
+    "colorToSlot": [
+        {"Color": "全透1","Slot": 1},
+        {"Color": "全透2","Slot": 2},
+        {"Color": "R","Slot": 3},
+        {"Color": "全透3","Slot": 4},
+        {"Color": "B","Slot": 5}
+    ],
 
     "spotSizeToSlot": [
-        {"spotSize": "1","Slot": 2},
-        {"spotSize": "4","Slot": 5}
-    ],
-    "colorToSlot": [
-        {"Color": "R","Slot": 2},
-        {"Color": "G","Slot": 4},
-        {"Color": "B","Slot": 5}
+        {"spotSize": "1","Slot": 1},
+        {"spotSize": "2","Slot": 2},
+        {"spotSize": "3","Slot": 3},
+        {"spotSize": "4","Slot": 4},
+        {"spotSize": "5","Slot": 5},
+        {"spotSize": "6","Slot": 6}
     ]
 }
