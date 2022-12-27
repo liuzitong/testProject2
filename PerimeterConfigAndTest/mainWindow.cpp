@@ -166,12 +166,14 @@ void MainWindow::initTable()
     ui->tableView_XYDistTable->setModel(m_xyDistTableModel);
     ui->tableView_XYDistTable->verticalHeader()->setVisible(false);
 
+    tableData=m_localTableData.m_focalLengthMotorPosMappingData;
     m_spotDistFocalPosModel=new TableModel();
-    m_spotDistFocalPosModel->m_column=6;
-    m_spotDistFocalPosModel->m_row=25;
+    m_spotDistFocalPosModel->m_column=tableData.m_column;
+    m_spotDistFocalPosModel->m_row=tableData.m_row;
     m_spotDistFocalPosModel->m_hozHeader<<"光斑1"<<"光斑2"<<"光斑3"<<"光斑4"<<"光斑5"<<"光斑6";
     for(int i=80;i<=320;i+=10){m_spotDistFocalPosModel->m_vertHeader<<QString::number(i);}
-    m_spotDistFocalPosModel->m_modelData=(int*)m_config.focalLengthMotorPosMappingPtr();
+//    m_spotDistFocalPosModel->m_modelData=(int*)m_config.focalLengthMotorPosMappingPtr();
+    m_spotDistFocalPosModel->m_modelData=tableData.m_data;
     ui->tableView_focalPosTable->setModel(m_spotDistFocalPosModel);
     ui->tableView_focalPosTable->setCornerName("距离");
     ui->tableView_focalPosTable->verticalHeader()->setVisible(true);
@@ -186,25 +188,6 @@ void MainWindow::initTable()
     ui->tableView_dbColorSpotPosTable->setCornerName("DB");
     ui->tableView_dbColorSpotPosTable->verticalHeader()->setVisible(true);
 
-    m_diamondCenterSpotFocalPosTableModel=new TableModel();
-    m_diamondCenterSpotFocalPosTableModel->m_column=1;
-    m_diamondCenterSpotFocalPosTableModel->m_row=6;
-    m_diamondCenterSpotFocalPosTableModel->m_hozHeader<<"焦距步";
-    for(int i=1;i<=6;i++){m_diamondCenterSpotFocalPosTableModel->m_vertHeader<<QString::number(i);}
-    m_diamondCenterSpotFocalPosTableModel->m_modelData=m_config.focalLengthMotorPosForDiamondCenterTestPtr();
-    ui->tableView_diamondFocalPosTable->setModel(m_diamondCenterSpotFocalPosTableModel);
-    ui->tableView_diamondFocalPosTable->setCornerName("光斑");
-    ui->tableView_diamondFocalPosTable->verticalHeader()->setVisible(true);
-
-    m_speedStepTimeTableModel=new TableModel();
-    m_speedStepTimeTableModel->m_column=1;
-    m_speedStepTimeTableModel->m_row=7;
-    m_speedStepTimeTableModel->m_hozHeader<<"时间";
-    for(int i=1;i<=7;i++){m_speedStepTimeTableModel->m_vertHeader<<QString::number(i);}
-    m_speedStepTimeTableModel->m_modelData=m_config.stepTimePtr();
-    ui->tableView_speedStepTimeTable->setModel(m_speedStepTimeTableModel);
-    ui->tableView_speedStepTimeTable->setCornerName("速度");
-    ui->tableView_speedStepTimeTable->verticalHeader()->setVisible(true);
 
     tableData=m_localTableData.m_dbAngleDampingTableData;
     m_dbAngleDampingTableModel=new TableModel();
@@ -273,10 +256,10 @@ int MainWindow::interpolation(int value[], QPointF loc)
 int MainWindow::getFocusMotorPosByDist(int focalDist,int spotSlot)
 {
     if(m_config.isEmpty()) {return 0;}
-    auto map = m_config.focalLengthMotorPosMappingPtr();
+    auto map = m_localTableData.m_focalLengthMotorPosMappingData;
     int indexDist= floor(focalDist/10)-8;
-    int pos1=map[indexDist][spotSlot-1];
-    int pos2=map[indexDist+1][spotSlot-1];
+    int pos1=map(indexDist,spotSlot-1);
+    int pos2=map(indexDist+1,spotSlot-1);
     int focalMotorPos=pos1+(pos2-pos1)*(focalDist%10)/10;
     return focalMotorPos;
 }
@@ -321,13 +304,11 @@ void MainWindow::refreshConfigUI()
     ui->lineEdit_centerY->setText(QString::number(m_config.mainTableCenterYRef()));
     ui->lineEdit_secondaryCenterX->setText(QString::number(m_config.secondaryTableCenterXRef()));
     ui->lineEdit_secondaryCenterY->setText(QString::number(m_config.secondaryTableCenterYRef()));
+    ui->lineEdit_focalMotorPosCorrection->setText(QString::number(m_config.focalMotorPosCorrectionRef()));
     ui->lineEdit_castLightDA->setText(QString::number(m_config.castLightADPresetRef()));
     ui->lineEdit_lightCorrectionFocus->setText(QString::number(m_config.focalLengthMotorPosForLightCorrectionRef()));
     ui->lineEdit_lightCorrectionX->setText(QString::number(m_config.xMotorPosForLightCorrectionRef()));
     ui->lineEdit_lightCorrectionY->setText(QString::number(m_config.yMotorPosForLightCorrectionRef()));
-    ui->lineEdit_diamondCenterX->setText(QString::number(m_config.xMotorPosForDiamondCenterTestRef()));
-    ui->lineEdit_diamondCenterY->setText(QString::number(m_config.yMotorPosForDiamondCenterTestRef()));
-    ui->lineEdit_stepLength->setText(QString::number(m_config.stepLengthRef(),'f',2));
 
 //    ui->tableView_dbColorSpotPosTable->viewport()->update();
 //    ui->tableView_speedStepTimeTable->viewport()->update();
@@ -363,13 +344,12 @@ void MainWindow::refreshConfigDataByUI()
     m_config.mainTableCenterYRef()=ui->lineEdit_centerY->text().toInt(&ok);
     m_config.secondaryTableCenterXRef()=ui->lineEdit_secondaryCenterX->text().toInt(&ok);
     m_config.secondaryTableCenterYRef()=ui->lineEdit_secondaryCenterY->text().toInt(&ok);
+    m_config.focalMotorPosCorrectionRef()=ui->lineEdit_focalMotorPosCorrection->text().toInt(&ok);
     m_config.castLightADPresetRef()=ui->lineEdit_castLightDA->text().toInt(&ok);
     m_config.focalLengthMotorPosForLightCorrectionRef()=ui->lineEdit_lightCorrectionFocus->text().toInt(&ok);
     m_config.xMotorPosForLightCorrectionRef()=ui->lineEdit_lightCorrectionX->text().toInt(&ok);
     m_config.yMotorPosForLightCorrectionRef()=ui->lineEdit_lightCorrectionY->text().toInt(&ok);
-    m_config.xMotorPosForDiamondCenterTestRef()=ui->lineEdit_diamondCenterX->text().toInt(&ok);
-    m_config.yMotorPosForDiamondCenterTestRef()=ui->lineEdit_diamondCenterY->text().toInt(&ok);
-    m_config.stepLengthRef()=ui->lineEdit_stepLength->text().toFloat(&ok);
+
 }
 
 
@@ -644,10 +624,9 @@ void MainWindow::on_pushButton_testStart_clicked()
             dotEnd.coordY=ui->lineEdit_endCoordY->text().toInt();
 
             quint8 db=ui->spinBox_DbSetting->value();
-            float stepLength=ui->lineEdit_stepLength->text().toFloat();
             int spotSlot=ui->spinBox_spotSlot->value();
             int colorSlot=ui->spinBox_colorSlot->value();
-            moveCastTest(dotBegin,dotEnd,spotSlot,colorSlot,stepLength,db,sps);
+            moveCastTest(dotBegin,dotEnd,spotSlot,colorSlot,1,db,sps);
             break;
         }
     }
@@ -869,11 +848,12 @@ void MainWindow::readLocalData(QString filePath)
         if(file.open(QIODevice::ReadOnly))
         {
             char* destPtr=(char*)m_localTableData.m_data.data();
-            int dateLen=m_localTableData.dataLen;
+            int dataLen=m_localTableData.dataLen;
             QByteArray data=file.readAll();
-            if(data.length()!=(int)(dateLen*sizeof(int)))
+            if(data.length()!=dataLen)
             {
                 showDevInfo(QString("文件长度错误:")+QString::number(data.length()));
+                showDevInfo(QString("文件长度应为:")+QString::number(dataLen));
                 return;
             }
             memcpy(destPtr,data.data(),data.length());
@@ -890,8 +870,10 @@ void MainWindow::on_action_saveLocalData_triggered()
     if(file.open(QIODevice::WriteOnly))
     {
         char* destPtr=(char*)m_localTableData.m_data.data();
-        int dateLen=m_localTableData.dataLen;
-        file.write(destPtr,dateLen*sizeof(int));
+        int dataLen=m_localTableData.dataLen;
+//        QByteArray arr(dateLen,0xff);
+//        file.write(arr);
+        file.write(destPtr,dataLen);
         file.flush();
         file.close();
     }
@@ -927,6 +909,7 @@ void MainWindow::readLocalConfig(QString filePath)
             if(data.length()!=m_config.dataLen())
             {
                 showDevInfo(QString("文件长度错误:")+QString::number(data.length()));
+                showDevInfo(QString("文件长度应为:")+QString::number(m_config.dataLen()));
                 return;
             }
             memcpy(m_config.dataPtr(),data,m_config.dataLen());
@@ -1462,7 +1445,7 @@ void MainWindow::moveCastTest(const CoordSpacePosInfo& dotSpaceBegin,const Coord
     int dataLen= (stepCount%stepPerFrame)*3*4+8;
     m_devCtl->sendCastMoveData(totalframe,totalframe-1,dataLen,&dotArr[stepPerFrame*3*(totalframe-1)]);     //最后一帧
     showDevInfo("开始移动");
-    m_devCtl->startCastMove(sps[0],sps[1],sps[2],m_config.stepTimePtr()[stepSpeed]);    //开始
+    m_devCtl->startCastMove(sps[0],sps[1],sps[2],stepSpeed);    //开始
     delete[] dotArr;
 
 

@@ -378,7 +378,7 @@ public:
     QWidget *tab_3;
     QHBoxLayout *horizontalLayout_23;
     QGroupBox *groupBox_83;
-    QVBoxLayout *verticalLayout_12;
+    QVBoxLayout *verticalLayout_8;
     QVBoxLayout *verticalLayout_19;
     QVBoxLayout *verticalLayout_57;
     QHBoxLayout *horizontalLayout_58;
@@ -440,7 +440,7 @@ public:
     QSpacerItem *horizontalSpacer_120;
     QVBoxLayout *verticalLayout_58;
     QGroupBox *groupBox_87;
-    QVBoxLayout *verticalLayout_17;
+    QVBoxLayout *verticalLayout_4;
     QHBoxLayout *horizontalLayout_65;
     QLabel *label_133;
     QLineEdit *lineEdit_focusUnite;
@@ -461,6 +461,10 @@ public:
     QLabel *label_359;
     QSpacerItem *horizontalSpacer_34;
     QSpacerItem *horizontalSpacer_35;
+    QHBoxLayout *horizontalLayout_6;
+    QLabel *label_361;
+    QLineEdit *lineEdit_focalMotorPosCorrection;
+    QSpacerItem *horizontalSpacer_45;
     QGroupBox *groupBox_21;
     QGridLayout *gridLayout_9;
     QLabel *label_360;
@@ -489,23 +493,6 @@ public:
     GenericTable *tableView_spotSlotPos;
     QSpacerItem *verticalSpacer_2;
     QSpacerItem *horizontalSpacer_33;
-    QGroupBox *groupBox_20;
-    QVBoxLayout *verticalLayout_18;
-    GenericTable *tableView_speedStepTimeTable;
-    QHBoxLayout *horizontalLayout_8;
-    QSpacerItem *horizontalSpacer_31;
-    QLabel *label_70;
-    QLineEdit *lineEdit_stepLength;
-    QSpacerItem *verticalSpacer_3;
-    QGroupBox *groupBox_22;
-    QVBoxLayout *verticalLayout_24;
-    GenericTable *tableView_diamondFocalPosTable;
-    QHBoxLayout *horizontalLayout_17;
-    QLabel *label_76;
-    QLineEdit *lineEdit_diamondCenterX;
-    QLabel *label_74;
-    QLineEdit *lineEdit_diamondCenterY;
-    QSpacerItem *verticalSpacer_4;
     QSpacerItem *horizontalSpacer_30;
     QGroupBox *groupBox_17;
     QVBoxLayout *verticalLayout_14;
@@ -2446,11 +2433,10 @@ public:
         groupBox_83->setSizePolicy(sizePolicy);
         groupBox_83->setMinimumSize(QSize(0, 0));
         groupBox_83->setMaximumSize(QSize(350, 16777215));
-        verticalLayout_12 = new QVBoxLayout(groupBox_83);
-        verticalLayout_12->setSpacing(5);
-        verticalLayout_12->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_12->setObjectName(QStringLiteral("verticalLayout_12"));
-        verticalLayout_12->setContentsMargins(5, 5, 5, 5);
+        verticalLayout_8 = new QVBoxLayout(groupBox_83);
+        verticalLayout_8->setSpacing(6);
+        verticalLayout_8->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_8->setObjectName(QStringLiteral("verticalLayout_8"));
         verticalLayout_19 = new QVBoxLayout();
         verticalLayout_19->setSpacing(6);
         verticalLayout_19->setObjectName(QStringLiteral("verticalLayout_19"));
@@ -2815,15 +2801,14 @@ public:
         verticalLayout_19->addLayout(verticalLayout_58);
 
 
-        verticalLayout_12->addLayout(verticalLayout_19);
+        verticalLayout_8->addLayout(verticalLayout_19);
 
         groupBox_87 = new QGroupBox(groupBox_83);
         groupBox_87->setObjectName(QStringLiteral("groupBox_87"));
-        verticalLayout_17 = new QVBoxLayout(groupBox_87);
-        verticalLayout_17->setSpacing(3);
-        verticalLayout_17->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_17->setObjectName(QStringLiteral("verticalLayout_17"));
-        verticalLayout_17->setContentsMargins(3, 3, 3, 3);
+        verticalLayout_4 = new QVBoxLayout(groupBox_87);
+        verticalLayout_4->setSpacing(6);
+        verticalLayout_4->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_4->setObjectName(QStringLiteral("verticalLayout_4"));
         horizontalLayout_65 = new QHBoxLayout();
         horizontalLayout_65->setSpacing(6);
         horizontalLayout_65->setObjectName(QStringLiteral("horizontalLayout_65"));
@@ -2863,7 +2848,7 @@ public:
         horizontalLayout_65->addItem(horizontalSpacer_92);
 
 
-        verticalLayout_17->addLayout(horizontalLayout_65);
+        verticalLayout_4->addLayout(horizontalLayout_65);
 
         gridLayout_37 = new QGridLayout();
         gridLayout_37->setSpacing(6);
@@ -2935,10 +2920,33 @@ public:
         gridLayout_37->addItem(horizontalSpacer_35, 1, 6, 1, 1);
 
 
-        verticalLayout_17->addLayout(gridLayout_37);
+        verticalLayout_4->addLayout(gridLayout_37);
+
+        horizontalLayout_6 = new QHBoxLayout();
+        horizontalLayout_6->setSpacing(6);
+        horizontalLayout_6->setObjectName(QStringLiteral("horizontalLayout_6"));
+        label_361 = new QLabel(groupBox_87);
+        label_361->setObjectName(QStringLiteral("label_361"));
+        label_361->setMinimumSize(QSize(65, 0));
+
+        horizontalLayout_6->addWidget(label_361);
+
+        lineEdit_focalMotorPosCorrection = new QLineEdit(groupBox_87);
+        lineEdit_focalMotorPosCorrection->setObjectName(QStringLiteral("lineEdit_focalMotorPosCorrection"));
+        lineEdit_focalMotorPosCorrection->setMinimumSize(QSize(50, 0));
+        lineEdit_focalMotorPosCorrection->setMaximumSize(QSize(50, 16777215));
+
+        horizontalLayout_6->addWidget(lineEdit_focalMotorPosCorrection);
+
+        horizontalSpacer_45 = new QSpacerItem(158, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_6->addItem(horizontalSpacer_45);
 
 
-        verticalLayout_12->addWidget(groupBox_87);
+        verticalLayout_4->addLayout(horizontalLayout_6);
+
+
+        verticalLayout_8->addWidget(groupBox_87);
 
         groupBox_21 = new QGroupBox(groupBox_83);
         groupBox_21->setObjectName(QStringLiteral("groupBox_21"));
@@ -3007,11 +3015,11 @@ public:
         gridLayout_9->addWidget(label_356, 0, 6, 1, 1);
 
 
-        verticalLayout_12->addWidget(groupBox_21);
+        verticalLayout_8->addWidget(groupBox_21);
 
         verticalSpacer_5 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        verticalLayout_12->addItem(verticalSpacer_5);
+        verticalLayout_8->addItem(verticalSpacer_5);
 
 
         horizontalLayout_23->addWidget(groupBox_83);
@@ -3148,122 +3156,6 @@ public:
         horizontalSpacer_33 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         horizontalLayout_18->addItem(horizontalSpacer_33);
-
-        groupBox_20 = new QGroupBox(tab_3);
-        groupBox_20->setObjectName(QStringLiteral("groupBox_20"));
-        groupBox_20->setMaximumSize(QSize(136, 16777215));
-        verticalLayout_18 = new QVBoxLayout(groupBox_20);
-        verticalLayout_18->setSpacing(5);
-        verticalLayout_18->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_18->setObjectName(QStringLiteral("verticalLayout_18"));
-        verticalLayout_18->setContentsMargins(5, 5, 5, 5);
-        tableView_speedStepTimeTable = new GenericTable(groupBox_20);
-        tableView_speedStepTimeTable->setObjectName(QStringLiteral("tableView_speedStepTimeTable"));
-        tableView_speedStepTimeTable->setMinimumSize(QSize(123, 163));
-        tableView_speedStepTimeTable->setMaximumSize(QSize(16777215, 16777215));
-        tableView_speedStepTimeTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-        tableView_speedStepTimeTable->horizontalHeader()->setCascadingSectionResizes(true);
-        tableView_speedStepTimeTable->horizontalHeader()->setDefaultSectionSize(60);
-        tableView_speedStepTimeTable->horizontalHeader()->setHighlightSections(false);
-        tableView_speedStepTimeTable->horizontalHeader()->setMinimumSectionSize(60);
-        tableView_speedStepTimeTable->horizontalHeader()->setStretchLastSection(true);
-        tableView_speedStepTimeTable->verticalHeader()->setVisible(false);
-        tableView_speedStepTimeTable->verticalHeader()->setCascadingSectionResizes(true);
-        tableView_speedStepTimeTable->verticalHeader()->setDefaultSectionSize(20);
-        tableView_speedStepTimeTable->verticalHeader()->setMinimumSectionSize(20);
-
-        verticalLayout_18->addWidget(tableView_speedStepTimeTable);
-
-        horizontalLayout_8 = new QHBoxLayout();
-        horizontalLayout_8->setSpacing(6);
-        horizontalLayout_8->setObjectName(QStringLiteral("horizontalLayout_8"));
-        horizontalSpacer_31 = new QSpacerItem(50, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        horizontalLayout_8->addItem(horizontalSpacer_31);
-
-        label_70 = new QLabel(groupBox_20);
-        label_70->setObjectName(QStringLiteral("label_70"));
-
-        horizontalLayout_8->addWidget(label_70);
-
-        lineEdit_stepLength = new QLineEdit(groupBox_20);
-        lineEdit_stepLength->setObjectName(QStringLiteral("lineEdit_stepLength"));
-        lineEdit_stepLength->setMinimumSize(QSize(60, 0));
-        lineEdit_stepLength->setMaximumSize(QSize(60, 16777215));
-
-        horizontalLayout_8->addWidget(lineEdit_stepLength);
-
-
-        verticalLayout_18->addLayout(horizontalLayout_8);
-
-        verticalSpacer_3 = new QSpacerItem(20, 100, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-        verticalLayout_18->addItem(verticalSpacer_3);
-
-
-        horizontalLayout_18->addWidget(groupBox_20);
-
-        groupBox_22 = new QGroupBox(tab_3);
-        groupBox_22->setObjectName(QStringLiteral("groupBox_22"));
-        groupBox_22->setMaximumSize(QSize(138, 16777215));
-        verticalLayout_24 = new QVBoxLayout(groupBox_22);
-        verticalLayout_24->setSpacing(5);
-        verticalLayout_24->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_24->setObjectName(QStringLiteral("verticalLayout_24"));
-        verticalLayout_24->setContentsMargins(5, 5, 5, 5);
-        tableView_diamondFocalPosTable = new GenericTable(groupBox_22);
-        tableView_diamondFocalPosTable->setObjectName(QStringLiteral("tableView_diamondFocalPosTable"));
-        tableView_diamondFocalPosTable->setMinimumSize(QSize(123, 163));
-        tableView_diamondFocalPosTable->setMaximumSize(QSize(16777215, 16777215));
-        tableView_diamondFocalPosTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-        tableView_diamondFocalPosTable->horizontalHeader()->setCascadingSectionResizes(true);
-        tableView_diamondFocalPosTable->horizontalHeader()->setDefaultSectionSize(60);
-        tableView_diamondFocalPosTable->horizontalHeader()->setHighlightSections(false);
-        tableView_diamondFocalPosTable->horizontalHeader()->setMinimumSectionSize(60);
-        tableView_diamondFocalPosTable->horizontalHeader()->setStretchLastSection(true);
-        tableView_diamondFocalPosTable->verticalHeader()->setVisible(false);
-        tableView_diamondFocalPosTable->verticalHeader()->setCascadingSectionResizes(true);
-        tableView_diamondFocalPosTable->verticalHeader()->setDefaultSectionSize(20);
-        tableView_diamondFocalPosTable->verticalHeader()->setMinimumSectionSize(20);
-
-        verticalLayout_24->addWidget(tableView_diamondFocalPosTable);
-
-        horizontalLayout_17 = new QHBoxLayout();
-        horizontalLayout_17->setSpacing(0);
-        horizontalLayout_17->setObjectName(QStringLiteral("horizontalLayout_17"));
-        label_76 = new QLabel(groupBox_22);
-        label_76->setObjectName(QStringLiteral("label_76"));
-        label_76->setMinimumSize(QSize(15, 0));
-
-        horizontalLayout_17->addWidget(label_76);
-
-        lineEdit_diamondCenterX = new QLineEdit(groupBox_22);
-        lineEdit_diamondCenterX->setObjectName(QStringLiteral("lineEdit_diamondCenterX"));
-        lineEdit_diamondCenterX->setMaximumSize(QSize(60, 16777215));
-
-        horizontalLayout_17->addWidget(lineEdit_diamondCenterX);
-
-        label_74 = new QLabel(groupBox_22);
-        label_74->setObjectName(QStringLiteral("label_74"));
-        label_74->setMinimumSize(QSize(15, 0));
-
-        horizontalLayout_17->addWidget(label_74);
-
-        lineEdit_diamondCenterY = new QLineEdit(groupBox_22);
-        lineEdit_diamondCenterY->setObjectName(QStringLiteral("lineEdit_diamondCenterY"));
-        lineEdit_diamondCenterY->setMaximumSize(QSize(60, 16777215));
-
-        horizontalLayout_17->addWidget(lineEdit_diamondCenterY);
-
-
-        verticalLayout_24->addLayout(horizontalLayout_17);
-
-        verticalSpacer_4 = new QSpacerItem(20, 100, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-        verticalLayout_24->addItem(verticalSpacer_4);
-
-
-        horizontalLayout_18->addWidget(groupBox_22);
 
 
         verticalLayout_7->addLayout(horizontalLayout_18);
@@ -3663,10 +3555,11 @@ public:
         groupBox_87->setTitle(QApplication::translate("MainWindow", "\344\275\215\347\275\256\344\277\241\346\201\257", Q_NULLPTR));
         label_133->setText(QApplication::translate("MainWindow", "\347\204\246\350\267\235\350\201\224\345\212\250:", Q_NULLPTR));
         label_132->setText(QApplication::translate("MainWindow", "\345\277\253\351\227\250\345\274\200\344\275\215:", Q_NULLPTR));
-        label_358->setText(QApplication::translate("MainWindow", "\345\211\257\344\270\255\345\277\203\344\275\215 X:", Q_NULLPTR));
+        label_358->setText(QApplication::translate("MainWindow", "\345\211\257\350\241\250\344\277\256\346\255\243 X:", Q_NULLPTR));
         label_354->setText(QApplication::translate("MainWindow", "Y:", Q_NULLPTR));
-        label_355->setText(QApplication::translate("MainWindow", "\346\255\243\344\270\255\345\277\203\344\275\215 X:", Q_NULLPTR));
+        label_355->setText(QApplication::translate("MainWindow", "\346\255\243\350\241\250\344\277\256\346\255\243 X:", Q_NULLPTR));
         label_359->setText(QApplication::translate("MainWindow", "Y:", Q_NULLPTR));
+        label_361->setText(QApplication::translate("MainWindow", "\347\204\246\350\267\235\344\277\256\346\255\243:", Q_NULLPTR));
         groupBox_21->setTitle(QApplication::translate("MainWindow", "\345\205\211\345\274\272\346\240\241\346\255\243", Q_NULLPTR));
         label_360->setText(QApplication::translate("MainWindow", "\347\204\246\350\267\235:", Q_NULLPTR));
         label_357->setText(QApplication::translate("MainWindow", "Y:", Q_NULLPTR));
@@ -3675,11 +3568,6 @@ public:
         groupBox_18->setTitle(QApplication::translate("MainWindow", "\347\204\246\350\267\235\345\217\202\346\225\260\350\241\250", Q_NULLPTR));
         groupBox_9->setTitle(QApplication::translate("MainWindow", "\351\242\234\350\211\262\350\241\250", Q_NULLPTR));
         groupBox_10->setTitle(QApplication::translate("MainWindow", "\345\205\211\346\226\221\350\241\250", Q_NULLPTR));
-        groupBox_20->setTitle(QApplication::translate("MainWindow", "\346\212\225\345\260\204\346\257\217\346\255\245\346\227\266\351\227\264\350\241\250", Q_NULLPTR));
-        label_70->setText(QApplication::translate("MainWindow", "\346\255\245\351\225\277:", Q_NULLPTR));
-        groupBox_22->setTitle(QApplication::translate("MainWindow", "\350\217\261\345\275\242\344\270\255\345\277\203", Q_NULLPTR));
-        label_76->setText(QApplication::translate("MainWindow", "X:", Q_NULLPTR));
-        label_74->setText(QApplication::translate("MainWindow", "Y:", Q_NULLPTR));
         groupBox_17->setTitle(QApplication::translate("MainWindow", "DB\345\217\202\346\225\260\350\241\250", Q_NULLPTR));
         groupBox_19->setTitle(QApplication::translate("MainWindow", "0-90\345\272\246DB\350\241\260\345\207\217\350\241\250", Q_NULLPTR));
         tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("MainWindow", "\351\205\215\347\275\256", Q_NULLPTR));

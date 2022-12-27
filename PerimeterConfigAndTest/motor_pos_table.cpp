@@ -23,7 +23,7 @@ MotorPosTable::MotorPosTable(QWidget *parent):QTableView(parent)
     for(int i=0;i<rowCount;i++)
     {
         vHead->setSpan(i*3,0,3,1);
-        vModel->setData(vModel->index(i*3,0),QString::number(-90+i*6),Qt::DisplayRole);
+        vModel->setData(vModel->index(i*3,0),QString::number(90-i*6),Qt::DisplayRole);
         vModel->setData(vModel->index(i*3,1),QStringLiteral("X步"),Qt::DisplayRole);
         vModel->setData(vModel->index(i*3+1,1),QStringLiteral("Y步"),Qt::DisplayRole);
         vModel->setData(vModel->index(i*3+2,1),QStringLiteral("距离"),Qt::DisplayRole);

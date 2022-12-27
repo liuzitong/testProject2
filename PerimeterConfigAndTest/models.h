@@ -38,13 +38,14 @@ public:
 //        delete[] m_data;
     }
 public:
-    SingleTableData m_mainPosTableData;
+    SingleTableData m_mainPosTableData;       //正副表
     SingleTableData m_secondaryPosTableData;
-    SingleTableData m_dbAngleDampingTableData;
-    SingleTableData m_xyDistTableData;
+    SingleTableData m_dbAngleDampingTableData;  //DB角度衰减表
+    SingleTableData m_xyDistTableData;          //焦距参数表
+    SingleTableData m_focalLengthMotorPosMappingData;    //光斑在不同焦距对应的电机焦距步  25种焦距 6种光斑
 //    int* m_data;
     QSharedPointer<int> m_data;
-    const int dataLen=31*31*3*2+46+52*2;     //正副表，DB角度衰减表，DB参数表
+    const int dataLen=(31*31*3*2+46+25*2+25*6)*sizeof(int);     //正副表，DB角度衰减表，焦距参数表
 };
 
 #endif // MODELS_H
