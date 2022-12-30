@@ -1188,13 +1188,18 @@ void MainWindow::fillXYMotorAndFocalInfoByXYCoord()
 
 bool MainWindow::getXYMotorPosAndFocalDistFromCoord(const CoordSpacePosInfo& coordSpacePosInfo,CoordMotorPosFocalDistInfo& coordMotorPosFocalDistInfo)
 {
-    static bool isMainDotInfoTable=true;
+    static bool isMainDotInfoTable;
+//    if(isMainDotInfoTable&&coordSpacePosInfo.coordX>30){isMainDotInfoTable=false;}
+//    if(!isMainDotInfoTable&&coordSpacePosInfo.coordX<-30){isMainDotInfoTable=true;}
+    if(ui->radioButton_mainTable->isChecked()) isMainDotInfoTable=true;
+    else if(ui->radioButton_secondaryTable->isChecked()) isMainDotInfoTable=false;
     //从-90到9,有15格,所以要加15
     int x1=floor(coordSpacePosInfo.coordX/6.0f)+15;int x2=ceil(coordSpacePosInfo.coordX/6.0f)+15;
     int y1=floor(coordSpacePosInfo.coordY/6.0f)+15;int y2=ceil(coordSpacePosInfo.coordY/6.0f)+15;
     auto data=m_localTableData;
     SingleTableData tableData;
     isMainDotInfoTable?tableData=data.m_mainPosTableData:tableData=data.m_secondaryPosTableData;
+
     CoordMotorPosFocalDistInfo fourDots[4]
     {
         {tableData(y1*3,x1),tableData(y1*3+1,x1),tableData(y1*3+2,x1)},
@@ -1202,21 +1207,23 @@ bool MainWindow::getXYMotorPosAndFocalDistFromCoord(const CoordSpacePosInfo& coo
         {tableData(y1*3,x2),tableData(y1*3+1,x2),tableData(y1*3+2,x2)},
         {tableData(y2*3,x2),tableData(y2*3+1,x2),tableData(y2*3+2,x2)},
     };
-    if(!((fourDots[0].motorX!=-1)&&(fourDots[1].motorX!=-1)&&(fourDots[2].motorX!=-1)&&(fourDots[3].motorX!=-1)))
-    {
-        isMainDotInfoTable=!isMainDotInfoTable;
-        isMainDotInfoTable?tableData=data.m_mainPosTableData:tableData=data.m_secondaryPosTableData;
-        fourDots[0]={tableData(y1*3,x1),tableData(y1*3+1,x1),tableData(y1*3+2,x1)};
-        fourDots[1]={tableData(y2*3,x1),tableData(y2*3+1,x1),tableData(y2*3+2,x1)};
-        fourDots[2]={tableData(y1*3,x2),tableData(y1*3+1,x2),tableData(y1*3+2,x2)};
-        fourDots[3]={tableData(y2*3,x2),tableData(y2*3+1,x2),tableData(y2*3+2,x2)};
-        if(!((fourDots[0].motorX=!-1)||(fourDots[1].motorX=-1)||(fourDots[2].motorX=-1)||(fourDots[3].motorX=-1)))
-        {
-            showDevInfo("point is out of range!");
-            isMainDotInfoTable=!isMainDotInfoTable;
-            return false;
-        }
-    }
+    if(((fourDots[0].motorX==-1)||(fourDots[1].motorX==-1)||(fourDots[2].motorX==-1)||(fourDots[3].motorX==-1)))
+    {showDevInfo("point is out of range!");}
+//    if(!((fourDots[0].motorX!=-1)&&(fourDots[1].motorX!=-1)&&(fourDots[2].motorX!=-1)&&(fourDots[3].motorX!=-1)))
+//    {
+//        isMainDotInfoTable=!isMainDotInfoTable;
+//        isMainDotInfoTable?tableData=data.m_mainPosTableData:tableData=data.m_secondaryPosTableData;
+//        fourDots[0]={tableData(y1*3,x1),tableData(y1*3+1,x1),tableData(y1*3+2,x1)};
+//        fourDots[1]={tableData(y2*3,x1),tableData(y2*3+1,x1),tableData(y2*3+2,x1)};
+//        fourDots[2]={tableData(y1*3,x2),tableData(y1*3+1,x2),tableData(y1*3+2,x2)};
+//        fourDots[3]={tableData(y2*3,x2),tableData(y2*3+1,x2),tableData(y2*3+2,x2)};
+//        if(!((fourDots[0].motorX=!-1)||(fourDots[1].motorX=-1)||(fourDots[2].motorX=-1)||(fourDots[3].motorX=-1)))
+//        {
+//            showDevInfo("point is out of range!");
+//            isMainDotInfoTable=!isMainDotInfoTable;
+//            return false;
+//        }
+//    }
 
 
     QPointF loc(coordSpacePosInfo.coordX-(x1-15)*6,coordSpacePosInfo.coordY-(y1-15)*6);
@@ -1226,6 +1233,17 @@ bool MainWindow::getXYMotorPosAndFocalDistFromCoord(const CoordSpacePosInfo& coo
 
     for(unsigned int i=0;i<sizeof(arr)/sizeof(int);i++) {arr[i]=fourDots[i].motorY;}
     coordMotorPosFocalDistInfo.motorY=interpolation(arr,loc);
+
+    if(isMainDotInfoTable)
+    {
+        coordMotorPosFocalDistInfo.motorX+=ui->lineEdit_centerX->text().toInt();
+        coordMotorPosFocalDistInfo.motorY+=ui->lineEdit_centerY->text().toInt();
+    }
+    else
+    {
+        coordMotorPosFocalDistInfo.motorX+=ui->lineEdit_secondaryCenterX->text().toInt();
+        coordMotorPosFocalDistInfo.motorY+=ui->lineEdit_secondaryCenterY->text().toInt();
+    }
 
     for(unsigned int i=0;i<sizeof(arr)/sizeof(int);i++) {arr[i]=fourDots[i].focalDist;}
     coordMotorPosFocalDistInfo.focalDist=interpolation(arr,loc);

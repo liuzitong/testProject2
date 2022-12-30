@@ -293,22 +293,30 @@ public:
     QSpinBox *spinBox_DbSpotPos;
     QCheckBox *checkBox_DbConfigSync;
     QPushButton *pushButton_dbTest;
+    QHBoxLayout *horizontalLayout_8;
+    QGroupBox *groupBox_5;
+    QVBoxLayout *verticalLayout_17;
+    QRadioButton *radioButton_mainTable;
+    QRadioButton *radioButton_secondaryTable;
     QStackedWidget *stackedWidget;
     QWidget *page;
     QHBoxLayout *horizontalLayout_7;
     QGroupBox *groupBox_staticCastPos;
-    QGridLayout *gridLayout_11;
-    QSpinBox *spinBox_YMotorPos_2;
-    QPushButton *pushButton_staticCastTest;
-    QLineEdit *lineEdit_coordY;
+    QVBoxLayout *verticalLayout_12;
+    QHBoxLayout *horizontalLayout_15;
+    QLabel *label_22;
+    QLineEdit *lineEdit_coordX;
     QLabel *label_72;
     QSpinBox *spinBox_XMotorPos_2;
-    QLabel *label_22;
-    QSpacerItem *horizontalSpacer_19;
-    QLabel *label_23;
-    QLineEdit *lineEdit_coordX;
     QCheckBox *checkBox_calcFocalDist;
+    QSpacerItem *horizontalSpacer_5;
+    QHBoxLayout *horizontalLayout_17;
+    QLabel *label_23;
+    QLineEdit *lineEdit_coordY;
     QLabel *label_73;
+    QSpinBox *spinBox_YMotorPos_2;
+    QSpacerItem *horizontalSpacer_19;
+    QPushButton *pushButton_staticCastTest;
     QWidget *page_2;
     QHBoxLayout *horizontalLayout_5;
     QGroupBox *groupBox_moveCastPos;
@@ -1923,6 +1931,32 @@ public:
 
         verticalLayout_9->addWidget(groupBox_4);
 
+        horizontalLayout_8 = new QHBoxLayout();
+        horizontalLayout_8->setSpacing(6);
+        horizontalLayout_8->setObjectName(QStringLiteral("horizontalLayout_8"));
+        groupBox_5 = new QGroupBox(groupBox_15);
+        groupBox_5->setObjectName(QStringLiteral("groupBox_5"));
+        verticalLayout_17 = new QVBoxLayout(groupBox_5);
+        verticalLayout_17->setSpacing(0);
+        verticalLayout_17->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_17->setObjectName(QStringLiteral("verticalLayout_17"));
+        verticalLayout_17->setContentsMargins(3, 3, 3, 3);
+        radioButton_mainTable = new QRadioButton(groupBox_5);
+        radioButton_mainTable->setObjectName(QStringLiteral("radioButton_mainTable"));
+        radioButton_mainTable->setMinimumSize(QSize(0, 20));
+        radioButton_mainTable->setChecked(true);
+
+        verticalLayout_17->addWidget(radioButton_mainTable);
+
+        radioButton_secondaryTable = new QRadioButton(groupBox_5);
+        radioButton_secondaryTable->setObjectName(QStringLiteral("radioButton_secondaryTable"));
+        radioButton_secondaryTable->setMinimumSize(QSize(0, 20));
+
+        verticalLayout_17->addWidget(radioButton_secondaryTable);
+
+
+        horizontalLayout_8->addWidget(groupBox_5);
+
         stackedWidget = new QStackedWidget(groupBox_15);
         stackedWidget->setObjectName(QStringLiteral("stackedWidget"));
         page = new QWidget();
@@ -1936,36 +1970,31 @@ public:
         groupBox_staticCastPos->setObjectName(QStringLiteral("groupBox_staticCastPos"));
         sizePolicy2.setHeightForWidth(groupBox_staticCastPos->sizePolicy().hasHeightForWidth());
         groupBox_staticCastPos->setSizePolicy(sizePolicy2);
-        gridLayout_11 = new QGridLayout(groupBox_staticCastPos);
-        gridLayout_11->setSpacing(3);
-        gridLayout_11->setContentsMargins(11, 11, 11, 11);
-        gridLayout_11->setObjectName(QStringLiteral("gridLayout_11"));
-        gridLayout_11->setContentsMargins(3, 0, 3, 0);
-        spinBox_YMotorPos_2 = new QSpinBox(groupBox_staticCastPos);
-        spinBox_YMotorPos_2->setObjectName(QStringLiteral("spinBox_YMotorPos_2"));
-        spinBox_YMotorPos_2->setMinimumSize(QSize(40, 0));
-        spinBox_YMotorPos_2->setMaximumSize(QSize(60, 16777215));
-        spinBox_YMotorPos_2->setMinimum(-200000);
-        spinBox_YMotorPos_2->setMaximum(200000);
+        verticalLayout_12 = new QVBoxLayout(groupBox_staticCastPos);
+        verticalLayout_12->setSpacing(3);
+        verticalLayout_12->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_12->setObjectName(QStringLiteral("verticalLayout_12"));
+        verticalLayout_12->setContentsMargins(3, 3, 3, 3);
+        horizontalLayout_15 = new QHBoxLayout();
+        horizontalLayout_15->setSpacing(6);
+        horizontalLayout_15->setObjectName(QStringLiteral("horizontalLayout_15"));
+        label_22 = new QLabel(groupBox_staticCastPos);
+        label_22->setObjectName(QStringLiteral("label_22"));
+        label_22->setMinimumSize(QSize(40, 0));
+        label_22->setMaximumSize(QSize(40, 16777215));
 
-        gridLayout_11->addWidget(spinBox_YMotorPos_2, 1, 3, 1, 1);
+        horizontalLayout_15->addWidget(label_22);
 
-        pushButton_staticCastTest = new QPushButton(groupBox_staticCastPos);
-        pushButton_staticCastTest->setObjectName(QStringLiteral("pushButton_staticCastTest"));
-        pushButton_staticCastTest->setMaximumSize(QSize(40, 16777215));
+        lineEdit_coordX = new QLineEdit(groupBox_staticCastPos);
+        lineEdit_coordX->setObjectName(QStringLiteral("lineEdit_coordX"));
+        lineEdit_coordX->setMaximumSize(QSize(60, 16777215));
 
-        gridLayout_11->addWidget(pushButton_staticCastTest, 0, 8, 1, 1);
-
-        lineEdit_coordY = new QLineEdit(groupBox_staticCastPos);
-        lineEdit_coordY->setObjectName(QStringLiteral("lineEdit_coordY"));
-        lineEdit_coordY->setMaximumSize(QSize(60, 16777215));
-
-        gridLayout_11->addWidget(lineEdit_coordY, 1, 1, 1, 1);
+        horizontalLayout_15->addWidget(lineEdit_coordX);
 
         label_72 = new QLabel(groupBox_staticCastPos);
         label_72->setObjectName(QStringLiteral("label_72"));
 
-        gridLayout_11->addWidget(label_72, 0, 2, 1, 1);
+        horizontalLayout_15->addWidget(label_72);
 
         spinBox_XMotorPos_2 = new QSpinBox(groupBox_staticCastPos);
         spinBox_XMotorPos_2->setObjectName(QStringLiteral("spinBox_XMotorPos_2"));
@@ -1974,42 +2003,63 @@ public:
         spinBox_XMotorPos_2->setMinimum(-200000);
         spinBox_XMotorPos_2->setMaximum(200000);
 
-        gridLayout_11->addWidget(spinBox_XMotorPos_2, 0, 3, 1, 1);
-
-        label_22 = new QLabel(groupBox_staticCastPos);
-        label_22->setObjectName(QStringLiteral("label_22"));
-        label_22->setMinimumSize(QSize(40, 0));
-        label_22->setMaximumSize(QSize(40, 16777215));
-
-        gridLayout_11->addWidget(label_22, 0, 0, 1, 1);
-
-        horizontalSpacer_19 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        gridLayout_11->addItem(horizontalSpacer_19, 0, 4, 1, 1);
-
-        label_23 = new QLabel(groupBox_staticCastPos);
-        label_23->setObjectName(QStringLiteral("label_23"));
-        label_23->setMinimumSize(QSize(40, 0));
-        label_23->setMaximumSize(QSize(40, 16777215));
-
-        gridLayout_11->addWidget(label_23, 1, 0, 1, 1);
-
-        lineEdit_coordX = new QLineEdit(groupBox_staticCastPos);
-        lineEdit_coordX->setObjectName(QStringLiteral("lineEdit_coordX"));
-        lineEdit_coordX->setMaximumSize(QSize(60, 16777215));
-
-        gridLayout_11->addWidget(lineEdit_coordX, 0, 1, 1, 1);
+        horizontalLayout_15->addWidget(spinBox_XMotorPos_2);
 
         checkBox_calcFocalDist = new QCheckBox(groupBox_staticCastPos);
         checkBox_calcFocalDist->setObjectName(QStringLiteral("checkBox_calcFocalDist"));
         checkBox_calcFocalDist->setChecked(true);
 
-        gridLayout_11->addWidget(checkBox_calcFocalDist, 0, 7, 1, 1);
+        horizontalLayout_15->addWidget(checkBox_calcFocalDist);
+
+        horizontalSpacer_5 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_15->addItem(horizontalSpacer_5);
+
+
+        verticalLayout_12->addLayout(horizontalLayout_15);
+
+        horizontalLayout_17 = new QHBoxLayout();
+        horizontalLayout_17->setSpacing(6);
+        horizontalLayout_17->setObjectName(QStringLiteral("horizontalLayout_17"));
+        label_23 = new QLabel(groupBox_staticCastPos);
+        label_23->setObjectName(QStringLiteral("label_23"));
+        label_23->setMinimumSize(QSize(40, 0));
+        label_23->setMaximumSize(QSize(40, 16777215));
+
+        horizontalLayout_17->addWidget(label_23);
+
+        lineEdit_coordY = new QLineEdit(groupBox_staticCastPos);
+        lineEdit_coordY->setObjectName(QStringLiteral("lineEdit_coordY"));
+        lineEdit_coordY->setMaximumSize(QSize(60, 16777215));
+
+        horizontalLayout_17->addWidget(lineEdit_coordY);
 
         label_73 = new QLabel(groupBox_staticCastPos);
         label_73->setObjectName(QStringLiteral("label_73"));
 
-        gridLayout_11->addWidget(label_73, 1, 2, 1, 1);
+        horizontalLayout_17->addWidget(label_73);
+
+        spinBox_YMotorPos_2 = new QSpinBox(groupBox_staticCastPos);
+        spinBox_YMotorPos_2->setObjectName(QStringLiteral("spinBox_YMotorPos_2"));
+        spinBox_YMotorPos_2->setMinimumSize(QSize(40, 0));
+        spinBox_YMotorPos_2->setMaximumSize(QSize(60, 16777215));
+        spinBox_YMotorPos_2->setMinimum(-200000);
+        spinBox_YMotorPos_2->setMaximum(200000);
+
+        horizontalLayout_17->addWidget(spinBox_YMotorPos_2);
+
+        horizontalSpacer_19 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_17->addItem(horizontalSpacer_19);
+
+        pushButton_staticCastTest = new QPushButton(groupBox_staticCastPos);
+        pushButton_staticCastTest->setObjectName(QStringLiteral("pushButton_staticCastTest"));
+        pushButton_staticCastTest->setMaximumSize(QSize(40, 16777215));
+
+        horizontalLayout_17->addWidget(pushButton_staticCastTest);
+
+
+        verticalLayout_12->addLayout(horizontalLayout_17);
 
 
         horizontalLayout_7->addWidget(groupBox_staticCastPos);
@@ -2096,7 +2146,10 @@ public:
 
         stackedWidget->addWidget(page_2);
 
-        verticalLayout_9->addWidget(stackedWidget);
+        horizontalLayout_8->addWidget(stackedWidget);
+
+
+        verticalLayout_9->addLayout(horizontalLayout_8);
 
         groupBox_focalTest = new QGroupBox(groupBox_15);
         groupBox_focalTest->setObjectName(QStringLiteral("groupBox_focalTest"));
@@ -3491,13 +3544,16 @@ public:
         label_83->setText(QApplication::translate("MainWindow", "\345\205\211\346\226\221\344\275\215\347\275\256:", Q_NULLPTR));
         checkBox_DbConfigSync->setText(QApplication::translate("MainWindow", "\345\220\214\346\255\245\351\205\215\347\275\256", Q_NULLPTR));
         pushButton_dbTest->setText(QApplication::translate("MainWindow", "\346\265\213\350\257\225", Q_NULLPTR));
+        groupBox_5->setTitle(QApplication::translate("MainWindow", "\346\255\243\345\211\257\350\241\250", Q_NULLPTR));
+        radioButton_mainTable->setText(QApplication::translate("MainWindow", "\346\255\243\350\241\250", Q_NULLPTR));
+        radioButton_secondaryTable->setText(QApplication::translate("MainWindow", "\345\211\257\350\241\250", Q_NULLPTR));
         groupBox_staticCastPos->setTitle(QApplication::translate("MainWindow", "\351\235\231\346\200\201\346\212\225\345\260\204\344\275\215\347\275\256", Q_NULLPTR));
-        pushButton_staticCastTest->setText(QApplication::translate("MainWindow", "\346\265\213\350\257\225", Q_NULLPTR));
-        label_72->setText(QApplication::translate("MainWindow", "\347\224\265\346\234\272\344\275\215\347\275\256:", Q_NULLPTR));
         label_22->setText(QApplication::translate("MainWindow", "X\345\235\220\346\240\207:", Q_NULLPTR));
-        label_23->setText(QApplication::translate("MainWindow", "Y\345\235\220\346\240\207:", Q_NULLPTR));
+        label_72->setText(QApplication::translate("MainWindow", "\347\224\265\346\234\272\344\275\215\347\275\256:", Q_NULLPTR));
         checkBox_calcFocalDist->setText(QApplication::translate("MainWindow", "\347\256\227\345\207\272\347\204\246\350\267\235", Q_NULLPTR));
+        label_23->setText(QApplication::translate("MainWindow", "Y\345\235\220\346\240\207:", Q_NULLPTR));
         label_73->setText(QApplication::translate("MainWindow", "\347\224\265\346\234\272\344\275\215\347\275\256:", Q_NULLPTR));
+        pushButton_staticCastTest->setText(QApplication::translate("MainWindow", "\346\265\213\350\257\225", Q_NULLPTR));
         groupBox_moveCastPos->setTitle(QApplication::translate("MainWindow", "\347\247\273\345\212\250\346\212\225\345\260\204\344\275\215\347\275\256", Q_NULLPTR));
         label_41->setText(QApplication::translate("MainWindow", "\350\265\267\347\202\271X\345\235\220\346\240\207:", Q_NULLPTR));
         label_42->setText(QApplication::translate("MainWindow", "\347\273\210\347\202\271X\345\235\220\346\240\207:", Q_NULLPTR));

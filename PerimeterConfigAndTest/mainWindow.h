@@ -130,6 +130,10 @@ private slots:
 
     void on_lineEdit_coordY_textChanged(const QString &arg1){fillXYMotorAndFocalInfoByXYCoord();};
 
+    void on_radioButton_mainTable_clicked(){fillXYMotorAndFocalInfoByXYCoord();};
+
+    void on_radioButton_secondaryTable_clicked(){fillXYMotorAndFocalInfoByXYCoord();};
+
     void on_spinBox_shutterOpenPos_valueChanged(int arg1);
 
     void on_pushButton_colorTest_clicked();
@@ -155,6 +159,8 @@ private slots:
     void on_checkBox_startRefreshInfo_stateChanged(int arg1);
 
     void on_checkBox_RefreshIO_stateChanged(int arg1);
+
+
 
 private:
     void initData();
