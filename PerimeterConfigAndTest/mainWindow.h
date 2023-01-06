@@ -126,13 +126,15 @@ private slots:
 
     void on_spinBox_DbSpotPos_valueChanged(int arg1);
 
-    void on_lineEdit_coordX_textChanged(const QString &arg1){fillXYMotorAndFocalInfoByXYCoord();};
+    void on_spinBox_coordX_valueChanged(int arg1){fillXYMotorAndFocalInfoByXYCoord();};
 
-    void on_lineEdit_coordY_textChanged(const QString &arg1){fillXYMotorAndFocalInfoByXYCoord();};
+    void on_spinBox_coordY_valueChanged(int arg1){fillXYMotorAndFocalInfoByXYCoord();};
 
     void on_radioButton_mainTable_clicked(){fillXYMotorAndFocalInfoByXYCoord();};
 
     void on_radioButton_secondaryTable_clicked(){fillXYMotorAndFocalInfoByXYCoord();};
+
+    void on_spinBox_focalMotorPos_2_valueChanged(int arg1);
 
     void on_spinBox_shutterOpenPos_valueChanged(int arg1);
 
@@ -160,6 +162,7 @@ private slots:
 
     void on_checkBox_RefreshIO_stateChanged(int arg1);
 
+    void on_reCalcXYFocalMotorPos_clicked(){fillXYMotorAndFocalInfoByXYCoord();};
 
 
 private:
@@ -171,8 +174,8 @@ private:
 
     //获取XY电机位置还有焦距
     bool getXYMotorPosAndFocalDistFromCoord(const CoordSpacePosInfo& coordSpacePosInfo,CoordMotorPosFocalDistInfo& coordMotorPosFocalDistInfo);
-    void staticCastTest(const CoordMotorPosFocalDistInfo& dot,int spotSlot ,int colorSlot,int db,int* sps,int durationTime,int shutterPos);
-    void moveCastTest(const CoordSpacePosInfo& dotBegin,const CoordSpacePosInfo& dotEnd,int spotSlot ,int colorSlot,float stepLength,int db,int* sps);
+    void staticCastTest(const CoordMotorPosFocalDistInfo& dot,int focalMotorPos,int db,quint8* sps,int durationTime,int shutterPos);
+    void moveCastTest(const CoordSpacePosInfo& dotBegin,const CoordSpacePosInfo& dotEnd,int spotSlot ,int colorSlot,float stepLength,int db,quint8* sps);
     void init();
     void initDevCtl();
     void uninitDevCtl();
@@ -182,6 +185,7 @@ private:
     void initConfigUI();
     void refreshConfigUI();
     void refreshConfigDataByUI();
+    void waitMotorStop(QVector<UsbDev::DevCtl::MotorId> motorIDs);
     Ui::MainWindow *ui;
     TableModel *m_colorPosTableModel;                       //颜色表
     TableModel *m_spotPosTableModel;                        //光斑表
@@ -191,6 +195,7 @@ private:
     TableModel *m_diamondCenterSpotFocalPosTableModel;      //菱形中心点时测试时, 焦距电机所需走动的步数 7个光斑
     TableModel *m_xyDistTableModel;                         //xy桌标对应的距离 本机数据
     TableModel *m_dbAngleDampingTableModel;                 //DB离心度衰减参数表 本机数据
+    Status m_status={-1,-1,-1};
     UsbDev::DevCtl *m_devCtl=NULL;
     UsbDev::Config m_config;
     LocalTableData m_localTableData;

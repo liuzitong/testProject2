@@ -784,20 +784,26 @@
                 <item row="1" column="3">
                  <widget class="QSpinBox" name="spinBox_hosChinMotorSpeed">
                   <property name="minimum">
-                   <number>1</number>
+                   <number>0</number>
                   </property>
                   <property name="maximum">
                    <number>7</number>
+                  </property>
+                  <property name="value">
+                   <number>1</number>
                   </property>
                  </widget>
                 </item>
                 <item row="3" column="3">
                  <widget class="QSpinBox" name="spinBox_vertChinMotorSpeed">
                   <property name="minimum">
-                   <number>1</number>
+                   <number>0</number>
                   </property>
                   <property name="maximum">
                    <number>7</number>
+                  </property>
+                  <property name="value">
+                   <number>1</number>
                   </property>
                  </widget>
                 </item>
@@ -1141,50 +1147,65 @@
                 <item row="0" column="3">
                  <widget class="QSpinBox" name="spinBox_XMotorSpeed">
                   <property name="minimum">
-                   <number>1</number>
+                   <number>0</number>
                   </property>
                   <property name="maximum">
                    <number>7</number>
+                  </property>
+                  <property name="value">
+                   <number>1</number>
                   </property>
                  </widget>
                 </item>
                 <item row="1" column="3">
                  <widget class="QSpinBox" name="spinBox_YMotorSpeed">
                   <property name="minimum">
-                   <number>1</number>
+                   <number>0</number>
                   </property>
                   <property name="maximum">
                    <number>7</number>
+                  </property>
+                  <property name="value">
+                   <number>1</number>
                   </property>
                  </widget>
                 </item>
                 <item row="2" column="3">
                  <widget class="QSpinBox" name="spinBox_focalMotorSpeed">
                   <property name="minimum">
-                   <number>1</number>
+                   <number>0</number>
                   </property>
                   <property name="maximum">
                    <number>7</number>
+                  </property>
+                  <property name="value">
+                   <number>1</number>
                   </property>
                  </widget>
                 </item>
                 <item row="3" column="3">
                  <widget class="QSpinBox" name="spinBox_colorMotorSpeed">
                   <property name="minimum">
-                   <number>1</number>
+                   <number>0</number>
                   </property>
                   <property name="maximum">
                    <number>7</number>
+                  </property>
+                  <property name="value">
+                   <number>1</number>
                   </property>
                  </widget>
                 </item>
                 <item row="4" column="3">
                  <widget class="QSpinBox" name="spinBox_spotMotorSpeed">
                   <property name="minimum">
-                   <number>1</number>
+                   <number>0</number>
                   </property>
                   <property name="maximum">
                    <number>7</number>
+                  </property>
+                  <property name="value">
+                   <number>1</number>
                   </property>
                  </widget>
                 </item>
@@ -2934,7 +2955,10 @@
                      <number>3</number>
                     </property>
                     <item>
-                     <layout class="QHBoxLayout" name="horizontalLayout_15">
+                     <layout class="QHBoxLayout" name="horizontalLayout_17">
+                      <property name="spacing">
+                       <number>3</number>
+                      </property>
                       <item>
                        <widget class="QLabel" name="label_22">
                         <property name="minimumSize">
@@ -2955,12 +2979,24 @@
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLineEdit" name="lineEdit_coordX">
+                       <widget class="QSpinBox" name="spinBox_coordX">
+                        <property name="minimumSize">
+                         <size>
+                          <width>60</width>
+                          <height>0</height>
+                         </size>
+                        </property>
                         <property name="maximumSize">
                          <size>
                           <width>60</width>
                           <height>16777215</height>
                          </size>
+                        </property>
+                        <property name="minimum">
+                         <number>-84</number>
+                        </property>
+                        <property name="maximum">
+                         <number>84</number>
                         </property>
                        </widget>
                       </item>
@@ -2994,16 +3030,6 @@
                        </widget>
                       </item>
                       <item>
-                       <widget class="QCheckBox" name="checkBox_calcFocalDist">
-                        <property name="text">
-                         <string>算出焦距</string>
-                        </property>
-                        <property name="checked">
-                         <bool>true</bool>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
                        <spacer name="horizontalSpacer_5">
                         <property name="orientation">
                          <enum>Qt::Horizontal</enum>
@@ -3016,10 +3042,23 @@
                         </property>
                        </spacer>
                       </item>
+                      <item>
+                       <widget class="QCheckBox" name="checkBox_calcFocalDist">
+                        <property name="text">
+                         <string>算出焦距</string>
+                        </property>
+                        <property name="checked">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
                      </layout>
                     </item>
                     <item>
-                     <layout class="QHBoxLayout" name="horizontalLayout_17">
+                     <layout class="QHBoxLayout" name="horizontalLayout_15">
+                      <property name="spacing">
+                       <number>3</number>
+                      </property>
                       <item>
                        <widget class="QLabel" name="label_23">
                         <property name="minimumSize">
@@ -3040,12 +3079,24 @@
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLineEdit" name="lineEdit_coordY">
+                       <widget class="QSpinBox" name="spinBox_coordY">
+                        <property name="minimumSize">
+                         <size>
+                          <width>60</width>
+                          <height>0</height>
+                         </size>
+                        </property>
                         <property name="maximumSize">
                          <size>
                           <width>60</width>
                           <height>16777215</height>
                          </size>
+                        </property>
+                        <property name="minimum">
+                         <number>-84</number>
+                        </property>
+                        <property name="maximum">
+                         <number>84</number>
                         </property>
                        </widget>
                       </item>
@@ -3090,6 +3141,19 @@
                          </size>
                         </property>
                        </spacer>
+                      </item>
+                      <item>
+                       <widget class="QPushButton" name="reCalcXYFocalMotorPos">
+                        <property name="maximumSize">
+                         <size>
+                          <width>40</width>
+                          <height>16777215</height>
+                         </size>
+                        </property>
+                        <property name="text">
+                         <string>刷新</string>
+                        </property>
+                       </widget>
                       </item>
                       <item>
                        <widget class="QPushButton" name="pushButton_staticCastTest">
@@ -3142,7 +3206,10 @@
                    <property name="title">
                     <string>移动投射位置</string>
                    </property>
-                   <layout class="QGridLayout" name="gridLayout_3">
+                   <layout class="QVBoxLayout" name="verticalLayout_18">
+                    <property name="spacing">
+                     <number>3</number>
+                    </property>
                     <property name="leftMargin">
                      <number>3</number>
                     </property>
@@ -3155,150 +3222,179 @@
                     <property name="bottomMargin">
                      <number>3</number>
                     </property>
-                    <property name="spacing">
-                     <number>3</number>
-                    </property>
-                    <item row="0" column="0">
-                     <widget class="QLabel" name="label_41">
-                      <property name="minimumSize">
-                       <size>
-                        <width>50</width>
-                        <height>0</height>
-                       </size>
-                      </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>16777215</width>
-                        <height>16777215</height>
-                       </size>
-                      </property>
-                      <property name="text">
-                       <string>起点X坐标:</string>
-                      </property>
-                     </widget>
+                    <item>
+                     <layout class="QHBoxLayout" name="horizontalLayout_26">
+                      <item>
+                       <widget class="QLabel" name="label_41">
+                        <property name="minimumSize">
+                         <size>
+                          <width>60</width>
+                          <height>0</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>16777215</width>
+                          <height>16777215</height>
+                         </size>
+                        </property>
+                        <property name="text">
+                         <string>起点X坐标:</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QSpinBox" name="spinBox_beginCoordX">
+                        <property name="minimumSize">
+                         <size>
+                          <width>60</width>
+                          <height>0</height>
+                         </size>
+                        </property>
+                        <property name="minimum">
+                         <number>-200000</number>
+                        </property>
+                        <property name="maximum">
+                         <number>200000</number>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLabel" name="label_42">
+                        <property name="minimumSize">
+                         <size>
+                          <width>60</width>
+                          <height>0</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>16777215</width>
+                          <height>16777215</height>
+                         </size>
+                        </property>
+                        <property name="text">
+                         <string>终点X坐标:</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QSpinBox" name="spinBox_endCoordX">
+                        <property name="minimumSize">
+                         <size>
+                          <width>60</width>
+                          <height>0</height>
+                         </size>
+                        </property>
+                        <property name="minimum">
+                         <number>-200000</number>
+                        </property>
+                        <property name="maximum">
+                         <number>200000</number>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <spacer name="horizontalSpacer_44">
+                        <property name="orientation">
+                         <enum>Qt::Horizontal</enum>
+                        </property>
+                        <property name="sizeHint" stdset="0">
+                         <size>
+                          <width>40</width>
+                          <height>20</height>
+                         </size>
+                        </property>
+                       </spacer>
+                      </item>
+                     </layout>
                     </item>
-                    <item row="0" column="8" colspan="2">
-                     <spacer name="horizontalSpacer_44">
-                      <property name="orientation">
-                       <enum>Qt::Horizontal</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>129</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                     </spacer>
-                    </item>
-                    <item row="0" column="4">
-                     <widget class="QLabel" name="label_42">
-                      <property name="minimumSize">
-                       <size>
-                        <width>50</width>
-                        <height>0</height>
-                       </size>
-                      </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>16777215</width>
-                        <height>16777215</height>
-                       </size>
-                      </property>
-                      <property name="text">
-                       <string>终点X坐标:</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="0" column="5">
-                     <widget class="QLineEdit" name="lineEdit_endCoordX">
-                      <property name="maximumSize">
-                       <size>
-                        <width>60</width>
-                        <height>16777215</height>
-                       </size>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="0" column="1">
-                     <widget class="QLineEdit" name="lineEdit_beginCoordX">
-                      <property name="maximumSize">
-                       <size>
-                        <width>60</width>
-                        <height>16777215</height>
-                       </size>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="0">
-                     <widget class="QLabel" name="label_40">
-                      <property name="minimumSize">
-                       <size>
-                        <width>50</width>
-                        <height>0</height>
-                       </size>
-                      </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>16777215</width>
-                        <height>16777215</height>
-                       </size>
-                      </property>
-                      <property name="text">
-                       <string>起点Y坐标:</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="1">
-                     <widget class="QLineEdit" name="lineEdit_beginCoordY">
-                      <property name="maximumSize">
-                       <size>
-                        <width>60</width>
-                        <height>16777215</height>
-                       </size>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="4">
-                     <widget class="QLabel" name="label_43">
-                      <property name="minimumSize">
-                       <size>
-                        <width>50</width>
-                        <height>0</height>
-                       </size>
-                      </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>16777215</width>
-                        <height>16777215</height>
-                       </size>
-                      </property>
-                      <property name="text">
-                       <string>终点Y坐标:</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="5">
-                     <widget class="QLineEdit" name="lineEdit_endCoordY">
-                      <property name="maximumSize">
-                       <size>
-                        <width>60</width>
-                        <height>16777215</height>
-                       </size>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="8" colspan="2">
-                     <spacer name="horizontalSpacer_20">
-                      <property name="orientation">
-                       <enum>Qt::Horizontal</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>40</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                     </spacer>
+                    <item>
+                     <layout class="QHBoxLayout" name="horizontalLayout_27">
+                      <item>
+                       <widget class="QLabel" name="label_40">
+                        <property name="minimumSize">
+                         <size>
+                          <width>60</width>
+                          <height>0</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>16777215</width>
+                          <height>16777215</height>
+                         </size>
+                        </property>
+                        <property name="text">
+                         <string>起点Y坐标:</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QSpinBox" name="spinBox_beginCoordY">
+                        <property name="minimumSize">
+                         <size>
+                          <width>60</width>
+                          <height>0</height>
+                         </size>
+                        </property>
+                        <property name="minimum">
+                         <number>-200000</number>
+                        </property>
+                        <property name="maximum">
+                         <number>200000</number>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLabel" name="label_43">
+                        <property name="minimumSize">
+                         <size>
+                          <width>50</width>
+                          <height>0</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>16777215</width>
+                          <height>16777215</height>
+                         </size>
+                        </property>
+                        <property name="text">
+                         <string>终点Y坐标:</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QSpinBox" name="spinBox_endCoordY">
+                        <property name="minimumSize">
+                         <size>
+                          <width>60</width>
+                          <height>0</height>
+                         </size>
+                        </property>
+                        <property name="minimum">
+                         <number>-200000</number>
+                        </property>
+                        <property name="maximum">
+                         <number>200000</number>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <spacer name="horizontalSpacer_20">
+                        <property name="orientation">
+                         <enum>Qt::Horizontal</enum>
+                        </property>
+                        <property name="sizeHint" stdset="0">
+                         <size>
+                          <width>40</width>
+                          <height>20</height>
+                         </size>
+                        </property>
+                       </spacer>
+                      </item>
+                     </layout>
                     </item>
                    </layout>
                   </widget>
@@ -3326,7 +3422,10 @@
              <property name="title">
               <string>焦距</string>
              </property>
-             <layout class="QGridLayout" name="gridLayout_13">
+             <layout class="QHBoxLayout" name="horizontalLayout_28">
+              <property name="spacing">
+               <number>3</number>
+              </property>
               <property name="leftMargin">
                <number>3</number>
               </property>
@@ -3339,10 +3438,26 @@
               <property name="bottomMargin">
                <number>3</number>
               </property>
-              <property name="spacing">
-               <number>3</number>
-              </property>
-              <item row="1" column="1">
+              <item>
+               <widget class="QLabel" name="label_37">
+                <property name="minimumSize">
+                 <size>
+                  <width>50</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>焦距:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
                <widget class="QSpinBox" name="spinBox_focalDist">
                 <property name="minimumSize">
                  <size>
@@ -3364,7 +3479,14 @@
                 </property>
                </widget>
               </item>
-              <item row="1" column="3">
+              <item>
+               <widget class="QLabel" name="label_39">
+                <property name="text">
+                 <string>电机位置:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
                <widget class="QSpinBox" name="spinBox_focalMotorPos_2">
                 <property name="minimumSize">
                  <size>
@@ -3386,26 +3508,7 @@
                 </property>
                </widget>
               </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_37">
-                <property name="minimumSize">
-                 <size>
-                  <width>50</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>50</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>焦距:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="4">
+              <item>
                <spacer name="horizontalSpacer_39">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
@@ -3418,7 +3521,20 @@
                 </property>
                </spacer>
               </item>
-              <item row="1" column="5">
+              <item>
+               <widget class="QCheckBox" name="checkBox_spotFocalSync">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="text">
+                 <string>同步本地数据</string>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
                <widget class="QPushButton" name="pushButton_focalTest">
                 <property name="maximumSize">
                  <size>
@@ -3428,13 +3544,6 @@
                 </property>
                 <property name="text">
                  <string>测试</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="2">
-               <widget class="QLabel" name="label_39">
-                <property name="text">
-                 <string>电机位置:</string>
                 </property>
                </widget>
               </item>
@@ -3822,12 +3931,17 @@
                <widget class="QComboBox" name="comboBox_testFucntion">
                 <item>
                  <property name="text">
-                  <string>静态投射测试</string>
+                  <string>设置颜色和光斑</string>
                  </property>
                 </item>
                 <item>
                  <property name="text">
-                  <string>移动投射测试</string>
+                  <string>静态投射</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>移动投射</string>
                  </property>
                 </item>
                </widget>

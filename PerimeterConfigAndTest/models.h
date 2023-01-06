@@ -2,6 +2,13 @@
 #define MODELS_H
 #include <QSharedPointer>
 
+struct Status
+{
+   int currentColorSlot;
+   int currentLightSpotPos;
+   int currentDB;
+};
+
 struct CoordSpacePosInfo
 {
     float coordX,coordY;
@@ -23,7 +30,7 @@ struct SingleTableData
     SingleTableData(int row,int column,int* data):m_row(row),m_column(column),m_data(data){};
     ~SingleTableData()=default;
 
-    int operator()(int row,int column){return m_data[row*m_column+column];}
+    int& operator()(int row,int column){return m_data[row*m_column+column];}
 
     int m_row;
     int m_column;

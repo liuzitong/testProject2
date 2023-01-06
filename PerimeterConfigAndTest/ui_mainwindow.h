@@ -303,42 +303,46 @@ public:
     QHBoxLayout *horizontalLayout_7;
     QGroupBox *groupBox_staticCastPos;
     QVBoxLayout *verticalLayout_12;
-    QHBoxLayout *horizontalLayout_15;
+    QHBoxLayout *horizontalLayout_17;
     QLabel *label_22;
-    QLineEdit *lineEdit_coordX;
+    QSpinBox *spinBox_coordX;
     QLabel *label_72;
     QSpinBox *spinBox_XMotorPos_2;
-    QCheckBox *checkBox_calcFocalDist;
     QSpacerItem *horizontalSpacer_5;
-    QHBoxLayout *horizontalLayout_17;
+    QCheckBox *checkBox_calcFocalDist;
+    QHBoxLayout *horizontalLayout_15;
     QLabel *label_23;
-    QLineEdit *lineEdit_coordY;
+    QSpinBox *spinBox_coordY;
     QLabel *label_73;
     QSpinBox *spinBox_YMotorPos_2;
     QSpacerItem *horizontalSpacer_19;
+    QPushButton *reCalcXYFocalMotorPos;
     QPushButton *pushButton_staticCastTest;
     QWidget *page_2;
     QHBoxLayout *horizontalLayout_5;
     QGroupBox *groupBox_moveCastPos;
-    QGridLayout *gridLayout_3;
+    QVBoxLayout *verticalLayout_18;
+    QHBoxLayout *horizontalLayout_26;
     QLabel *label_41;
-    QSpacerItem *horizontalSpacer_44;
+    QSpinBox *spinBox_beginCoordX;
     QLabel *label_42;
-    QLineEdit *lineEdit_endCoordX;
-    QLineEdit *lineEdit_beginCoordX;
+    QSpinBox *spinBox_endCoordX;
+    QSpacerItem *horizontalSpacer_44;
+    QHBoxLayout *horizontalLayout_27;
     QLabel *label_40;
-    QLineEdit *lineEdit_beginCoordY;
+    QSpinBox *spinBox_beginCoordY;
     QLabel *label_43;
-    QLineEdit *lineEdit_endCoordY;
+    QSpinBox *spinBox_endCoordY;
     QSpacerItem *horizontalSpacer_20;
     QGroupBox *groupBox_focalTest;
-    QGridLayout *gridLayout_13;
-    QSpinBox *spinBox_focalDist;
-    QSpinBox *spinBox_focalMotorPos_2;
+    QHBoxLayout *horizontalLayout_28;
     QLabel *label_37;
-    QSpacerItem *horizontalSpacer_39;
-    QPushButton *pushButton_focalTest;
+    QSpinBox *spinBox_focalDist;
     QLabel *label_39;
+    QSpinBox *spinBox_focalMotorPos_2;
+    QSpacerItem *horizontalSpacer_39;
+    QCheckBox *checkBox_spotFocalSync;
+    QPushButton *pushButton_focalTest;
     QGroupBox *groupBox_8;
     QHBoxLayout *horizontalLayout_4;
     QLabel *label_26;
@@ -835,15 +839,17 @@ public:
 
         spinBox_hosChinMotorSpeed = new QSpinBox(groupBox_3);
         spinBox_hosChinMotorSpeed->setObjectName(QStringLiteral("spinBox_hosChinMotorSpeed"));
-        spinBox_hosChinMotorSpeed->setMinimum(1);
+        spinBox_hosChinMotorSpeed->setMinimum(0);
         spinBox_hosChinMotorSpeed->setMaximum(7);
+        spinBox_hosChinMotorSpeed->setValue(1);
 
         gridLayout_4->addWidget(spinBox_hosChinMotorSpeed, 1, 3, 1, 1);
 
         spinBox_vertChinMotorSpeed = new QSpinBox(groupBox_3);
         spinBox_vertChinMotorSpeed->setObjectName(QStringLiteral("spinBox_vertChinMotorSpeed"));
-        spinBox_vertChinMotorSpeed->setMinimum(1);
+        spinBox_vertChinMotorSpeed->setMinimum(0);
         spinBox_vertChinMotorSpeed->setMaximum(7);
+        spinBox_vertChinMotorSpeed->setValue(1);
 
         gridLayout_4->addWidget(spinBox_vertChinMotorSpeed, 3, 3, 1, 1);
 
@@ -1020,36 +1026,41 @@ public:
 
         spinBox_XMotorSpeed = new QSpinBox(groupBox_2);
         spinBox_XMotorSpeed->setObjectName(QStringLiteral("spinBox_XMotorSpeed"));
-        spinBox_XMotorSpeed->setMinimum(1);
+        spinBox_XMotorSpeed->setMinimum(0);
         spinBox_XMotorSpeed->setMaximum(7);
+        spinBox_XMotorSpeed->setValue(1);
 
         gridLayout_5->addWidget(spinBox_XMotorSpeed, 0, 3, 1, 1);
 
         spinBox_YMotorSpeed = new QSpinBox(groupBox_2);
         spinBox_YMotorSpeed->setObjectName(QStringLiteral("spinBox_YMotorSpeed"));
-        spinBox_YMotorSpeed->setMinimum(1);
+        spinBox_YMotorSpeed->setMinimum(0);
         spinBox_YMotorSpeed->setMaximum(7);
+        spinBox_YMotorSpeed->setValue(1);
 
         gridLayout_5->addWidget(spinBox_YMotorSpeed, 1, 3, 1, 1);
 
         spinBox_focalMotorSpeed = new QSpinBox(groupBox_2);
         spinBox_focalMotorSpeed->setObjectName(QStringLiteral("spinBox_focalMotorSpeed"));
-        spinBox_focalMotorSpeed->setMinimum(1);
+        spinBox_focalMotorSpeed->setMinimum(0);
         spinBox_focalMotorSpeed->setMaximum(7);
+        spinBox_focalMotorSpeed->setValue(1);
 
         gridLayout_5->addWidget(spinBox_focalMotorSpeed, 2, 3, 1, 1);
 
         spinBox_colorMotorSpeed = new QSpinBox(groupBox_2);
         spinBox_colorMotorSpeed->setObjectName(QStringLiteral("spinBox_colorMotorSpeed"));
-        spinBox_colorMotorSpeed->setMinimum(1);
+        spinBox_colorMotorSpeed->setMinimum(0);
         spinBox_colorMotorSpeed->setMaximum(7);
+        spinBox_colorMotorSpeed->setValue(1);
 
         gridLayout_5->addWidget(spinBox_colorMotorSpeed, 3, 3, 1, 1);
 
         spinBox_spotMotorSpeed = new QSpinBox(groupBox_2);
         spinBox_spotMotorSpeed->setObjectName(QStringLiteral("spinBox_spotMotorSpeed"));
-        spinBox_spotMotorSpeed->setMinimum(1);
+        spinBox_spotMotorSpeed->setMinimum(0);
         spinBox_spotMotorSpeed->setMaximum(7);
+        spinBox_spotMotorSpeed->setValue(1);
 
         gridLayout_5->addWidget(spinBox_spotMotorSpeed, 4, 3, 1, 1);
 
@@ -1975,26 +1986,29 @@ public:
         verticalLayout_12->setContentsMargins(11, 11, 11, 11);
         verticalLayout_12->setObjectName(QStringLiteral("verticalLayout_12"));
         verticalLayout_12->setContentsMargins(3, 3, 3, 3);
-        horizontalLayout_15 = new QHBoxLayout();
-        horizontalLayout_15->setSpacing(6);
-        horizontalLayout_15->setObjectName(QStringLiteral("horizontalLayout_15"));
+        horizontalLayout_17 = new QHBoxLayout();
+        horizontalLayout_17->setSpacing(3);
+        horizontalLayout_17->setObjectName(QStringLiteral("horizontalLayout_17"));
         label_22 = new QLabel(groupBox_staticCastPos);
         label_22->setObjectName(QStringLiteral("label_22"));
         label_22->setMinimumSize(QSize(40, 0));
         label_22->setMaximumSize(QSize(40, 16777215));
 
-        horizontalLayout_15->addWidget(label_22);
+        horizontalLayout_17->addWidget(label_22);
 
-        lineEdit_coordX = new QLineEdit(groupBox_staticCastPos);
-        lineEdit_coordX->setObjectName(QStringLiteral("lineEdit_coordX"));
-        lineEdit_coordX->setMaximumSize(QSize(60, 16777215));
+        spinBox_coordX = new QSpinBox(groupBox_staticCastPos);
+        spinBox_coordX->setObjectName(QStringLiteral("spinBox_coordX"));
+        spinBox_coordX->setMinimumSize(QSize(60, 0));
+        spinBox_coordX->setMaximumSize(QSize(60, 16777215));
+        spinBox_coordX->setMinimum(-84);
+        spinBox_coordX->setMaximum(84);
 
-        horizontalLayout_15->addWidget(lineEdit_coordX);
+        horizontalLayout_17->addWidget(spinBox_coordX);
 
         label_72 = new QLabel(groupBox_staticCastPos);
         label_72->setObjectName(QStringLiteral("label_72"));
 
-        horizontalLayout_15->addWidget(label_72);
+        horizontalLayout_17->addWidget(label_72);
 
         spinBox_XMotorPos_2 = new QSpinBox(groupBox_staticCastPos);
         spinBox_XMotorPos_2->setObjectName(QStringLiteral("spinBox_XMotorPos_2"));
@@ -2003,41 +2017,44 @@ public:
         spinBox_XMotorPos_2->setMinimum(-200000);
         spinBox_XMotorPos_2->setMaximum(200000);
 
-        horizontalLayout_15->addWidget(spinBox_XMotorPos_2);
+        horizontalLayout_17->addWidget(spinBox_XMotorPos_2);
+
+        horizontalSpacer_5 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_17->addItem(horizontalSpacer_5);
 
         checkBox_calcFocalDist = new QCheckBox(groupBox_staticCastPos);
         checkBox_calcFocalDist->setObjectName(QStringLiteral("checkBox_calcFocalDist"));
         checkBox_calcFocalDist->setChecked(true);
 
-        horizontalLayout_15->addWidget(checkBox_calcFocalDist);
-
-        horizontalSpacer_5 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        horizontalLayout_15->addItem(horizontalSpacer_5);
+        horizontalLayout_17->addWidget(checkBox_calcFocalDist);
 
 
-        verticalLayout_12->addLayout(horizontalLayout_15);
+        verticalLayout_12->addLayout(horizontalLayout_17);
 
-        horizontalLayout_17 = new QHBoxLayout();
-        horizontalLayout_17->setSpacing(6);
-        horizontalLayout_17->setObjectName(QStringLiteral("horizontalLayout_17"));
+        horizontalLayout_15 = new QHBoxLayout();
+        horizontalLayout_15->setSpacing(3);
+        horizontalLayout_15->setObjectName(QStringLiteral("horizontalLayout_15"));
         label_23 = new QLabel(groupBox_staticCastPos);
         label_23->setObjectName(QStringLiteral("label_23"));
         label_23->setMinimumSize(QSize(40, 0));
         label_23->setMaximumSize(QSize(40, 16777215));
 
-        horizontalLayout_17->addWidget(label_23);
+        horizontalLayout_15->addWidget(label_23);
 
-        lineEdit_coordY = new QLineEdit(groupBox_staticCastPos);
-        lineEdit_coordY->setObjectName(QStringLiteral("lineEdit_coordY"));
-        lineEdit_coordY->setMaximumSize(QSize(60, 16777215));
+        spinBox_coordY = new QSpinBox(groupBox_staticCastPos);
+        spinBox_coordY->setObjectName(QStringLiteral("spinBox_coordY"));
+        spinBox_coordY->setMinimumSize(QSize(60, 0));
+        spinBox_coordY->setMaximumSize(QSize(60, 16777215));
+        spinBox_coordY->setMinimum(-84);
+        spinBox_coordY->setMaximum(84);
 
-        horizontalLayout_17->addWidget(lineEdit_coordY);
+        horizontalLayout_15->addWidget(spinBox_coordY);
 
         label_73 = new QLabel(groupBox_staticCastPos);
         label_73->setObjectName(QStringLiteral("label_73"));
 
-        horizontalLayout_17->addWidget(label_73);
+        horizontalLayout_15->addWidget(label_73);
 
         spinBox_YMotorPos_2 = new QSpinBox(groupBox_staticCastPos);
         spinBox_YMotorPos_2->setObjectName(QStringLiteral("spinBox_YMotorPos_2"));
@@ -2046,20 +2063,26 @@ public:
         spinBox_YMotorPos_2->setMinimum(-200000);
         spinBox_YMotorPos_2->setMaximum(200000);
 
-        horizontalLayout_17->addWidget(spinBox_YMotorPos_2);
+        horizontalLayout_15->addWidget(spinBox_YMotorPos_2);
 
         horizontalSpacer_19 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        horizontalLayout_17->addItem(horizontalSpacer_19);
+        horizontalLayout_15->addItem(horizontalSpacer_19);
+
+        reCalcXYFocalMotorPos = new QPushButton(groupBox_staticCastPos);
+        reCalcXYFocalMotorPos->setObjectName(QStringLiteral("reCalcXYFocalMotorPos"));
+        reCalcXYFocalMotorPos->setMaximumSize(QSize(40, 16777215));
+
+        horizontalLayout_15->addWidget(reCalcXYFocalMotorPos);
 
         pushButton_staticCastTest = new QPushButton(groupBox_staticCastPos);
         pushButton_staticCastTest->setObjectName(QStringLiteral("pushButton_staticCastTest"));
         pushButton_staticCastTest->setMaximumSize(QSize(40, 16777215));
 
-        horizontalLayout_17->addWidget(pushButton_staticCastTest);
+        horizontalLayout_15->addWidget(pushButton_staticCastTest);
 
 
-        verticalLayout_12->addLayout(horizontalLayout_17);
+        verticalLayout_12->addLayout(horizontalLayout_15);
 
 
         horizontalLayout_7->addWidget(groupBox_staticCastPos);
@@ -2076,70 +2099,90 @@ public:
         groupBox_moveCastPos->setObjectName(QStringLiteral("groupBox_moveCastPos"));
         groupBox_moveCastPos->setEnabled(true);
         groupBox_moveCastPos->setMaximumSize(QSize(16777215, 16777215));
-        gridLayout_3 = new QGridLayout(groupBox_moveCastPos);
-        gridLayout_3->setSpacing(3);
-        gridLayout_3->setContentsMargins(11, 11, 11, 11);
-        gridLayout_3->setObjectName(QStringLiteral("gridLayout_3"));
-        gridLayout_3->setContentsMargins(3, 3, 3, 3);
+        verticalLayout_18 = new QVBoxLayout(groupBox_moveCastPos);
+        verticalLayout_18->setSpacing(3);
+        verticalLayout_18->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_18->setObjectName(QStringLiteral("verticalLayout_18"));
+        verticalLayout_18->setContentsMargins(3, 3, 3, 3);
+        horizontalLayout_26 = new QHBoxLayout();
+        horizontalLayout_26->setSpacing(6);
+        horizontalLayout_26->setObjectName(QStringLiteral("horizontalLayout_26"));
         label_41 = new QLabel(groupBox_moveCastPos);
         label_41->setObjectName(QStringLiteral("label_41"));
-        label_41->setMinimumSize(QSize(50, 0));
+        label_41->setMinimumSize(QSize(60, 0));
         label_41->setMaximumSize(QSize(16777215, 16777215));
 
-        gridLayout_3->addWidget(label_41, 0, 0, 1, 1);
+        horizontalLayout_26->addWidget(label_41);
 
-        horizontalSpacer_44 = new QSpacerItem(129, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        spinBox_beginCoordX = new QSpinBox(groupBox_moveCastPos);
+        spinBox_beginCoordX->setObjectName(QStringLiteral("spinBox_beginCoordX"));
+        spinBox_beginCoordX->setMinimumSize(QSize(60, 0));
+        spinBox_beginCoordX->setMinimum(-200000);
+        spinBox_beginCoordX->setMaximum(200000);
 
-        gridLayout_3->addItem(horizontalSpacer_44, 0, 8, 1, 2);
+        horizontalLayout_26->addWidget(spinBox_beginCoordX);
 
         label_42 = new QLabel(groupBox_moveCastPos);
         label_42->setObjectName(QStringLiteral("label_42"));
-        label_42->setMinimumSize(QSize(50, 0));
+        label_42->setMinimumSize(QSize(60, 0));
         label_42->setMaximumSize(QSize(16777215, 16777215));
 
-        gridLayout_3->addWidget(label_42, 0, 4, 1, 1);
+        horizontalLayout_26->addWidget(label_42);
 
-        lineEdit_endCoordX = new QLineEdit(groupBox_moveCastPos);
-        lineEdit_endCoordX->setObjectName(QStringLiteral("lineEdit_endCoordX"));
-        lineEdit_endCoordX->setMaximumSize(QSize(60, 16777215));
+        spinBox_endCoordX = new QSpinBox(groupBox_moveCastPos);
+        spinBox_endCoordX->setObjectName(QStringLiteral("spinBox_endCoordX"));
+        spinBox_endCoordX->setMinimumSize(QSize(60, 0));
+        spinBox_endCoordX->setMinimum(-200000);
+        spinBox_endCoordX->setMaximum(200000);
 
-        gridLayout_3->addWidget(lineEdit_endCoordX, 0, 5, 1, 1);
+        horizontalLayout_26->addWidget(spinBox_endCoordX);
 
-        lineEdit_beginCoordX = new QLineEdit(groupBox_moveCastPos);
-        lineEdit_beginCoordX->setObjectName(QStringLiteral("lineEdit_beginCoordX"));
-        lineEdit_beginCoordX->setMaximumSize(QSize(60, 16777215));
+        horizontalSpacer_44 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        gridLayout_3->addWidget(lineEdit_beginCoordX, 0, 1, 1, 1);
+        horizontalLayout_26->addItem(horizontalSpacer_44);
 
+
+        verticalLayout_18->addLayout(horizontalLayout_26);
+
+        horizontalLayout_27 = new QHBoxLayout();
+        horizontalLayout_27->setSpacing(6);
+        horizontalLayout_27->setObjectName(QStringLiteral("horizontalLayout_27"));
         label_40 = new QLabel(groupBox_moveCastPos);
         label_40->setObjectName(QStringLiteral("label_40"));
-        label_40->setMinimumSize(QSize(50, 0));
+        label_40->setMinimumSize(QSize(60, 0));
         label_40->setMaximumSize(QSize(16777215, 16777215));
 
-        gridLayout_3->addWidget(label_40, 1, 0, 1, 1);
+        horizontalLayout_27->addWidget(label_40);
 
-        lineEdit_beginCoordY = new QLineEdit(groupBox_moveCastPos);
-        lineEdit_beginCoordY->setObjectName(QStringLiteral("lineEdit_beginCoordY"));
-        lineEdit_beginCoordY->setMaximumSize(QSize(60, 16777215));
+        spinBox_beginCoordY = new QSpinBox(groupBox_moveCastPos);
+        spinBox_beginCoordY->setObjectName(QStringLiteral("spinBox_beginCoordY"));
+        spinBox_beginCoordY->setMinimumSize(QSize(60, 0));
+        spinBox_beginCoordY->setMinimum(-200000);
+        spinBox_beginCoordY->setMaximum(200000);
 
-        gridLayout_3->addWidget(lineEdit_beginCoordY, 1, 1, 1, 1);
+        horizontalLayout_27->addWidget(spinBox_beginCoordY);
 
         label_43 = new QLabel(groupBox_moveCastPos);
         label_43->setObjectName(QStringLiteral("label_43"));
         label_43->setMinimumSize(QSize(50, 0));
         label_43->setMaximumSize(QSize(16777215, 16777215));
 
-        gridLayout_3->addWidget(label_43, 1, 4, 1, 1);
+        horizontalLayout_27->addWidget(label_43);
 
-        lineEdit_endCoordY = new QLineEdit(groupBox_moveCastPos);
-        lineEdit_endCoordY->setObjectName(QStringLiteral("lineEdit_endCoordY"));
-        lineEdit_endCoordY->setMaximumSize(QSize(60, 16777215));
+        spinBox_endCoordY = new QSpinBox(groupBox_moveCastPos);
+        spinBox_endCoordY->setObjectName(QStringLiteral("spinBox_endCoordY"));
+        spinBox_endCoordY->setMinimumSize(QSize(60, 0));
+        spinBox_endCoordY->setMinimum(-200000);
+        spinBox_endCoordY->setMaximum(200000);
 
-        gridLayout_3->addWidget(lineEdit_endCoordY, 1, 5, 1, 1);
+        horizontalLayout_27->addWidget(spinBox_endCoordY);
 
         horizontalSpacer_20 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        gridLayout_3->addItem(horizontalSpacer_20, 1, 8, 1, 2);
+        horizontalLayout_27->addItem(horizontalSpacer_20);
+
+
+        verticalLayout_18->addLayout(horizontalLayout_27);
 
 
         horizontalLayout_5->addWidget(groupBox_moveCastPos);
@@ -2159,11 +2202,18 @@ public:
         sizePolicy7.setHeightForWidth(groupBox_focalTest->sizePolicy().hasHeightForWidth());
         groupBox_focalTest->setSizePolicy(sizePolicy7);
         groupBox_focalTest->setMinimumSize(QSize(0, 0));
-        gridLayout_13 = new QGridLayout(groupBox_focalTest);
-        gridLayout_13->setSpacing(3);
-        gridLayout_13->setContentsMargins(11, 11, 11, 11);
-        gridLayout_13->setObjectName(QStringLiteral("gridLayout_13"));
-        gridLayout_13->setContentsMargins(3, 3, 3, 3);
+        horizontalLayout_28 = new QHBoxLayout(groupBox_focalTest);
+        horizontalLayout_28->setSpacing(3);
+        horizontalLayout_28->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_28->setObjectName(QStringLiteral("horizontalLayout_28"));
+        horizontalLayout_28->setContentsMargins(3, 3, 3, 3);
+        label_37 = new QLabel(groupBox_focalTest);
+        label_37->setObjectName(QStringLiteral("label_37"));
+        label_37->setMinimumSize(QSize(50, 0));
+        label_37->setMaximumSize(QSize(50, 16777215));
+
+        horizontalLayout_28->addWidget(label_37);
+
         spinBox_focalDist = new QSpinBox(groupBox_focalTest);
         spinBox_focalDist->setObjectName(QStringLiteral("spinBox_focalDist"));
         spinBox_focalDist->setMinimumSize(QSize(60, 0));
@@ -2171,7 +2221,12 @@ public:
         spinBox_focalDist->setMinimum(-200000);
         spinBox_focalDist->setMaximum(200000);
 
-        gridLayout_13->addWidget(spinBox_focalDist, 1, 1, 1, 1);
+        horizontalLayout_28->addWidget(spinBox_focalDist);
+
+        label_39 = new QLabel(groupBox_focalTest);
+        label_39->setObjectName(QStringLiteral("label_39"));
+
+        horizontalLayout_28->addWidget(label_39);
 
         spinBox_focalMotorPos_2 = new QSpinBox(groupBox_focalTest);
         spinBox_focalMotorPos_2->setObjectName(QStringLiteral("spinBox_focalMotorPos_2"));
@@ -2180,29 +2235,24 @@ public:
         spinBox_focalMotorPos_2->setMinimum(-200000);
         spinBox_focalMotorPos_2->setMaximum(200000);
 
-        gridLayout_13->addWidget(spinBox_focalMotorPos_2, 1, 3, 1, 1);
-
-        label_37 = new QLabel(groupBox_focalTest);
-        label_37->setObjectName(QStringLiteral("label_37"));
-        label_37->setMinimumSize(QSize(50, 0));
-        label_37->setMaximumSize(QSize(50, 16777215));
-
-        gridLayout_13->addWidget(label_37, 1, 0, 1, 1);
+        horizontalLayout_28->addWidget(spinBox_focalMotorPos_2);
 
         horizontalSpacer_39 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        gridLayout_13->addItem(horizontalSpacer_39, 1, 4, 1, 1);
+        horizontalLayout_28->addItem(horizontalSpacer_39);
+
+        checkBox_spotFocalSync = new QCheckBox(groupBox_focalTest);
+        checkBox_spotFocalSync->setObjectName(QStringLiteral("checkBox_spotFocalSync"));
+        checkBox_spotFocalSync->setEnabled(true);
+        checkBox_spotFocalSync->setChecked(false);
+
+        horizontalLayout_28->addWidget(checkBox_spotFocalSync);
 
         pushButton_focalTest = new QPushButton(groupBox_focalTest);
         pushButton_focalTest->setObjectName(QStringLiteral("pushButton_focalTest"));
         pushButton_focalTest->setMaximumSize(QSize(40, 16777215));
 
-        gridLayout_13->addWidget(pushButton_focalTest, 1, 5, 1, 1);
-
-        label_39 = new QLabel(groupBox_focalTest);
-        label_39->setObjectName(QStringLiteral("label_39"));
-
-        gridLayout_13->addWidget(label_39, 1, 2, 1, 1);
+        horizontalLayout_28->addWidget(pushButton_focalTest);
 
 
         verticalLayout_9->addWidget(groupBox_focalTest);
@@ -3553,6 +3603,7 @@ public:
         checkBox_calcFocalDist->setText(QApplication::translate("MainWindow", "\347\256\227\345\207\272\347\204\246\350\267\235", Q_NULLPTR));
         label_23->setText(QApplication::translate("MainWindow", "Y\345\235\220\346\240\207:", Q_NULLPTR));
         label_73->setText(QApplication::translate("MainWindow", "\347\224\265\346\234\272\344\275\215\347\275\256:", Q_NULLPTR));
+        reCalcXYFocalMotorPos->setText(QApplication::translate("MainWindow", "\345\210\267\346\226\260", Q_NULLPTR));
         pushButton_staticCastTest->setText(QApplication::translate("MainWindow", "\346\265\213\350\257\225", Q_NULLPTR));
         groupBox_moveCastPos->setTitle(QApplication::translate("MainWindow", "\347\247\273\345\212\250\346\212\225\345\260\204\344\275\215\347\275\256", Q_NULLPTR));
         label_41->setText(QApplication::translate("MainWindow", "\350\265\267\347\202\271X\345\235\220\346\240\207:", Q_NULLPTR));
@@ -3561,8 +3612,9 @@ public:
         label_43->setText(QApplication::translate("MainWindow", "\347\273\210\347\202\271Y\345\235\220\346\240\207:", Q_NULLPTR));
         groupBox_focalTest->setTitle(QApplication::translate("MainWindow", "\347\204\246\350\267\235", Q_NULLPTR));
         label_37->setText(QApplication::translate("MainWindow", "\347\204\246\350\267\235:", Q_NULLPTR));
-        pushButton_focalTest->setText(QApplication::translate("MainWindow", "\346\265\213\350\257\225", Q_NULLPTR));
         label_39->setText(QApplication::translate("MainWindow", "\347\224\265\346\234\272\344\275\215\347\275\256:", Q_NULLPTR));
+        checkBox_spotFocalSync->setText(QApplication::translate("MainWindow", "\345\220\214\346\255\245\346\234\254\345\234\260\346\225\260\346\215\256", Q_NULLPTR));
+        pushButton_focalTest->setText(QApplication::translate("MainWindow", "\346\265\213\350\257\225", Q_NULLPTR));
         groupBox_8->setTitle(QApplication::translate("MainWindow", "\345\277\253\351\227\250", Q_NULLPTR));
         label_26->setText(QApplication::translate("MainWindow", "\346\211\223\345\274\200\346\227\266\351\227\264:", Q_NULLPTR));
         label_27->setText(QApplication::translate("MainWindow", "\347\224\265\346\234\272\344\275\215\347\275\256:", Q_NULLPTR));
@@ -3578,8 +3630,9 @@ public:
         label_45->setText(QApplication::translate("MainWindow", "\346\265\213\350\257\225\351\241\271\347\233\256:", Q_NULLPTR));
         comboBox_testFucntion->clear();
         comboBox_testFucntion->insertItems(0, QStringList()
-         << QApplication::translate("MainWindow", "\351\235\231\346\200\201\346\212\225\345\260\204\346\265\213\350\257\225", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "\347\247\273\345\212\250\346\212\225\345\260\204\346\265\213\350\257\225", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "\350\256\276\347\275\256\351\242\234\350\211\262\345\222\214\345\205\211\346\226\221", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "\351\235\231\346\200\201\346\212\225\345\260\204", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "\347\247\273\345\212\250\346\212\225\345\260\204", Q_NULLPTR)
         );
         pushButton_testStart->setText(QApplication::translate("MainWindow", "\345\274\200\345\247\213\346\265\213\350\257\225", Q_NULLPTR));
         pushButton_readCache->setText(QApplication::translate("MainWindow", "\350\257\273\345\217\226\347\274\223\345\255\230", Q_NULLPTR));

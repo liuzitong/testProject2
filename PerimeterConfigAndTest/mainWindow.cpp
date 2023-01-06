@@ -241,14 +241,15 @@ void MainWindow::initWidget()
     on_spinBox_colorSlot_valueChanged(ui->spinBox_colorSlot->value());
     on_spinBox_spotSlot_valueChanged(ui->spinBox_spotSlot->value());
     on_spinBox_DbSetting_valueChanged(0);
+    fillXYMotorAndFocalInfoByXYCoord();
 }
 
 int MainWindow::interpolation(int value[], QPointF loc)
 {
     double secondVal[2];
-    secondVal[0]=value[0]+(value[1]-value[0])*(loc.y()/6.0);
-    secondVal[1]=value[2]+(value[3]-value[2])*(loc.y()/6.0);
-    int ret=secondVal[0]+(secondVal[1]-secondVal[0])*(loc.x()/6.0);
+    secondVal[0]=value[0]+(value[1]-value[0])*(loc.x()/6.0);
+    secondVal[1]=value[2]+(value[3]-value[2])*(loc.x()/6.0);
+    int ret=secondVal[0]+(secondVal[1]-secondVal[0])*(loc.y()/6.0);
     return ret;
 }
 
@@ -350,6 +351,33 @@ void MainWindow::refreshConfigDataByUI()
     m_config.xMotorPosForLightCorrectionRef()=ui->lineEdit_lightCorrectionX->text().toInt(&ok);
     m_config.yMotorPosForLightCorrectionRef()=ui->lineEdit_lightCorrectionY->text().toInt(&ok);
 
+}
+
+
+
+void MainWindow::waitMotorStop(QVector<UsbDev::DevCtl::MotorId> motorIDs)
+{
+
+    auto getBusy=[&]()->bool
+    {
+        for(auto& motorId:motorIDs)
+        {
+            if(m_statusData.isMotorBusy(motorId))
+            {
+                qDebug()<<" motor "<<motorId<<" is busy";
+                return true;
+            }
+        }
+        qDebug()<<"no motor busy";
+        return false;
+    };
+    QElapsedTimer mstimer;
+    mstimer.restart();//必须先等一会儿刷新状态
+    do
+    {
+        QCoreApplication::processEvents();
+    }while(getBusy()||(mstimer.nsecsElapsed()/1000000<500)); //500ms
+//    while(getBusy()){QCoreApplication::processEvents();}
 }
 
 
@@ -588,40 +616,89 @@ void MainWindow::on_pushButton_light3_clicked()
 
 void MainWindow::on_pushButton_testStart_clicked()
 {
-    int sps[5];
+    using MotorId=UsbDev::DevCtl::MotorId;
+    quint8 sps[5];
+    int spotSlot=ui->spinBox_spotSlot->value();
+    int colorSlot=ui->spinBox_colorSlot->value();
     sps[0]=ui->spinBox_XMotorSpeed_2->value();
-    sps[0]=ui->spinBox_YMotorSpeed_2->value();
-    sps[0]=ui->spinBox_focalMotorSpeed_2->value();
-    sps[0]=ui->spinBox_colorMotorSpeed_2->value();
-    sps[0]=ui->spinBox_spotMotorSpeed_2->value();
+    sps[1]=ui->spinBox_YMotorSpeed_2->value();
+    sps[2]=ui->spinBox_focalMotorSpeed_2->value();
+    sps[3]=ui->spinBox_colorMotorSpeed_2->value();
+    sps[4]=ui->spinBox_spotMotorSpeed_2->value();
     switch (ui->comboBox_testFucntion->currentIndex())
     {
         case 0:
         {
-            quint8 db=ui->spinBox_DbSetting->value();
-            quint16 durationTime=ui->spinBox_shutterOpenDuration->text().toInt();
-            quint32 shutterPos=ui->spinBox_shutterOpenPos->text().toInt();
-            int spotSlot=ui->spinBox_spotSlot->value();
-            int colorSlot=ui->spinBox_colorSlot->value();
-            float coordX=ui->lineEdit_coordX->text().toFloat();
-            float coordY=ui->lineEdit_coordY->text().toFloat();
+            m_devCtl->resetMotor(UsbDev::DevCtl::MotorId_Color,sps[3]);
+            m_devCtl->resetMotor(UsbDev::DevCtl::MotorId_Light_Spot,sps[4]);
+            waitMotorStop({UsbDev::DevCtl::MotorId_Color,UsbDev::DevCtl::MotorId_Light_Spot});
+            if(m_status.currentColorSlot!=colorSlot||m_status.currentLightSpotPos!=spotSlot)              //变换到改变光斑颜色位置
+            {
+                int  color_Circl_Motor_Steps=m_profile.motorRange(UsbDev::DevCtl::MotorId_Color).second-m_profile.motorRange(UsbDev::DevCtl::MotorId_Color).first;
+                int  spot_Circl_Motor_Steps=m_profile.motorRange(UsbDev::DevCtl::MotorId_Light_Spot).second-m_profile.motorRange(UsbDev::DevCtl::MotorId_Light_Spot).first;
 
-//            if(ui->checkBox_useConfigPos->isChecked())
-//            {ui->spinBox_shutterOpenPos->setValue(m_config.shutterOpenPosRef());}
-            CoordSpacePosInfo coordSpacePosInfo{coordX,coordY};
-            CoordMotorPosFocalDistInfo coordMotorPosFocalDistInfo;
-            if(!getXYMotorPosAndFocalDistFromCoord(coordSpacePosInfo,coordMotorPosFocalDistInfo)) return;
-            coordMotorPosFocalDistInfo.focalDist=ui->spinBox_focalMotorPos_2->value();
-            staticCastTest(coordMotorPosFocalDistInfo,spotSlot,colorSlot,db,sps,durationTime,shutterPos);
+                {
+                    int focalPos=m_config.focusPosForSpotAndColorChangeRef();
+                    int motorPos[5]{0,0,focalPos,m_statusData.motorPosition(MotorId::MotorId_Color)+color_Circl_Motor_Steps*10,m_statusData.motorPosition(MotorId::MotorId_Light_Spot)+spot_Circl_Motor_Steps*10};
+                    waitMotorStop({UsbDev::DevCtl::MotorId_Focus,UsbDev::DevCtl::MotorId_Color,UsbDev::DevCtl::MotorId_Light_Spot});
+                    m_devCtl->move5Motors(std::array<quint8, 5>{0,0,sps[2],1,1}.data(),motorPos);
+                    waitMotorStop({UsbDev::DevCtl::MotorId_Focus});
+                    m_devCtl->move5Motors(std::array<quint8, 5>{1,1,1,1,1}.data(),std::array<int, 5>{0,0,0,0,0}.data(),UsbDev::DevCtl::MoveMethod::Relative);
+                }
+                showDevInfo("调整颜色和光斑.");
+                {
+                    int motorPos[5]{0,0,0,ui->spinBox_colorMotorPos_2->value(),ui->spinBox_spotMotorPos_2->value()}; //单个电机绝对位置不可行
+                    quint8 speed[5]{0,0,0,sps[3],sps[4]};
+                    waitMotorStop({UsbDev::DevCtl::MotorId_Light_Spot,UsbDev::DevCtl::MotorId_Color,UsbDev::DevCtl::MotorId_Focus});
+                    m_devCtl->move5Motors(speed,motorPos);
+                }
+
+                {
+                    int  motorPos[5]{0,0,0,color_Circl_Motor_Steps,spot_Circl_Motor_Steps};
+                    quint8 speed[5]{0,0,0,sps[3],sps[4]};
+                    waitMotorStop({UsbDev::DevCtl::MotorId_Color,UsbDev::DevCtl::MotorId_Light_Spot});          //转一圈拖动光斑和颜色
+                    m_devCtl->move5Motors(speed,motorPos,UsbDev::DevCtl::Relative);
+                }
+                {
+                    int motorPos[5]={0,0,0,-300,-300};
+                    quint8 speed[5]{0,0,0,sps[3],sps[4]};
+                    waitMotorStop({UsbDev::DevCtl::MotorId_Color,UsbDev::DevCtl::MotorId_Light_Spot});
+                    m_devCtl->move5Motors(speed,motorPos,UsbDev::DevCtl::Relative);    //防止干扰误差
+                }
+                {
+                    int motorPos[5]={0, 0, 10000, 0 ,0};
+                    quint8 speed[5]{0,0,sps[2],0,0};
+                    waitMotorStop({UsbDev::DevCtl::MotorId_Color,UsbDev::DevCtl::MotorId_Light_Spot,UsbDev::DevCtl::MotorId_Focus});
+                    m_devCtl->move5Motors(speed,motorPos,UsbDev::DevCtl::Relative);     //DB 脱离颜色和光斑
+                }
+                m_status.currentColorSlot=colorSlot;
+                m_status.currentColorSlot=spotSlot;
+            }
+            else{showDevInfo("颜色和光斑已经是目标位置.");}
             break;
         }
         case 1:
         {
+            quint8 db=ui->spinBox_DbSetting->value();
+            quint16 durationTime=ui->spinBox_shutterOpenDuration->text().toInt();
+            quint32 shutterPos=ui->spinBox_shutterOpenPos->text().toInt();
+            float coordX=ui->spinBox_coordX->text().toFloat();
+            float coordY=ui->spinBox_coordY->text().toFloat();
+            CoordSpacePosInfo coordSpacePosInfo{coordX,coordY};
+            CoordMotorPosFocalDistInfo coordMotorPosFocalDistInfo;
+            if(!getXYMotorPosAndFocalDistFromCoord(coordSpacePosInfo,coordMotorPosFocalDistInfo)) return;
+//            coordMotorPosFocalDistInfo.focalDist=ui->spinBox_focalDist->value();
+            int focalMotorPos=getFocusMotorPosByDist(coordMotorPosFocalDistInfo.focalDist,spotSlot)+ui->lineEdit_focalMotorPosCorrection->text().toInt();
+            staticCastTest(coordMotorPosFocalDistInfo,focalMotorPos,db,sps,durationTime,shutterPos);
+            break;
+        }
+        case 2:
+        {
             CoordSpacePosInfo dotBegin,dotEnd;
-            dotBegin.coordX=ui->lineEdit_beginCoordX->text().toInt();
-            dotBegin.coordY=ui->lineEdit_beginCoordY->text().toInt();
-            dotEnd.coordX=ui->lineEdit_endCoordX->text().toInt();
-            dotEnd.coordY=ui->lineEdit_endCoordY->text().toInt();
+            dotBegin.coordX=ui->spinBox_beginCoordX->text().toInt();
+            dotBegin.coordY=ui->spinBox_beginCoordY->text().toInt();
+            dotEnd.coordX=ui->spinBox_endCoordX->text().toInt();
+            dotEnd.coordY=ui->spinBox_endCoordY->text().toInt();
 
             quint8 db=ui->spinBox_DbSetting->value();
             int spotSlot=ui->spinBox_spotSlot->value();
@@ -667,7 +744,7 @@ void MainWindow::on_spinBox_colorMotorPos_2_valueChanged(int arg1)
     if(ui->checkBox_colorConfigSync->isChecked())
     {
         int colorSlot=ui->spinBox_colorSlot->value();
-        m_config.switchColorMotorPosPtr()[colorSlot]=arg1;
+        m_config.switchColorMotorPosPtr()[colorSlot-1]=arg1;
     }
 }
 
@@ -692,7 +769,7 @@ void MainWindow::on_spinBox_spotSlot_valueChanged(int arg1)
         }
     }
     if(!findSpot) ui->comboBox_spotSize->setCurrentText("--");
-    SET_BLOCKING_VALUE(ui->spinBox_spotMotorPos_2,m_config.switchLightSpotMotorPosPtr()[arg1]);
+    SET_BLOCKING_VALUE(ui->spinBox_spotMotorPos_2,m_config.switchLightSpotMotorPosPtr()[arg1-1]);
 }
 
 void MainWindow::on_spinBox_spotMotorPos_2_valueChanged(int arg1)
@@ -700,7 +777,7 @@ void MainWindow::on_spinBox_spotMotorPos_2_valueChanged(int arg1)
     if(ui->checkBox_spotConfigSync->isChecked())
     {
         int spotSlot=ui->spinBox_spotSlot->value();
-        m_config.switchLightSpotMotorPosPtr()[spotSlot]=arg1;
+        m_config.switchLightSpotMotorPosPtr()[spotSlot-1]=arg1;
     }
 }
 
@@ -728,6 +805,18 @@ void MainWindow::on_spinBox_DbSpotPos_valueChanged(int arg1)
     }
 }
 
+void MainWindow::on_spinBox_focalMotorPos_2_valueChanged(int arg1)
+{
+    if(ui->checkBox_spotFocalSync->isChecked())
+    {
+        int slotIndex=ui->spinBox_spotSlot->value()-1;
+        int focalDist=ui->spinBox_focalDist->value();
+        int focalIndex=qRound(float(focalDist-80)/10);
+//        m_localTableData.m_focalLengthMotorPosMappingData(focalIndex,slotIndex)=arg1;
+        m_localTableData.m_focalLengthMotorPosMappingData(focalIndex,slotIndex)=arg1;
+    }
+}
+
 
 void MainWindow::on_spinBox_shutterOpenPos_valueChanged(int arg1)
 {
@@ -743,16 +832,17 @@ void MainWindow::on_pushButton_colorTest_clicked()
     int motorPos[5]{0};
     sps[3]=ui->spinBox_colorMotorSpeed_2->value();
     motorPos[3]=ui->spinBox_colorMotorPos_2->value();
-    QElapsedTimer mstimer;
-    do
-    {
-        mstimer.restart();
-        m_devCtl->move5Motors(sps,motorPos);
-        while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId::MotorId_Color)||(mstimer.nsecsElapsed()/1000000<500))
-        {
-            QCoreApplication::processEvents();
-        }
-    }while(qAbs(m_statusData.motorPosition(UsbDev::DevCtl::MotorId::MotorId_Color)-motorPos[3])>500);//防止没移动到
+    //    QElapsedTimer mstimer;
+    //    do
+    //    {
+    //        mstimer.restart();
+    //        m_devCtl->move5Motors(sps,motorPos);
+    //        while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId::MotorId_Color)||(mstimer.nsecsElapsed()/1000000<500))
+    //        {
+    //            QCoreApplication::processEvents();
+    //        }
+    //    }while(qAbs(m_statusData.motorPosition(UsbDev::DevCtl::MotorId::MotorId_Color)-motorPos[3])>500);//防止没移动到
+     m_devCtl->move5Motors(sps,motorPos);
 }
 
 void MainWindow::on_pushButton_spotTest_clicked()
@@ -806,13 +896,17 @@ void MainWindow::on_pushButton_shuterTest_clicked()
 
 void MainWindow::on_comboBox_testFucntion_currentIndexChanged(int index)
 {
-    ui->stackedWidget->setCurrentIndex(index);
-    ui->spinBox_shutterOpenDuration->setEnabled(index==0);
-    ui->groupBox_focalTest->setEnabled(index==0);
-    if(index==1)
+    if(index==0) return;
+    else
     {
-        ui->spinBox_spotSlot->setMinimum(1);
+        ui->stackedWidget->setCurrentIndex(index-1);
+        ui->spinBox_shutterOpenDuration->setEnabled(index==1);
+        ui->groupBox_focalTest->setEnabled(index==1);
     }
+//    if(index==2)
+//    {
+//        ui->spinBox_spotSlot->setMinimum(1);
+//    }
 }
 
 
@@ -1174,15 +1268,16 @@ void MainWindow::fillXYMotorAndFocalInfoByXYCoord()
 {
     if(!ui->checkBox_calcFocalDist->isChecked()) return;
     CoordSpacePosInfo coordSpacePosInfo;
-    coordSpacePosInfo.coordX=ui->lineEdit_coordX->text().toFloat();
-    coordSpacePosInfo.coordY=ui->lineEdit_coordY->text().toFloat();
+    coordSpacePosInfo.coordX=ui->spinBox_coordX->value();
+    coordSpacePosInfo.coordY=ui->spinBox_coordY->value();
     CoordMotorPosFocalDistInfo coordMotorPosFocalDistInfo;
     getXYMotorPosAndFocalDistFromCoord(coordSpacePosInfo,coordMotorPosFocalDistInfo);
     int focalMotorPos=getFocusMotorPosByDist(coordMotorPosFocalDistInfo.focalDist,ui->spinBox_spotSlot->value());
     ui->spinBox_XMotorPos_2->setValue(coordMotorPosFocalDistInfo.motorX);
     ui->spinBox_YMotorPos_2->setValue(coordMotorPosFocalDistInfo.motorY);
     ui->spinBox_focalDist->setValue(coordMotorPosFocalDistInfo.focalDist);
-    ui->spinBox_focalMotorPos_2->setValue(focalMotorPos);
+    SET_BLOCKING_VALUE(ui->spinBox_focalMotorPos_2,focalMotorPos);             //移动位置的时候,同步焦距到本地数据.
+//    ui->spinBox_focalMotorPos_2->setValue(focalMotorPos);
 
 }
 
@@ -1193,19 +1288,19 @@ bool MainWindow::getXYMotorPosAndFocalDistFromCoord(const CoordSpacePosInfo& coo
 //    if(!isMainDotInfoTable&&coordSpacePosInfo.coordX<-30){isMainDotInfoTable=true;}
     if(ui->radioButton_mainTable->isChecked()) isMainDotInfoTable=true;
     else if(ui->radioButton_secondaryTable->isChecked()) isMainDotInfoTable=false;
-    //从-90到9,有15格,所以要加15
+    //有15格,所以要加15,Y要反号
     int x1=floor(coordSpacePosInfo.coordX/6.0f)+15;int x2=ceil(coordSpacePosInfo.coordX/6.0f)+15;
-    int y1=floor(coordSpacePosInfo.coordY/6.0f)+15;int y2=ceil(coordSpacePosInfo.coordY/6.0f)+15;
+    int y1=floor(-coordSpacePosInfo.coordY/6.0f)+15;int y2=ceil(-coordSpacePosInfo.coordY/6.0f)+15;
+    qDebug()<<"x1:"<<x1<<"x2:"<<x2;
+    qDebug()<<"y1:"<<y1<<"y2:"<<y2;
     auto data=m_localTableData;
     SingleTableData tableData;
     isMainDotInfoTable?tableData=data.m_mainPosTableData:tableData=data.m_secondaryPosTableData;
 
-    CoordMotorPosFocalDistInfo fourDots[4]
+    CoordMotorPosFocalDistInfo fourDots[4]              //周围四个坐标点的马达和焦距值
     {
-        {tableData(y1*3,x1),tableData(y1*3+1,x1),tableData(y1*3+2,x1)},
-        {tableData(y2*3,x1),tableData(y2*3+1,x1),tableData(y2*3+2,x1)},
-        {tableData(y1*3,x2),tableData(y1*3+1,x2),tableData(y1*3+2,x2)},
-        {tableData(y2*3,x2),tableData(y2*3+1,x2),tableData(y2*3+2,x2)},
+        {tableData(y1*3,x1),tableData(y1*3+1,x1),tableData(y1*3+2,x1)},{tableData(y1*3,x2),tableData(y1*3+1,x2),tableData(y1*3+2,x2)},
+        {tableData(y2*3,x1),tableData(y2*3+1,x1),tableData(y2*3+2,x1)},{tableData(y2*3,x2),tableData(y2*3+1,x2),tableData(y2*3+2,x2)},
     };
     if(((fourDots[0].motorX==-1)||(fourDots[1].motorX==-1)||(fourDots[2].motorX==-1)||(fourDots[3].motorX==-1)))
     {showDevInfo("point is out of range!");}
@@ -1226,9 +1321,10 @@ bool MainWindow::getXYMotorPosAndFocalDistFromCoord(const CoordSpacePosInfo& coo
 //    }
 
 
-    QPointF loc(coordSpacePosInfo.coordX-(x1-15)*6,coordSpacePosInfo.coordY-(y1-15)*6);
+    QPointF loc(coordSpacePosInfo.coordX-(x1-15)*6,-coordSpacePosInfo.coordY-(y1-15)*6);         //算出比格子位置多多少
+    qDebug()<<"loc is:"<<loc;
     int arr[4];
-    for(unsigned int i=0;i<sizeof(arr)/sizeof(int);i++) {arr[i]=fourDots[i].motorX;}
+    for(unsigned int i=0;i<sizeof(arr)/sizeof(int);i++) {arr[i]=fourDots[i].motorX;}            //四个格子差值计算
     coordMotorPosFocalDistInfo.motorX=interpolation(arr,loc);
 
     for(unsigned int i=0;i<sizeof(arr)/sizeof(int);i++) {arr[i]=fourDots[i].motorY;}
@@ -1258,7 +1354,7 @@ bool MainWindow::getXYMotorPosAndFocalDistFromCoord(const CoordSpacePosInfo& coo
     return true;
 }
 
-void MainWindow::staticCastTest(const CoordMotorPosFocalDistInfo& coordMotorPosFocalDistInfo,int spotSlot ,int colorSlot,int db,int* sps,int durationTime,int shutterPos)
+void MainWindow::staticCastTest(const CoordMotorPosFocalDistInfo& coordMotorPosFocalDistInfo,int focalMotorPos,int db,quint8* sps,int durationTime,int shutterPos)
 {
 //    以后加上
 //    if(m_config.isEmpty()) {showDevInfo("empty config"); return;}
@@ -1267,66 +1363,28 @@ void MainWindow::staticCastTest(const CoordMotorPosFocalDistInfo& coordMotorPosF
 //          m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Light_Spot)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Shutter))
 //    {QCoreApplication::processEvents();}
 
-    //移动焦距电机到调节位置
-    quint8 spsArr[5]={0};
-    qint32 posArr[5]={0};
-    showDevInfo("移动焦距电机到联动位置.");
-    if(!m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus))
-    {
-        spsArr[2]=sps[2];
-        posArr[2]=m_config.focusPosForSpotAndColorChangeRef();
-        m_devCtl->move5Motors(spsArr,posArr);
-    }
-
-
-
-
-    //调整颜色和光斑
-    showDevInfo("调整颜色和光斑.");
-    memset(spsArr,0,sizeof(spsArr));
-    memset(posArr,0,sizeof(posArr));
-    spsArr[3]=sps[3];
-    spsArr[4]=sps[4];
-    posArr[3]=m_config.switchColorMotorPosPtr()[colorSlot];
-    posArr[4]=m_config.switchLightSpotMotorPosPtr()[spotSlot];
-
-    while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus))
-    {QCoreApplication::processEvents();}
-    m_devCtl->move5Motors(spsArr,posArr);
-
-    //调整焦距
-    showDevInfo("调整焦距.");
-    memset(spsArr,0,sizeof(spsArr));
-    memset(posArr,0,sizeof(posArr));
-    spsArr[2]=sps[2];
-    posArr[2]=getFocusMotorPosByDist(coordMotorPosFocalDistInfo.focalDist,spotSlot);
-    while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Color)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Light_Spot))
-    {QCoreApplication::processEvents();}
-    m_devCtl->move5Motors(spsArr,posArr);
-
     //调整DB同时移动到指定位置
-    showDevInfo("调整DB同时移动到指定位置.");
-    memset(spsArr,0,sizeof(spsArr));
-    memset(posArr,0,sizeof(posArr));
-    spsArr[0]=sps[0];spsArr[1]=sps[1];spsArr[3]=sps[3];spsArr[4]=sps[4];
-    posArr[0]=coordMotorPosFocalDistInfo.motorX;
-    posArr[1]=coordMotorPosFocalDistInfo.motorY;
-    posArr[3]=m_config.DbPosMappingPtr()[db][0];
-    posArr[4]=m_config.DbPosMappingPtr()[db][1];
-    while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Focus))
-    {QCoreApplication::processEvents();}
-    m_devCtl->move5Motors(spsArr,posArr);
+    showDevInfo("调整焦距DB同时移动到指定位置.");
+    {
+        int motorPos[5]{0};
+        motorPos[0]=coordMotorPosFocalDistInfo.motorX;
+        motorPos[1]=coordMotorPosFocalDistInfo.motorY;
+        motorPos[2]=focalMotorPos;
+        motorPos[3]=m_config.DbPosMappingPtr()[db][0];
+        motorPos[4]=m_config.DbPosMappingPtr()[db][1];
+
+//        motorPos[2]=getFocusMotorPosByDist(coordMotorPosFocalDistInfo.focalDist,spotSlot);
+        waitMotorStop({UsbDev::DevCtl::MotorId_Color,UsbDev::DevCtl::MotorId_Light_Spot,UsbDev::DevCtl::MotorId_Focus,UsbDev::DevCtl::MotorId_X,UsbDev::DevCtl::MotorId_Y});
+        m_devCtl->move5Motors(sps,motorPos);
+    }
 
     //打开快门
     showDevInfo("打开快门.");
-    shutterPos=ui->spinBox_shutterOpenPos->value();
-    while(m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_X)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Y)||
-          m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Color)||m_statusData.isMotorBusy(UsbDev::DevCtl::MotorId_Light_Spot))
-    {QCoreApplication::processEvents();}
+    waitMotorStop({UsbDev::DevCtl::MotorId_Color,UsbDev::DevCtl::MotorId_Light_Spot,UsbDev::DevCtl::MotorId_Focus,UsbDev::DevCtl::MotorId_X,UsbDev::DevCtl::MotorId_Y,UsbDev::DevCtl::MotorId_Shutter});
     m_devCtl->openShutter(durationTime,shutterPos);
 }
 
-void MainWindow::moveCastTest(const CoordSpacePosInfo& dotSpaceBegin,const CoordSpacePosInfo& dotSpaceEnd,int spotSlot ,int colorSlot,float stepLength,int db,int* sps)
+void MainWindow::moveCastTest(const CoordSpacePosInfo& dotSpaceBegin,const CoordSpacePosInfo& dotSpaceEnd,int spotSlot ,int colorSlot,float stepLength,int db,quint8* sps)
 {
 
     CoordMotorPosFocalDistInfo dotMotorBegin,dotMotorEnd;
