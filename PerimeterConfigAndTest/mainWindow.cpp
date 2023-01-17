@@ -451,9 +451,15 @@ void MainWindow::refreshVideo()
     int dataSize=size.width()*size.height();
     if(pixData==NULL){pixData=new quint8[dataSize];}
     m_frameData=m_devCtl->takeNextPendingFrameData();
-    memcpy(pixData+20,m_frameData.rawData().data(),dataSize-20);
-    memset(pixData,pixData[20],20);
+//    memcpy(pixData+20,m_frameData.rawData().data(),dataSize-20);
+//    memset(pixData,pixData[20],20);
+//    QImage image=QImage(pixData,size.width(),size.height(),QImage::Format::Format_Grayscale8);
+
+//    auto pixData=(quint8*)(m_frameData.rawData().data());
+    auto pixData=reinterpret_cast<quint8*>(m_frameData.rawData().data());
     QImage image=QImage(pixData,size.width(),size.height(),QImage::Format::Format_Grayscale8);
+
+//    QImage image=QImage(pixData,size.width(),size.height(),QImage::Format::Format_Grayscale8);
 //    if(m_videoCount>0)
 //    {
 //        m_videoCount--;
@@ -660,7 +666,7 @@ void MainWindow::on_pushButton_testStart_clicked()
                     m_devCtl->move5Motors(speed,motorPos,UsbDev::DevCtl::Relative);
                 }
                 {
-                    int motorPos[5]={0,0,0,-300,-300};
+                    int motorPos[5]={0,0,0,-1000,-1000};
                     quint8 speed[5]{0,0,0,sps[3],sps[4]};
                     waitMotorStop({UsbDev::DevCtl::MotorId_Color,UsbDev::DevCtl::MotorId_Light_Spot});
                     m_devCtl->move5Motors(speed,motorPos,UsbDev::DevCtl::Relative);    //防止干扰误差

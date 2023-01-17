@@ -110,7 +110,7 @@ public:
      *        while 'acc_flga' is 1, 'sps' should be [ 0, 800 ]
      *
      */
-    void  move5Motors( quint8* sps, qint32* value,MoveMethod method=MoveMethod::Abosolute);
+    void  move5Motors( quint8*  sps, qint32*  value,MoveMethod method=MoveMethod::Abosolute);
 
     void sendCastMoveData(quint8 totalFrame,quint8 frameNumber,quint32 dataLen,qint32* posData);
 

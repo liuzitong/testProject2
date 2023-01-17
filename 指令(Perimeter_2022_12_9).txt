@@ -1,0 +1,386 @@
+***************perimeter protocol**************
+author:liuzitong
+date:20210927
+
+【 约定 】
+     文档中出现的专用名词以引号包括。
+     “上位机”：指代操作 FPGA 的PC 或其他操作端
+     “下位机”：指代FPGA 控制端
+     “字节位”：例           b7 b6 b5 b4 b3 b2 b1 b0
+                  0x81 --  1  0  0  0  0  0  0  1 
+                  
+
+【 应答方式 】
+
+     68013A   EP2 做为 视频流端口，  方向为：68013 -> Host
+              EP8 做为 指令端口，    方向为：68013 <- Host
+              EP6 做为 指令结果端口，方向为：68013 -> Host
+
+
+【 profile 】
+
+    以下定义主板资料数据，该数据以下述方式表达。里面多于一个字节的数值均为有符号数，
+多字节的数值字序以配置中的 flag.1 位表示（ 0 为 LE, 1 为 BE )
+----------------------------------------------------------------------------
+offset  |  byte  |           description  
+----------------------------------------------------------------------------
+   0        2      dev_type                                                   布点:0x8800  投射:0x0088 保留万一布点也要用该软件
+   2        2      dev_ver                                                    设备版本, 0x00, 0x00 代表初始版本
+   4        2      frame_width                                                视频帧像素宽度：有符号数
+   6        2      frame_height                                               视频帧像素高度：有符号数  
+   8        4      x_motor_range_begin                                        x电机范围开始值
+   12       4      x_motor_range_end                                          x电机范围结束值
+   16       4      y_motor_range_begin                                        y电机范围开始值
+   20       4      y_motor_range_end                                          y电机范围结束值
+   24       4      focus_motor_range_begin                                    焦距电机范围开始值
+   28       4      focus_motor_range_end                                      焦距电机范围结束值
+   32       4      color_motor_range_begin                                    颜色电机范围开始值
+   36       4      color_motor_range_end                                      颜色电机范围结束值
+   40       4      light_spot_motor_range_begin                               光斑电机范围开始值
+   44       4      light_spot_motor_range_end                                 光斑电机范围结束值
+   48       4      shutter_motor_range_begin                                  快门电机范围开始值
+   52       4      shutter_motor_range_end                                    快门电机范围结束值
+   56       4      x_chin_motor_range_begin                                   水平腮托电机范围开始值
+   60       4      x_chin_motor_range_end                                     水平腮托电机范围结束值
+   64       4      y_chin_motor_range_begin                                   垂直腮托电机范围开始值
+   68       4      y_chin_motor_range_end                                     垂直腮托电机范围结束值
+           
+【 config 】
+----------------------------------------------------------------------------
+offset  |  byte  |           description  
+----------------------------------------------------------------------------
+   0        4      crc_veryfication                                           校验位
+   4        4      device_ID                                                  设备编号
+   8        2      center_fixation_lamp_DA                                    中心固视        
+   10       8      big_diamond_fixation_lamp_DA                               大菱形 word[4]          
+   18       8      small_diamond_fixation_lamp_DA                             小菱形 word[4]         
+   26       2      yellow_background_lamp_DA                                  黄色背景灯       
+   28       6      white_background_lamp_RGB                                  白色背景灯      word[3]   [R,G,B] 
+   34       2      center_infrared_lamp_DA                                    中心红外灯      
+   36       2      border_infrared_lamp_DA                                    边缘红外        
+   38       2      eyeglass_frame_lamp_DA                                     镜架红外        
+   40       4      environment_alarm_light_DA                                 环境光报警值     word[2] [白背景光,黄背景光]
+   44       4      m_pupil_grey_threshold_DA                                  瞳孔灰度阈值     word[2] [白背景光,黄背景光]
+   48       20     switch_color_motor_pos                                     1-5五种颜色中的各个颜色所需对应的电机转动步数 int[5]   (1冗余)
+   68       24     switch_light_spot_pos                                      1-6六种光斑中的各个光斑所需对用的电机转动步数 int[5]   (3冗余)
+   92       4      focus_pos_for_spot_and_color_change                        每次改变光斑和颜色的时候焦距电机位置   (焦距联动,机械特性,每次改变光斑和颜色都要到一定焦距)
+   96       4      shutter_motor_pos_open_pos                                 快门开位  
+   100      4      main_table_center_x_correction                                        正表中心X
+   104      4      main_table_center_y_correction                                        正表中心y
+   108      4      secondary_table_center_x_correction                                   副表中心X
+   112      4      secondary_table_center_y_correction                                   副表中心y
+   116      4      focal_motor_pos_correction                                 焦距修正
+   120      4      cast_light_AD                                              投射光强    (衰减片全空,开机校验投射光用)    
+   124      4      x_motor_pos_for_light_correction                           光强校正时 X电机所需走动的步数,以复位点计数
+   128      4      y_motor_pos_for_light_correction                           光强校正时 Y电机所需走动的步数,以复位点计数
+   132      4      focal_length_motor_pos_for_light_correction                光强校正时 焦距电机所需走动的步数,以复位点计数
+   136      416    Db_pos_mapping                                             DB对应的颜色电机和光斑电机各自转动的步数   0~51DB,每个DB对应两个电机转动 int[52][2]   [DB][颜色电机,光斑电机]
+--total 552 BYTES
+
+
+注调节方式:
+         1.控制焦距电机到联动位置(光强校正时 焦距电机所需走动的步数,以复位点计数).
+         2.运动颜色电机和光斑电机带动偏正片调整调整亮度.
+         3.控制焦距电机到焦距位置.
+         4.调整光斑和颜色.
+
+         
+//1268     92     DB_90degree_angle_loss                                     90度衰减，以中心0度为基础，DB数*50存储，间隔2度，0-45,由于是椭圆,削减两边的半径较短的亮度. word[46]  固定值在上位机上定死
+//1360     10800  motor_location_table                                       位置电机表      int[30][30][3]      [30个x坐标][30个y坐标][x步,y步,焦距]  做到上位机
+//         10800  motor_location_table                                       位置电机副表    int[30][30][3]      [30个x坐标][30个y坐标][x步,y步,焦距]     
+
+
+
+   
+【 视频帧格式 】
+视频只有灰度,255级,一字节一像素点,校验位和时间戳占用前8个像素点.总大小为宽度*高度
+----------------------------------------------------------------------------
+   offset |             byte             |           description  
+----------------------------------------------------------------------------
+   0       4                                 crc_veryfication                校验位
+   4       4                                 time_stamp                      时间戳(ms)
+   8       1                                 shutter_status                  快门是否开的状态(就是刺激点是否可见的状态)
+   10      2                                 stimulate_dot_serial_number     刺激点亮的序号(提取CACHE中的序号,如果相同可以作为实时眼位图)
+   12      4                                 x_motor_posinate                x电机坐标
+   16      4                                 y_motor_posinate                y电机坐标
+   20      frame_height*frame_width-20       raw_data                        视频帧数据
+
+
+
+【 轮询数据 】
+
+
+  以下定义轮询时的数据，该数据以下述方式表达，未定义区数据为0，总长 512 字节。
+----------------------------------------------------------------------------
+   offset  |  byte  |           description  
+----------------------------------------------------------------------------
+   0        1           Serial No.                                      自增序号，每次上传一个包，即增长该字段   
+   1        1           cache_normal_flag                               普通缓存,1为可用,0为无可用
+   2        1           cache_move_flag                                 移动缓存,1为可用,0为无可用
+   3        1           answerpad_status                                应答器状态     1按下,0 松开  
+   4        1           camera_status                                   摄像头状态     1打开,0 关闭 
+   5        1           eyeglass_status                                 镜架状态       1升起,0 放下   
+   6        1           x_motor_flag                                    水平电机运行标记，1 为忙， 0 为闲
+   7        1           y_motor_flag                                    垂直电机运行标记，1 为忙， 0 为闲
+   8        1           focus_motor_flag                                焦距电机运行标记，1 为忙， 0 为闲
+   9        1           color_motor_flag                                颜色电机运行标记，1 为忙， 0 为闲
+   10       1           light_spot_motor_flag                           光斑电机运行标记，1 为忙， 0 为闲
+   11       1           shutter_motor_flag                              快门电机运行标记，1 为忙， 0 为闲 
+   12       1           x_chin_motor_flag                               腮托x电机运行标记，1 为忙， 0 为闲
+   13       1           y_chin_motor_flag                               腮托y电机运行标记，1 为忙， 0 为闲
+   14       1           x_motor_cmd_cntr                                初始0，每收到该指令，增长此值
+   15       1           y_motor_cmd_cntr                                初始0，每收到该指令，增长此值
+   16       1           focus_motor_cmd_cntr                            初始0，每收到该指令，增长此值
+   17       1           color_motor_cmd_cntr                            初始0，每收到该指令，增长此值
+   18       1           light_spot_motor_cmd_cntr                       初始0，每收到该指令，增长此值
+   19       1           shutter_motor_cmd_cntr                          初始0，每收到该指令，增长此值
+   20       1           x_chin_motor_cmd_cntr                           初始0，每收到该指令，增长此值
+   21       1           y_chin_motor_cmd_cntr                           初始0，每收到该指令，增长此值
+   22       1           move_status                                     动态移动是否完成 1为未完成，0为完成.
+   24       4           x_motor_curr_pos                                4 字节位置值
+   28       4           y_motor_curr_pos                                4 字节位置值
+   32       4           focus_motor_curr_pos                            4 字节位置值
+   36       4           color_motor_curr_pos                            4 字节位置值
+   40       4           light_spot_motor_curr_pos                       4 字节位置值
+   44       4           shutter_motor_curr_pos                          4 字节位置值 
+   48       4           x_chin_motor_curr_pos                           4 字节位置值
+   52       4           y_chin_motor_curr_pos                           4 字节位置值
+   56       4           env_light_DA                                    环境光DA
+   60       4           cast_light_DA                                   投射光DA
+----------------------------------------------------------------------------
+
+【 静态缓存数据】
+----------------------------------------------------------------------------
+   offset  |  byte  |           description  
+----------------------------------------------------------------------------
+   0        4           stimulate_dot_serial_number               刺激点亮的序号
+   4        4           motor_posX                                x电机坐标  
+   8        4           motor_posY                                y电机坐标    
+   12       4           shutter_time                              快门打开时间
+   16       4           answerPad_pressed_time                    按下时间
+   20       4           answerPad_release_time                    松开时间
+
+存储保留三个,一次读完,新的数据保存在低位,旧的数据保存在高位
+
+
+
+
+【 移动缓存数据 】
+----------------------------------------------------------------------------
+   offset  |  byte  |           description  
+----------------------------------------------------------------------------
+   0        4           stimulate_dot_serial_number             当前刺激点亮的序号
+   8        4           answer_motor_posX                       应答时候的投射位置
+   12       4           answer_motor_posX                       应答时候的投射位置
+存储保留三个,一次读完,新的数据保存在低位,旧的数据保存在高位
+
+x电机 (约定为 x_motor )
+y电机 (约定为 y_motor )
+焦距电机（约定为 focus_motor ）
+颜色电机（约定为 color_motor ）
+光斑电机（约定为 light_spot_motor ）
+快门电机 ( 约定为 shutter_motor )
+腮托水平电机（约定为 x_chin_motor )
+腮托竖向电机（约定为 y_chin_motor ）
+
+
+【 指令 】
+
+
+指令为一系列的字节流，最多为 512 字节。
+
+基本格式：    [ 0x5A | cmd | opt-0 | opt-1 |  ... ]
+
+
+1. 腮托XY电机相对移动指令     
+
+   相对称动：从当前位置根据距离值（正或负）进行前向 或 后向移动
+
+   0x5A, 0x50, [  sps_x (1B) ], [  sps_y (1B) ],[ dist_x (4B) ],[ dist_y (4B) ] 
+                
+
+   sps:  单位秒移动多少步, 有符号数 
+         以秒为单位，描述平均速度下，每秒移动多少脉冲步。
+         在加减速标记作用下，代表加减速参数
+         不移动为0X00
+
+   dist: 4 个字节的距离表达，以脉冲数作为单位，有符号数。
+         例如：表达正向走     LE order 下 1000 个脉冲为 0xe8, 0x03, 0x00, 0x00  (  1000 )
+               表达反方向下次 LE order 下 1000 个脉冲为 0x18, 0xfc, 0xff, 0xff  ( -1000 )
+
+         急停命令0x0000,腮托停止移动时候发送
+                   
+   * 电机运行中，状态标记为“忙”（1），停止时，状态标记为“闲”(0)
+
+2. 腮托XY电机绝对移动指令 
+    
+   绝对移动：根据电机可移动范围进行绝对位置移动（电机可移动范围见 profile 配置）
+
+   0x5A, 0x51, [  sps_x (1B) ], [  sps_y (1B) ],[ pos_x (4B) ],[ pos_y (4B) ]
+
+   备注：参考 0x50 指令, pos 解释如同 dist，但值代表整个电机可移动范围的绝对坐标
+
+
+3. 5电机相对移动指令  
+
+   相对称动：从当前位置根据距离值（正或负）进行前向 或 后向移动
+
+   0x5A, 0x52, [ rsvd (1B) ], [  sps (1B) ], [  sps (1B) ], [  sps (1B) ],  [  sps (1B) ],[  sps (1B) ], 
+               [dist_x (4B)],[dist_y (4B)],[dist_focal (4B)],[dist_color (4B)], [dist_light_spot (4B) ],
+
+
+    分别为  x电机    (约定为 x_motor )
+            y电机    (约定为 y_motor )
+            焦距电机（约定为 focus_motor ）
+            颜色电机（约定为 color_motor ）
+            光斑电机（约定为 light_spot_motor ）
+   速度等级为0表示不影响此电机,(停止用相对运动0位置表示), 5电机停止，关闭开门效果等同于停止动态。
+
+4. 5电机绝对移动指令 
+    
+   绝对移动：根据电机可移动范围进行绝对位置移动（电机可移动范围见 profile 配置） 
+
+   0x5A, 0x53, [ rsvd (1B)],[ sps (1B) ],[ sps (1B) ], [ sps (1B) ], [ sps (1B) ],[ sps (1B) ],
+               [ pos_x (4B)],[ pos_y (4B)], [ pos_focal (4B)], [ pos_color (4B) , [ pos_light_spot (4B) ]
+    
+    分别为  x电机    (约定为 x_motor )
+            y电机    (约定为 y_motor )
+            焦距电机（约定为 focus_motor ）
+            颜色电机（约定为 color_motor )
+            光斑电机（约定为 light_spot_motor ）
+    速度等级为0表示不影响此电机
+
+6. 投射电机移动指令帧                                                                                              
+   0x5A, 0x54, [ totalframe(1B) ],[ frameNumber(1B) ] ,[datalen(4B)],[pos_x (4B)][pos_y (4B)][focus (4B)]...
+    
+   totalframe:总帧数.
+   frameNumber:帧编号 从0开始.
+   datalen:实际装填数据长度.
+   pos_x:x电机位置,pos_y:y电机位置,focus:焦距电机位置. 采用相对位置.
+
+7. 投射电机移动开始
+   0x5A, 0x55,[rsvd(2B)],[rsvd(1B)],[ sps_x (1B) ],[ sps_y (1B) ],[ sps_f (1B) ],[steptime(4B)]              //steptime units=us
+
+   step_time:细分每段移动的总时间(包括等待时间和运行时间),9种速度对应9种时间,写在上位机的自己配置文件里(下位机不需要存储此信息)
+
+8. 快门打开
+   0x5A, 0x56, [duration_time(2B)] [pos_shutter(4B)]              //对位错误
+
+   0x0000关闭   0xffff常开
+
+   
+
+9. 电机复位指令
+
+   复位电机到硬件初始位置
+
+   0x5A, 0x57, [ motor-id (1B) ],  [ sps (1B) ]
+
+   motor-id: 
+   x电机:            0x01               
+   y电机:            0x02       
+   焦距电机:         0x03       
+   颜色电机:         0x04       
+   光斑电机:         0x05       
+   快门电机:         0x06          
+   腮托水平电机:     0x07            
+   腮托竖向电机:     0x08     
+
+
+
+10. 视频指令
+
+   开启或关闭视频
+
+   0x5A, 0x70, [ rsvd(1B) ]，[ on_off(1B) ]
+
+   on_off: 开启双摄视频为 1， 关闭为 0
+
+        
+11. 灯控指令
+
+   0x5A, 0x80, [ lamp_id(1B) ], [ lamp_number(1B) ]
+
+   lamp_id: 灯控的ID
+            0x00 -- 中心固视
+            0x01 -- 大菱形
+            0x02 -- 小菱形
+            0x03 -- 黄色背景灯
+            0x04 -- 中心红外灯
+            0x05 -- 边缘红外
+            0x06 -- 镜架红外
+            0x07 -- 投射光                        
+    da: 亮度. 0 为关闭.
+    lamp_number:仅作用于大菱形和和小菱形.(0~3).
+   
+
+12.白色灯控命令
+   0x5A, 0x81,[ R(1B) ][ G(1B) ][ B(1B) ]
+
+
+13.蜂鸣器控制命令
+   0x5A, 0x90,[repeat_count(2B)][duaration_time(2B)][interval_time(2B)]
+
+   reapeat_count:叫多少次.0xffff表示一直叫,ox0000表示停止叫.
+   duration_time:鸣叫时间.
+   interval_time:鸣叫之后的距离下一次开始鸣叫的间隔时间.
+
+13. 取profile指令
+
+    0x5A, 0xF0
+
+    配置总长为512 字节，总是取回512字节
+
+    * 发送此指令后，从 EP6 读取配置数据块 
+
+
+14. 取config指令
+
+    0x5A, 0xF1. 
+
+    配置总长为512 字节，总是取回512字节
+
+    * 发送此指令后，从 EP6 读取配置数据块 
+
+
+15. 存config指令
+
+    0x5A, 0xF2, [ totalframe(1B) ],[ frameNumber(1B) ],[data]
+
+   totalframe:总帧数.
+   frameNumber:帧编号 从0开始.
+
+    * 发送此指令后，存配置数据块到 EP6 
+
+
+16. 取论询数据
+    
+    0x5A, 0xF3
+    
+    * 发送此指令后，从 EP6 读取论询数据块
+
+
+17.取一般缓存数据
+
+    0x5A, 0xF4
+    
+    * 发送此指令后，从 EP6 读取论询数据块
+
+18.取移动缓存数据
+    0x5A, 0xF5
+    
+    * 发送此指令后，从 EP6 读取论询数据块
+
+19.刺激计数清零
+    0x5A, 0xF6
+    
+
+
+    
+   
+
+
+
+
+
+ 

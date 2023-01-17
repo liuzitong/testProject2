@@ -112,6 +112,7 @@ public :
     Q_INVOKABLE bool  cmd_ReadFrameData ( );
     Q_INVOKABLE bool  cmd_TurnOnVideo ( );
     Q_INVOKABLE bool  cmd_TurnOffVideo( );
+    Q_INVOKABLE bool  cmd_ClearCache( );
     Q_INVOKABLE bool  cmd_GeneralCmd( QByteArray ba  ,QString funcName,quint32 dataLen);
 
     Q_SIGNAL void  workStatusChanged    ( int );
@@ -169,6 +170,7 @@ void   DevCtl_Worker :: init( bool req_emit )
             m_wks = DevCtl::WorkStatus_S_OK;
             if ( req_emit ) { emit this->workStatusChanged( DevCtl::WorkStatus_S_OK ); }
             emit updateInfo("连接成功.");
+            this->cmd_ClearCache();
             this->cmd_ReadProfile( req_emit );
             this->cmd_ReadConfig (req_emit);
         } else {
@@ -221,8 +223,8 @@ bool    DevCtl_Worker :: cmdComm_bulkInSync( unsigned char *buff, int buff_sz)
     SciPack::NwkUsbObj2::DataPacket pkg;
     pkg.dat_id = 0; pkg.dat_ptr = buff; pkg.dat_size = buff_sz;
     bool ret=( m_usb_dev->bulkTransSync( SciPack::NwkUsbObj2::PipeTypeID_BlkBulkIn, & pkg ) == SCIPACK_S_OK );
-    QString msg="cmdComm_bulkInSync:\n"+buffToQStr(reinterpret_cast<const char*>(buff),buff_sz);
-    logger->info(msg.toStdString());
+//    QString msg="cmdComm_bulkInSync:\n"+buffToQStr(reinterpret_cast<const char*>(buff),buff_sz);
+//    logger->info(msg.toStdString());
     return ret;
 }
 
@@ -234,8 +236,8 @@ bool    DevCtl_Worker :: cmdComm_strInSync( unsigned char *buff, int buff_sz )
     SciPack::NwkUsbObj2::DataPacket pkg;
     pkg.dat_id = 0; pkg.dat_ptr = buff; pkg.dat_size = buff_sz;
     bool ret=( m_usb_dev->bulkTransSync( SciPack::NwkUsbObj2::PipeTypeID_StrBulkIn, & pkg ) == SCIPACK_S_OK );
-    QString msg=buffToQStr(reinterpret_cast<const char*>(buff),20);
-    logger->info(msg.toStdString());
+//    QString msg=buffToQStr(reinterpret_cast<const char*>(buff),20);
+//    logger->info(msg.toStdString());
     return ret;
 }
 
@@ -426,6 +428,37 @@ bool  DevCtl_Worker :: cmd_ReadFrameData()
 
 }
 
+//bool  DevCtl_Worker :: cmd_ClearCache()
+//{
+//    if ( ! this->isDeviceWork()) { updateInfo("no connection!");return false; }
+////    if ( m_is_video_on ) { return true; }
+//    bool ret = true;
+//    updateInfo("打开摄像头.");
+//    if ( ret ) { // turn on EP2
+//        SciPack::NwkUsbObj2::SetupPacket pkg;
+//        pkg.m_req_type = 0x40; pkg.m_req = 0xb2; pkg.m_value = 0;
+//        pkg.m_index = 0x01; pkg.m_length = 0;
+//        if ( m_usb_dev->ctlTransSync( & pkg, nullptr, nullptr ) != SCIPACK_S_OK ) {
+//            updateInfo("control transfer failed, can not open EP2 IN.");
+//            ret = false;
+//        }
+//    }
+//    if ( ret ) { // turn on video
+//        unsigned char buff[512];
+//        buff[0] = 0x5a; buff[1] = 0x70; buff[2] = 0x00; buff[3] = 0x01;
+//        updateIOInfo(buffToQStr(reinterpret_cast<const char*>(buff),4));
+//        ret = this->cmdComm_bulkOutSync( buff, sizeof( buff ));
+//        if ( ! ret ) { updateInfo("send video-on cmd failed."); }
+//    }
+//    if ( ret ) {
+//        m_is_video_on = true; m_elapse_tmr.start();
+//        updateInfo("摄像头打开成功.");
+//        emit this->videoStatusChanged( true );
+//    }
+//    return ret;
+//}
+
+
 // ============================================================================
 // cmd: the video open or close control  ok
 // ============================================================================
@@ -491,6 +524,26 @@ bool  DevCtl_Worker :: cmd_TurnOffVideo()
         emit this->videoStatusChanged( false );
     }
 
+    return ret;
+}
+
+bool DevCtl_Worker::cmd_ClearCache()
+{
+    if ( ! this->isDeviceWork()) { updateInfo("no connection!");return false; }
+    bool ret = true;
+    updateInfo("清除缓存.");
+    if ( ret ) { //clear Cache
+        SciPack::NwkUsbObj2::SetupPacket pkg;
+        pkg.m_req_type = 0x40; pkg.m_req = 0xb2; pkg.m_value = 0;
+        pkg.m_index = 0x03; pkg.m_length = 0;
+        if ( m_usb_dev->ctlTransSync( & pkg, nullptr, nullptr ) != SCIPACK_S_OK ) {
+            updateInfo("Can't clear Cache.");
+            ret = false;
+        }
+    }
+    if ( ret ) {
+        updateInfo("清除缓存完成.");
+    }
     return ret;
 }
 
@@ -699,7 +752,7 @@ void  DevCtlPriv :: ensureTimer( bool sw )
             QxPack::IcRmtObjCreator::createObjInThread (
                 m_t_tmr, []( void *)->QObject*{
                     QTimer *tmr = usbdev_new_qobj( QTimer );
-                    tmr->setInterval( 500/60 );
+                    tmr->setInterval( 500/30 );
                     tmr->setSingleShot( false );
                     return tmr;
                 },this
@@ -978,7 +1031,7 @@ void  DevCtl :: moveChinMotors( quint8* sps, qint32* dist,MoveMethod method)
 // ============================================================================
 // move the motor
 // ============================================================================
-void   DevCtl :: move5Motors( quint8* sps, qint32* dist,MoveMethod method)
+void   DevCtl :: move5Motors( quint8*  sps, qint32*  dist,MoveMethod method)
 {
     QByteArray ba(512,0);ba.fill(0);
     unsigned char* ptr=reinterpret_cast<unsigned char*>(ba.data());
